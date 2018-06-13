@@ -1,0 +1,102 @@
+{extend name="common/index"}
+{block name="content"}
+<div class="layui-row">
+    <form id="editForm" class="layui-form" action="">
+        <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
+        <input type="hidden" name="role_id" value="{$data.role_id|default=''}">
+        <div class="layui-col-xs12 layui-col-sm5">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>角色名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" value="{$data.name|default=''}" placeholder="请输入" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12 layui-col-sm7">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用途描述：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="describe" value="{$data.describe|default=''}" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <table id="roleTable"  lay-filter="roleTable"></table>
+            </div>
+        </div>
+        <div class="tpl-form-action">
+            <button class="layui-btn layui-btn-radius layui-btn-lg" lay-submit lay-filter="formSubmit">保存</button>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    var auth_list = "{$data.auth|default=''}";//当前角色的权限列表
+    layui.use(['form', 'table'], function () {
+        var form = layui.form
+            ,table = layui.table;
+
+        //表格数据渲染
+        table.render({
+            elem: '#roleTable'
+            ,url: '{:url("Menu/getDataList")}'
+            ,limit:99999
+            ,cols: [[
+                {type:'numbers', title:'序号', width:60}
+                ,{field:'pid_text', title:'上级菜单', width: 100}
+                ,{field:'name_text', title:'菜单名称', minWidth: 150}
+                ,{field:'url', title:'链接地址', minWidth: 250}
+                ,{field:'description', title:'简介', minWidth: 80}
+                ,{title:'操作', width: 100, align:'center', templet: function (data) {
+                    var _html = "";
+                    if (data.menu_id == 1) {
+                        //“首页” 默认为选中状态
+                        _html = "checked disabled";
+                    } else if ($.inArray(data.menu_id.toString(), auth_list.split(',')) != "-1") {
+                        //将已有的权限，设置为选择状态
+                        _html = "checked";
+                    }
+                    return "<input type='checkbox' name='auth["+data.menu_id+"]' value='"+data.menu_id+"' data-pid='"+data.pid+"' lay-skin='primary' "+_html+" lay-filter='changeAuth'>";
+                }}
+            ]]
+        });
+
+        //监听选中状态改变情况
+        form.on('checkbox(changeAuth)', function (data) {
+            var pid = $(data.elem).data('pid');
+            $.post('{:url("Menu/getChildInfo")}', {id:data.value}, function (result) {
+                $.each(result, function (key,val) {
+                    //遍历当前菜单的子节点，将选中状态 与 当前菜单状态保持一致
+                    $(".layui-table-main").find('input[type="checkbox"][value="'+val.menu_id+'"]').prop('checked', data.elem.checked);
+                });
+                //将当前菜单的父节点，设置为选中状态
+                $(".layui-table-main").find('input[type="checkbox"][value="'+pid+'"]').prop('checked', true);
+                form.render('checkbox');
+            }, 'json');
+        });
+
+        //监听提交
+        form.on('submit(formSubmit)', function(data){
+            $('input[type="checkbox"][value="1"]').prop('disabled', false);//将“首页”设置为可上传
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+            $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
+                layer.close(index);
+                if (result.code) {
+                    layer.msg(result.msg, {shade:[0.5,'#000'],time:2000}, function () {
+                        window.location.href = result.url;
+                    });
+                } else {
+                    $('#token').val(result.data.token);
+                    $('input[type="checkbox"][value="1"]').prop('disabled', true);//将“首页”设置disabled
+                    layer.alert(result.msg, {icon:2, title:'保存失败！'});
+                }
+            }, 'json');
+            return false;
+        });
+    });
+
+</script>
+{/block}

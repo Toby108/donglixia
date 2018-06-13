@@ -1,0 +1,67 @@
+{extend name="common/index"}
+{block name="content"}
+<div class="layui-row">
+    <form id="editForm" class="layui-form tpl-form-label-long" action="" >
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">网站信息</li>
+                <li>系统设置</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    {$wen_info_html}
+                </div>
+                <div class="layui-tab-item">
+                    {$system_config_html}
+                </div>
+            </div>
+        </div>
+        <div class="tpl-form-action">
+            <button class="layui-btn layui-btn-radius layui-btn-lg" lay-submit lay-filter="formSubmit">保存</button>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    layui.use(['form', 'upload'], function () {
+        var form = layui.form
+            ,upload = layui.upload;
+
+        /*上传头像*/
+        upload.render({
+            elem: '.tpl-img-avatar'
+            ,url: '{:url("uploadImg")}'
+            ,size: 1024 //限制文件大小，单位 KB
+            ,exts: "jpg|png|gif|bmp|jpeg"
+            ,done: function(res){
+                if(res.code){
+                    var control = this.item;
+                    $(control).attr('src', res.data); //图片链接
+                    $(control).closest('div').find('input').val(res.data); //赋值上传
+                } else {
+                    layer.alert(res.msg);
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(formSubmit)', function(data){
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+            $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
+                layer.close(index);
+                if (result.code) {
+                    layer.msg(result.msg, {shade:[0.5,'#000'],time:2000}, function () {
+                        window.location.reload();
+                    });
+                } else {
+                    layer.alert(result.msg, {icon:2, title:'保存失败！'});
+                }
+            }, 'json');
+            return false;
+        });
+    });
+</script>
+
+{/block}

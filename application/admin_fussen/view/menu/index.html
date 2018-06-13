@@ -1,0 +1,145 @@
+{extend name="common/index"}
+{block name="css"}
+<style>
+    .layui-table-cell{
+        padding: 0 8px;
+    }
+    #selectPid .layui-input-inline{
+        width: 320px;
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="layui-row">
+    <form id="searchForm" class="layui-form layui-form-pane tpl-form-search" onkeydown="if(event.keyCode=='13'){reloadTable('#searchForm');return false;}">
+        <div class="layui-form-item">
+            <div id="selectPid" class="layui-inline"></div>
+            <input type="hidden" name="pid" id="pid">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">菜单名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">链接地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="url" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <div class="layui-btn-group">
+                    <a class="layui-btn layui-btn-normal" onclick="reloadTable('#searchForm');">搜索</a>
+                    <a class="layui-btn" href="{:url('edit')}" target="_blank">新增</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="layui-col-xs12">
+    <table id="menuTable" lay-filter="menuTable"></table>
+</div>
+
+<script type="text/html" id="operating">
+    <div class="layui-btn-group">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </div>
+</script>
+
+{/block}
+
+
+{block name="script"}
+<script type="text/javascript">
+    var tableIns = null;
+    layui.use(['table'], function () {
+        var table = layui.table;
+
+        //表格数据渲染
+        tableIns = table.render({
+            elem: '#menuTable'
+            ,url: '{:url("getDataList")}'
+            ,page: true
+            ,limit: table_limit
+            ,limits: table_limits
+            ,cellMinWidth:50
+            ,cols: [[
+                {type:'numbers', title:'序号', width:50}
+                ,{field:'pid_text', title:'上级分类', width: 100}
+                ,{field:'name_text', title:'菜单名称', minWidth: 180}
+                ,{field:'url', title:'链接地址', minWidth: 150}
+                ,{field:'display_text', title:'是否显示', align:'center', width: 75}
+                ,{field:'extend_text', title:'默认展开', align:'center', width: 95}
+                ,{field:'open_type_text', title:'打开方式', width: 95}
+                ,{title:'更改排序', align:'center', width: 75, templet: function (data) {
+                    return '<div class="layui-btn-group">' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.menu_id+',\'asc\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.menu_id+',\'desc\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '</div>';
+                }}
+                ,{title:'操作', toolbar: '#operating', width: 100, align:'center'}
+            ]]
+            ,where: getFormJson('#searchForm')
+        });
+
+        //监听工具条
+        table.on('tool(menuTable)', function(obj){
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('子菜单也将被删除，确定继续吗？', function(index){
+                    $.post('{:url("delete")}',{id:data.menu_id}, function (result) {
+                        layer.close(index);
+                        if (result.code) {
+                            reloadTable('#searchForm');
+                        } else {
+                            layer.alert(result.msg, {icon:2});
+                        }
+                    }, 'json');
+                });
+            } else if (obj.event === 'edit') {
+                window.open('edit?menu_id='+data.menu_id);
+            }
+        });
+    });
+
+    //上级菜单，级联选择
+    layui.config({
+        base: '__ADMIN__/js/'
+    }).use('linkSelect', function () {
+        var linkSelect = layui.linkSelect;
+        var inputFrame = $('#selectPid').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
+
+        //级联选择，url渲染
+        link = linkSelect.render({
+            elem: '#selectPid',
+            url: "{:url('getMenuList')}",
+            inputFrame: inputFrame,          //默认排版方式
+            lableName: '上级分类',
+            selected: function (item,dom) {
+                var val = link.getValue();
+                var val_last = 0;
+                if (val[val.length-1] != undefined) {
+                    val_last = val[val.length-1].value;
+                }
+                $("#pid").val(val_last);
+            }
+        });
+    });
+
+
+    function changeSort(id, type) {
+        $.post("{:url('changeSort')}", {menu_id:id, type:type}, function (result) {
+            if (result.code) {
+                reloadTable('#searchForm');
+            } else {
+                layer.msg(result.msg);
+            }
+        }, 'json');
+    }
+</script>
+
+{/block}

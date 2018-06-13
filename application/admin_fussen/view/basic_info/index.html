@@ -1,0 +1,196 @@
+{extend name="common/index"}
+{block name="css"}
+<style>
+    .layui-table-cell{
+        padding: 0 8px;
+    }
+    #selectPid .layui-input-inline{
+        width: 320px;
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="layui-row">
+    <form id="searchForm" class="layui-form layui-form-pane tpl-form-search" onkeydown="if(event.keyCode=='13'){reloadTable('#searchForm');return false;}">
+        <div class="layui-form-item">
+            <div id="selectPid" class="layui-inline"></div>
+            <input type="hidden" name="pid" id="pid">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <div class="layui-btn-group">
+                    <a class="layui-btn layui-btn-normal" onclick="reloadTable('#searchForm');">搜索</a>
+                    <a class="layui-btn" href="{:url('edit')}" target="_blank">新增</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<table id="basicTable" lay-filter="basicTable"></table>
+
+<script type="text/html" id="operating">
+    <div class="layui-btn-group">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </div>
+</script>
+
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    var tableIns = null;
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+
+        //表格数据渲染
+        tableIns = table.render({
+            elem: '#basicTable'
+            ,url: '{:url("getDataList")}'
+            ,page: true
+            ,limit: table_limit
+            ,limits: table_limits
+            ,cellMinWidth: 50
+            ,cols: [[
+                {type:'numbers', title:'序号', width:60}
+                ,{field:'pid_text', title:'上级分类', width: '15%'}
+                ,{field:'name', title:'名称', width: '15%', edit: 'text'}
+                ,{field:'code', title:'代号', width: '8%', edit: 'text'}
+                ,{title:'状态', width: '8%', align:'center', templet: function (data) {
+                    var check_state = data.status == 1 ? 'checked=""' : '';
+                    return '<input type="checkbox" name="status" value="'+data.status+'" data-id="'+data.basic_id+'" lay-skin="switch"  lay-text="启用|禁用" lay-filter="statusEvent" '+check_state+'>';
+                }}
+                ,{field:'description', title:'简介', minWidth:50}
+                ,{title:'更改排序' , width: '10%', align:'center', templet: function (data) {
+                    return '<div class="layui-btn-group">' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.basic_id+',\'asc\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.basic_id+',\'desc\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '</div>';
+                }}
+                ,{title:'操作', toolbar: '#operating', width: 100, align:'center'}
+            ]]
+            ,where: getFormJson('#searchForm')
+        });
+
+        //监听单元格编辑
+        table.on('edit(basicTable)', function(obj){
+            var data = {};
+            var res = {};
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+
+            data[obj.field] = obj.value;
+            data['basic_id'] = obj.data.basic_id;
+            $.ajax({
+                url: '{:url("updateField")}',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    layer.close(index);
+                    res = result;
+                }
+            });
+
+            if (!res.code) {
+                $(this)[0].value = $(this).prev().text();
+                layer.alert(res.msg, {icon:2, title:'保存失败！'});
+            } else {
+                reloadTable('#searchForm');
+            }
+            return false;
+        });
+
+        //监听状态操作
+        form.on('switch(statusEvent)', function(obj){
+            var data = {};
+            var res = {};
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+            data[this.name] = obj.elem.checked == true ? 1 : 0;
+            data['basic_id'] = $(obj.elem).data('id');
+
+            $.ajax({
+                url: '{:url("updateField")}',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    layer.close(index);
+                    res = result;
+                }
+            });
+
+            if (!res.code) {
+                $(this).prop('checked', !obj.elem.checked);
+                form.render('checkbox');// 重新渲染开关
+                layer.alert(res.msg, {icon:2, title:'保存失败！'});
+            }
+        });
+
+        //监听工具条
+        table.on('tool(basicTable)', function(obj){
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('子类资料也将被删除，确定继续吗？', function(index){
+                    $.post('{:url("delete")}',{id:data.basic_id}, function (result) {
+                        layer.close(index);
+                        if (result.code) {
+                            layer.msg(result.msg);
+                            reloadTable('#searchForm');
+                        } else {
+                            layer.alert(result.msg, {icon:2});
+                        }
+                    }, 'json');
+                });
+            } else if (obj.event === 'edit') {
+                window.open('edit?basic_id='+data.basic_id);
+            }
+        });
+    });
+
+    //上级菜单，级联选择
+    layui.config({
+        base: '__ADMIN__/js/'
+    }).use('linkSelect', function () {
+        var linkSelect = layui.linkSelect;
+        var inputFrame = $('#selectPid').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
+
+        //级联选择，url渲染
+        link = linkSelect.render({
+            elem: '#selectPid',
+            url: "{:url('getBasicList')}",
+            inputFrame: inputFrame,          //默认排版方式
+            lableName: '上级分类',
+            selected: function (item,dom) {
+                var val = link.getValue();
+                var val_last = 0;
+                if (val[val.length-1] != undefined) {
+                    val_last = val[val.length-1].value;
+                }
+                $("#pid").val(val_last);
+            }
+        });
+    });
+
+    /*更改排序*/
+    function changeSort(id, type) {
+        $.post("{:url('changeSort')}", {basic_id:id, type:type}, function (result) {
+            if (result.code) {
+                reloadTable('#searchForm');
+            } else {
+                layer.alert(result.msg, {icon:2});
+            }
+        }, 'json');
+    }
+</script>
+
+{/block}

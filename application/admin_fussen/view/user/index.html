@@ -1,0 +1,158 @@
+{extend name="common/index"}
+{block name="css"}
+<style>
+    .layui-table-cell{
+        padding: 0 8px;
+    }
+</style>
+{/block}
+{block name="content"}
+<!--条件搜索栏-->
+<div class="layui-row">
+    <form id="searchForm" class="layui-form layui-form-pane tpl-form-search" onkeydown="if(event.keyCode=='13'){reloadTable('#searchForm');return false;}">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="nick_name" placeholder="请输入账号" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">真实姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="real_name" placeholder="请输入真实姓名" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="tel" placeholder="请输入手机号" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">证件号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="card_no" placeholder="身份证号/通行证号..." class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">注册日期</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="create_begin" id="create_begin" class="layui-input">
+                </div>
+                <div class="layui-form-mid">--</div>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="create_end" id="create_end" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-btn-group">
+                    <a class="layui-btn layui-btn-normal" onclick="reloadTable('#searchForm');">搜索</a>
+                    <a class="layui-btn"  href="{:url('edit')}" target="_blank">新增</a>
+                    <a class="layui-btn layui-btn-danger">删除</a>
+                    <a class="layui-btn layui-btn-warm" href="javascript:;" onclick="exportData()">导出数据</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--数据列表-->
+<table id="userTable" lay-filter="userTable"></table>
+<!--操作列-->
+<script type="text/html" id="operating">
+    <div class="layui-btn-group">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" href="javascript:;" onclick="changePwd({{d.uid}}, '修改密码');">改密码</a>
+        <a class="layui-btn layui-btn-xs" href="javascript:;" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" href="javascript:;" lay-event="del">删除</a>
+    </div>
+</script>
+
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    var tableIns = null;
+
+    layui.use(['form','laydate', 'table', 'layer'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var table = layui.table;
+        var layer = layui.layer;
+
+        /*注册日期，执行一个laydate实例*/
+        laydate.render({elem: '#create_begin'});
+        laydate.render({elem: '#create_end'});
+
+        //表格数据渲染
+        tableIns = table.render({
+            elem: '#userTable'
+            ,url: '{:url("getDataList")}'
+            ,page: true
+            ,limit: table_limit
+            ,limits: table_limits
+            ,cols: [[
+                {type:'numbers', title:'序号', width: 45}
+                ,{field:'nick_name', title:'帐号', width: '8%', edit: 'text'}
+                ,{field:'real_name', title:'真实姓名', width: '8%', edit: 'text'}
+                ,{field:'tel', title:'手机号码', width: '11%', edit: 'text'}
+                ,{field:'card_no', title:'证件号', width: '16%', edit: 'text'}
+                ,{field:'signature', title:'个性签名'}
+                ,{field:'create_time', title:'注册日期', width: '11%'}
+                ,{ title:'操作', toolbar: '#operating', width: 135, align:'center'}
+            ]]
+            ,where: getFormJson('#searchForm')
+        });
+
+        //监听单元格编辑
+        table.on('edit(userTable)', function(obj){
+            var data = {};
+            var res = {};
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+
+            data[obj.field] = obj.value;
+            data['uid'] = obj.data.uid;
+            $.ajax({
+                url: '{:url("updateField")}',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    layer.close(index);
+                    res = result;
+                }
+            });
+
+            if (!res.code) {
+                $(this)[0].value = $(this).prev().text();
+                layer.alert(res.msg, {icon:2, title:'保存失败！'});
+            }
+            return false;
+        });
+
+        //监听操作栏
+        table.on('tool(userTable)', function(obj){
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('确定删除吗？', function(index){
+                    $.post('{:url("delete")}',{id:data.uid}, function (result) {
+                        layer.close(index);
+                        if (result.code) {
+                            obj.del();
+                        } else {
+                            layer.msg(result.msg, {icon:2});
+                        }
+                    }, 'json');
+                });
+            } else if (obj.event === 'edit') {
+                window.open('edit?uid='+data.uid);
+            }
+        });
+    });
+
+    function exportData() {
+        var url = '{:url("exportData")}';
+        window.open(url + '?' + $('#userForm').serialize());
+    }
+</script>
+{/block}

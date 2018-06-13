@@ -1,0 +1,179 @@
+{extend name="common/index"}
+{block name="css"}
+{/block}
+
+{block name="content"}
+<div class="layui-row">
+    <form id="editForm" class="layui-form" action="">
+        <input type="hidden" name="goods_id" id="goods_id" value="{$data.goods_id|default=''}">
+        <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
+        <div class="layui-field-box">
+            <div class="layui-main">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">产品主图：</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload-drag image-url">
+                            <div  style="margin: -20px 0px; {notempty name="data.img_url"}display:none;{/notempty}">
+                                <i class="layui-icon layui-icon-upload"></i>
+                                <p>建议尺寸800*800</p>
+                                <p>点击上传，或将文件拖拽到此处</p>
+                            </div>
+                            <img src="{$data.img_url|default=''}" alt="图片" style="margin: -30px;width: 258px;height: 114px; {empty name="data.img_url"}display: none;{/empty}">
+                            <input type="hidden" name="img_url" value="{$data.img_url|default=''}">
+                        </div>
+                    </div>
+                </div>
+                <div id="select-cat-id" class="layui-form-item"></div>
+                <input type="hidden" name="cat_id" id="cat_id" value="{$data.cat_id|default=0}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>产品名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="goods_name" value="{$data.goods_name|default=''}" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">产品简称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="short_name" value="{$data.short_name|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">产品价格：</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="price" value="{$data.price|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">购买链接：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="buy_url" value="{$data.buy_url|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">关键字：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keywords" value="{$data.keywords|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">发布时间：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="public_time" id="public_time" value="{$data.public_date_hh_ii_ss|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" >产品排序：</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="sort_num" value="{$data.sort_num|default='1'}" placeholder="数字越小，越靠前" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">产品状态：</label>
+                    <div class="layui-input-block">
+                        {volist name="stateList" id="vo"}
+                        <input type="radio" name="state" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.state|default='175'"}checked{/eq}>
+                        {/volist}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">描述简介：</label>
+                    <div class="layui-input-block">
+                        <textarea name="describe" class="layui-textarea">{$data.describe|default=''}</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">产品详情：</label>
+                    <div class="layui-input-block">
+                        <!-- 加载编辑器的容器 -->
+                        <script id="goods-detail" name="detail" type="text/plain">{$data.detail|default=''}</script>
+                    </div>
+                </div>
+            </div>
+            <div class="tpl-form-action">
+                <button class="layui-btn layui-btn-radius layui-btn-lg" lay-submit lay-filter="formSubmit">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/plugins/ueditor/ueditor.config.js"></script><!-- 编辑器配置文件 -->
+<script type="text/javascript" src="__STATIC__/plugins/ueditor/ueditor.all.min.js"></script><!-- 编辑器源码文件 -->
+
+<script type="text/javascript">
+    layui.use(['form', 'laydate', 'upload'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+
+        //实例化时间插件
+        laydate.render({elem: '#public_time' ,type: 'datetime'});
+
+        //拖拽上传，缩略图
+        upload.render({
+            elem: '.image-url'
+            ,url: '{:url("uploadImg")}'
+            ,size: 2048 //限制文件大小，单位 KB
+            ,exts: "jpg|png|gif|bmp|jpeg"
+            ,done: function(res){
+                if(res.code){
+                    var control = this.item;
+                    $(control).find('div').css('display','none'); //隐藏文字
+                    $(control).find('img').css('display','inline-block').attr('src', res.data); //显示图片，图片链接
+                    $(control).find('input[name="img_url"]').val(res.data); //赋值上传
+                } else {
+                    layer.alert(res.msg);
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(formSubmit)', function(data){
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+            $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
+                layer.close(index);
+                if (result.code) {
+                    layer.msg(result.msg, {shade:[0.5,'#000'],time:2000}, function () {
+                        window.location.href = result.url;
+                    });
+                } else {
+                    $('#token').val(result.data.token);
+                    layer.alert(result.msg, {icon:2, title:'保存失败！'});
+                }
+            }, 'json');
+            return false;
+        });
+    });
+
+    //上级菜单，级联选择
+    layui.config({
+        base: '__ADMIN__/js/'
+    }).use('linkSelect', function () {
+        var linkSelect = layui.linkSelect;
+        var inputFrame = $('#select-cat-id').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
+        var selectedArr = {$data.cat_id_multi|default='0'};
+
+        //级联选择，url渲染
+        link = linkSelect.render({
+            elem: '#select-cat-id',
+            url: "{:url('getCatList')}",
+            selectedArr : selectedArr,		//默认选中数组
+            inputFrame: inputFrame,          //默认排版方式
+            lableName: '所属栏目：',
+            where: {goods_id:$("#goods_id").val()},
+            selected: function (item,dom) {
+                var val = link.getValue();
+                var val_last = 0;
+                if (val[val.length-1] != undefined) {
+                    val_last = val[val.length-1].value;
+                }
+                $("#cat_id").val(val_last);
+            }
+        });
+    });
+
+    //实例化编辑器*
+    UE.getEditor('goods-detail');
+</script>
+{/block}

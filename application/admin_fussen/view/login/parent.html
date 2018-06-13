@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{:session('config.web_name')} 登录页</title>
+    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_578787_o6tct7f5owuq5mi.css">
+    <link rel="stylesheet" href="__ADMIN__/css/login.css" />
+    {block name="css"}{/block}
+</head>
+<body class="layui-layout-body tpl-body-bg">
+<div class="tpl-user-login tpl-user-display-show">
+    <!--内容区域-->
+    {block name="content"}{/block}
+
+    <div class="layui-trans tpl-user-login-footer">
+        <p>
+            <span><a href="{:url('User/index',['uid'=>'2','visitor'=>'1'])}" target="_blank" style="color: #FF5722;">游客免登录</a></span>
+        </p>
+    </div>
+</div>
+
+<script src="__STATIC__/js/jquery-3.2.1.min.js"></script>
+<script src="__STATIC__/plugins/layui/layui.js"></script>
+
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script>
+    $(function () {
+        if ( typeof(_open_v5_) != "undefined") {
+            window.location.reload();
+        }
+    });
+</script>
+{block name="script"}{/block}
+</body>
+</html>

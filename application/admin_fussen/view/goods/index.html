@@ -1,0 +1,169 @@
+{extend name="common/index"}
+{block name="css"}
+<style>
+    .layui-table-cell{
+        padding: 0 8px;
+    }
+</style>
+{/block}
+{block name="content"}
+<!--条件搜索栏-->
+<div class="layui-row">
+    <form id="searchForm" class="layui-form layui-form-pane tpl-form-search" onkeydown="if(event.keyCode=='13'){reloadTable('#searchForm');return false;}">
+        <div class="layui-form-item">
+            <div id="select-cat-id" class="layui-inline"></div>
+            <input type="hidden" name="cat_id" id="cat_id">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="goods_name" placeholder="标题" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">关键字</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="keywords" placeholder="关键字" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-inline">
+                    <select name="state">
+                        <option value="">请选择</option>
+                        {volist name="stateList" id="vo"}
+                        <option value="{$vo.basic_id}">{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">发布时间</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="public_begin" id="public_begin" class="layui-input">
+                </div>
+                <div class="layui-form-mid">--</div>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="public_end" id="public_end" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-btn-group">
+                    <a class="layui-btn layui-btn-normal" onclick="reloadTable('#searchForm');">搜索</a>
+                    <a class="layui-btn"  href="{:url('edit')}" target="_blank">新增</a>
+                    <a class="layui-btn layui-btn-danger">删除</a>
+                    <a class="layui-btn layui-btn-warm" href="javascript:;" onclick="exportData()">导出数据</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--数据列表-->
+<table id="goodsTable" lay-filter="goodsTable"></table>
+<!--操作列-->
+<script type="text/html" id="operating">
+    <div class="layui-btn-group">
+        <a class="layui-btn layui-btn-xs" href="javascript:;" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" href="javascript:;" lay-event="del">删除</a>
+    </div>
+</script>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    layui.use(['form','laydate', 'table', 'layer'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var table = layui.table;
+        var layer = layui.layer;
+
+        /*注册日期，执行一个laydate实例*/
+        laydate.render({elem: '#public_begin'});
+        laydate.render({elem: '#public_end'});
+
+        //表格数据渲染
+        tableIns = table.render({
+            elem: '#goodsTable'
+            ,url: '{:url("getDataList")}'
+            ,page: true
+            ,limit: table_limit
+            ,limits: table_limits
+            ,cols: [[
+                {type:'numbers', title:'序号', width: 45}
+                ,{field:'cat_name', title:'分类', width: '8%'}
+                ,{field:'goods_name', title:'标题', edit: 'text'}
+                ,{field:'state_text', title:'状态', width: '8%', align:'center'}
+                ,{field:'read_num', title:'阅读次数', width: '8%', align:'center'}
+                ,{title:'更改排序' , width: '8%', align:'center', templet: function (data) {
+                    return '<div class="layui-btn-group">' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.goods_id+',\'asc\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.goods_id+',\'desc\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '</div>';
+                }}
+                ,{field:'public_date', title:'发布时间', width: '13%'}
+                ,{field:'modify_by', title:'修改人', width: '10%'}
+                ,{fixed: 'right', title:'操作', toolbar: '#operating', width: 135, align:'center'}
+            ]]
+            ,where: getFormJson('#searchForm')
+        });
+
+        //监听工具条
+        table.on('tool(goodsTable)', function(obj){
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('数据删除后无法恢复，确定继续吗？', function(index){
+                    $.post('{:url("delete")}',{id:data.goods_id}, function (result) {
+                        layer.close(index);
+                        if (result.code) {
+                            layer.msg(result.msg);
+                            obj.del();
+                        } else {
+                            layer.alert(result.msg, {icon:2});
+                        }
+                    }, 'json');
+                });
+            } else if (obj.event === 'edit') {
+                window.open('edit?goods_id='+data.goods_id);
+            }
+        });
+
+    });
+
+
+    //上级菜单，级联选择
+    layui.config({
+        base: '__ADMIN__/js/'
+    }).use('linkSelect', function () {
+        var linkSelect = layui.linkSelect;
+        var inputFrame = $('#select-cat-id').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
+
+        //级联选择，url渲染
+        link = linkSelect.render({
+            elem: '#select-cat-id',
+            url: "{:url('getCatList')}",
+            inputFrame: inputFrame,          //默认排版方式
+            lableName: '分类',
+            selected: function (item,dom) {
+                var val = link.getValue();
+                var val_last = 0;
+                if (val[val.length-1] != undefined) {
+                    val_last = val[val.length-1].value;
+                }
+                $("#cat_id").val(val_last);
+            }
+        });
+    });
+
+
+    /*更改排序*/
+    function changeSort(id, type) {
+        $.post("{:url('changeSort')}", {goods_id:id, type:type}, function (result) {
+            if (result.code) {
+                reloadTable('#searchForm');
+            } else {
+                layer.alert(result.msg, {icon:2});
+            }
+        }, 'json');
+    }
+</script>
+{/block}

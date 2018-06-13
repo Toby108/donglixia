@@ -1,0 +1,118 @@
+{extend name="common/index"}
+{block name="css"}
+{/block}
+
+{block name="content"}
+<div class="layui-row">
+    <form id="editForm" class="layui-form tpl-form-label-long" action="">
+        <input type="hidden" name="basic_id" id="basic_id" value="{$data.basic_id|default=''}">
+        <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
+        <div class="layui-field-box">
+            <div class="layui-main">
+                <div id="selectPid" class="layui-form-item"></div>
+                <input type="hidden" name="pid" id="pid" value="{$data.pid|default=0}">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>资料名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" value="{$data.name|default=''}" lay-verify="required" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">资料代号：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="code" value="{$data.code|default=''}" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">资料排序：</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="sort" value="{$data.sort|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">资料图片：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image" value="{$data.image|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">资料数值：</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="value" value="{$data.value|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" >资料简介：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="description" value="{$data.description|default=''}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">资料状态：</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="1" title="启用" {eq name="$data.status|default=1" value="1"}checked{/eq}>
+                        <input type="radio" name="status" value="0" title="禁用" {eq name="$data.status|default=1" value="0"}checked{/eq}>
+                    </div>
+                </div>
+            </div>
+            <div class="tpl-form-action">
+                <button class="layui-btn layui-btn-radius layui-btn-lg" lay-submit lay-filter="formSubmit">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    //实例化表单
+    layui.use(['form'], function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formSubmit)', function(data){
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+            $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
+                layer.close(index);
+                if (result.code) {
+                    layer.msg(result.msg, {shade:[0.5,'#000'],time:2000}, function () {
+                        window.location.href = result.url;
+                    });
+                } else {
+                    $('#token').val(result.data.token);
+                    layer.alert(result.msg, {icon:2, title:'保存失败！'});
+                }
+            }, 'json');
+            return false;
+        });
+    });
+
+    //上级菜单，级联选择
+    layui.config({
+        base: '__ADMIN__/js/'
+    }).use('linkSelect', function () {
+        var linkSelect = layui.linkSelect;
+        var inputFrame = $('#selectPid').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
+        var selectedArr = {$data.pid_multi|default='0'};
+        //级联选择，url渲染
+        link = linkSelect.render({
+            elem: '#selectPid',
+            url: "{:url('getBasicList')}",
+            selectedArr : selectedArr,		//默认选中数组
+            inputFrame: inputFrame,          //默认排版方式
+            placeholderText : "顶级",	//默认placeholder
+            lableName: '上级分类：',
+            where: {basic_id:$("#basic_id").val()},
+            selected: function (item,dom) {
+                var val = link.getValue();
+                var val_last = 0;
+                if (val[val.length-1] != undefined) {
+                    val_last = val[val.length-1].value;
+                }
+                $("#pid").val(val_last);
+            }
+        });
+    });
+</script>
+{/block}

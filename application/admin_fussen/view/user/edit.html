@@ -1,0 +1,515 @@
+{extend name="common/index"}
+{block name="css"}
+{/block}
+{block name="content"}
+<div class="layui-row">
+    <form id="editForm" class="layui-form tpl-form-label-long" action="" >
+        <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
+        <input type="hidden" name="uid" value="{$data.uid|default=''}">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">账号信息</li>
+                <li>人员资料</li>
+                <li>相关图片</li>
+                <li>活跃度分析</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-main">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">头像：</label>
+                            <div class="layui-input-block" style="text-align: center;">
+                                <input type="hidden" name="avatar" value="{$avatar}">
+                                <img src="{$avatar}" class="tpl-img-avatar">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>帐号：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="nick_name" value="{$data.nick_name|default=''}" lay-verify="required" placeholder="请输入帐号" class="layui-input" autocomplete="off">
+                            </div>
+                        </div>
+                        {empty name="data.uid"}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>密码：</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="password" placeholder="请输入密码" class="layui-input" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>确认密码：</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="confirm" placeholder="请再次确认密码" class="layui-input" autocomplete="off">
+                            </div>
+                        </div>
+                        {/empty}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>电话号码：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tel" value="{$data.tel|default=''}" lay-verify="required" placeholder="请输入电话号码" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">真实姓名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="real_name" value="{$data.real_name|default=''}" placeholder="请输入真实姓名" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户类型：</label>
+                            <div class="layui-input-block">
+                                {notempty name="basicList"}
+                                {volist name="basicList" id="vo"}
+                                {eq name="vo.cat_code" value="AL"}
+                                <input type="radio" name="type" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.type|default='159'"}checked{/eq}>
+                                {/eq}
+                                {/volist}
+                                {/notempty}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">部门：</label>
+                            <div class="layui-input-block">
+                                <select name="dept_id">
+                                    <option value="">请选择</option>
+                                    {notempty name="deptList"}
+                                    {volist name="deptList" id="vo"}
+                                    <option value="{$vo.dept_id}" {eq name="vo.dept_id" value="$data.dept_id|default=''"}selected{/eq}>{$vo.name}</option>
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>角色权限：</label>
+                            <div class="layui-input-block">
+                                <select name="role_id[]" multiple lay-search lay-verify="required">
+                                    <option value="">请选择</option>
+                                    {notempty name="roleList"}
+                                    {volist name="roleList" id="vo"}
+                                    <option value="{$vo.role_id}" {in name="vo.role_id" value="$data.role_id|default='2'"}selected{/in}>{$vo.name}{notempty name="$vo.describe"} —— （{$vo.describe}）{/notempty}</option>
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <!--<div class="layui-form-item">-->
+                            <!--<label class="layui-form-label">数据权限：</label>-->
+                            <!--<div class="layui-input-block">-->
+                                <!--{notempty name="basicList"}-->
+                                <!--{volist name="basicList" id="vo"}-->
+                                <!--{eq name="vo.cat_code" value="AM"}-->
+                                <!--<input type="radio" name="login_rank" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.login_rank|default='161'"}checked{/eq}>-->
+                                <!--{/eq}-->
+                                <!--{/volist}-->
+                                <!--{/notempty}-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">推荐人：</label>
+                            <div class="layui-input-block">
+                                <select name="parent_id" lay-search>
+                                    <option value="">请选择</option>
+                                    {notempty name="parentList"}
+                                    {volist name="parentList" id="vo"}
+                                    <option value="{$vo.uid}" {eq name="vo.uid" value="$data.parent_id|default=''"}selected{/eq}>{$vo.real_name}</option>
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">个性签名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="signature" value="{$data.signature|default=''}" placeholder="不超过100字" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">登录状态：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="login_state" value="1" title="正常" {eq name="$data.login_state|default='1'" value="1"}checked{/eq}>
+                                <input type="radio" name="login_state" value="2" title="禁用" {eq name="$data.login_state|default='1'" value="2"}checked{/eq}>
+                                <input type="radio" name="login_state" value="3" title="调试" {eq name="$data.login_state|default='1'" value="3"}checked{/eq}>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-main">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">证件类型：</label>
+                            <div class="layui-input-block">
+                                <select name="card_type" lay-search="">
+                                    <option value="">请选择</option>
+                                    {notempty name="basicList"}
+                                    {volist name="basicList" id="vo"}
+                                    {eq name="vo.cat_code" value="AB"}
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.card_type|default=''"}selected{/eq}>{$vo.name}</option>
+                                    {/eq}
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">证件号码：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="card_no" value="{$data.card_no|default=''}" placeholder="请输入证件号" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">出生日期：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="birthday" value="{$data.birthday|default=''}" id="birthday" placeholder="请输入出生日期" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="email" value="{$data.email|default=''}" placeholder="请输入邮箱" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">性别：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="sex" value="1" title="男" checked>
+                                <input type="radio" name="sex" value="0" title="女">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">银行名称：</label>
+                            <div class="layui-input-block">
+                                <select name="bank" lay-search="">
+                                    <option value="">请选择</option>
+                                    {notempty name="basicList"}
+                                    {volist name="basicList" id="vo"}
+                                    {eq name="vo.cat_code" value="AE"}
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.bank|default=''"}selected{/eq}>{$vo.name}</option>
+                                    {/eq}
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">银行卡号：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="bank_no" value="{$data.bank_no|default=''}" placeholder="请输入银行卡号" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md4 layui-col-lg4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">所在省市区：</label>
+                                <div class="layui-input-block">
+                                    <select name="province" id="province" lay-filter="region">
+                                        <option value="">请选择省</option>
+                                        {notempty name="provinceList"}
+                                        {volist name="provinceList" id="vo"}
+                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.province|default='0'"}selected{/eq}>{$vo.name}</option>
+                                        {/volist}
+                                        {/notempty}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md3 layui-col-lg3">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width: auto;"></label>
+                                <div class="layui-input-block" style="margin-left: 10px;">
+                                    <select name="city" id="city" lay-filter="region">
+                                        <option value="">请选择市</option>
+                                        {notempty name="cityList"}
+                                        {volist name="cityList" id="vo"}
+                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.city|default='0'"}selected{/eq}>{$vo.name}</option>
+                                        {/volist}
+                                        {/notempty}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md5 layui-col-lg5">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width: auto;"></label>
+                                <div class="layui-input-block" style="margin-left: 10px;">
+                                    <select name="district" id="district">
+                                        <option value="">请选择区/县</option>
+                                        {notempty name="districtList"}
+                                        {volist name="districtList" id="vo"}
+                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.district|default='0'"}selected{/eq}>{$vo.name}</option>
+                                        {/volist}
+                                        {/notempty}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">街道地址：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="address" value="{$data.address|default=''}" placeholder="请输入详细街道地址" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">职务：</label>
+                            <div class="layui-input-block">
+                                <select name="position" lay-search="">
+                                    <option value="">请选择</option>
+                                    {notempty name="basicList"}
+                                    {volist name="basicList" id="vo"}
+                                    {eq name="vo.cat_code" value="AF"}
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.position|default=''"}selected{/eq}>{$vo.name}</option>
+                                    {/eq}
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">民族：</label>
+                            <div class="layui-input-block">
+                                <select name="nation" lay-search="">
+                                    <option value="">请选择</option>
+                                    {notempty name="basicList"}
+                                    {volist name="basicList" id="vo"}
+                                    {eq name="vo.cat_code" value="AD"}
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.nation|default=''"}selected{/eq}>{$vo.name}</option>
+                                    {/eq}
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">学历：</label>
+                            <div class="layui-input-block">
+                                <select name="academic" lay-search="">
+                                    <option value="">请选择</option>
+                                    {notempty name="basicList"}
+                                    {volist name="basicList" id="vo"}
+                                    {eq name="vo.cat_code" value="AA"}
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.academic|default=''"}selected{/eq}>{$vo.name}</option>
+                                    {/eq}
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">婚姻：</label>
+                            <div class="layui-input-block">
+                                <select name="marriage" lay-search="">
+                                    <option value="">请选择</option>
+                                    {notempty name="basicList"}
+                                    {volist name="basicList" id="vo"}
+                                    {eq name="vo.cat_code" value="AC"}
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.marriage|default=''"}selected{/eq}>{$vo.name}</option>
+                                    {/eq}
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">政治面貌：</label>
+                            <div class="layui-input-block">
+                                <select name="politics" lay-search="">
+                                    <option value="">请选择</option>
+                                    {notempty name="basicList"}
+                                    {volist name="basicList" id="vo"}
+                                    {eq name="vo.cat_code" value="AG"}
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.politics|default=''"}selected{/eq}>{$vo.name}</option>
+                                    {/eq}
+                                    {/volist}
+                                    {/notempty}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md4 layui-col-lg4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">紧急联系人：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="contact_name" value="{$data.contact_name|default=''}" placeholder="姓名" title="姓名" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md3 layui-col-lg3">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width: auto;"></label>
+                                <div class="layui-input-block" style="margin-left: 10px;">
+                                    <input type="text" name="contact_tel" value="{$data.contact_tel|default=''}" placeholder="电话" title="电话" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md5 layui-col-lg5">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width: auto;"></label>
+                                <div class="layui-input-block" style="margin-left: 10px;">
+                                    <input type="text" name="contact_address" value="{$data.contact_address|default=''}" placeholder="联系地址" title="联系地址" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">在职状态：</label>
+                            <div class="layui-input-block">
+                                {notempty name="basicList"}
+                                {volist name="basicList" id="vo"}
+                                {eq name="vo.cat_code" value="AI"}
+                                <input type="radio" name="onduty_state" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.onduty_state|default='272'"}checked{/eq}>
+                                {/eq}
+                                {/volist}
+                                {/notempty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-main">
+                        <div class="layui-form-item">
+                            {volist name="imgList" id="vo" key="k"}
+                            <div class="layui-col-xs6 layui-col-sm4 layui-col-md4 layui-col-lg3">
+                                <input type="hidden" name="img[{$k}][img_id]" value="{$vo.img_id}">
+                                <input type="hidden" name="img[{$k}][uid]" value="{$vo.uid}">
+                                <input type="hidden" name="img[{$k}][img_url]" value="{$vo.img_url}" class="img-url">
+                                <input type="hidden" name="img[{$k}][type]" value="{$vo.type}">
+                                <div class="layui-upload">
+                                    <div class="layui-upload-list">
+                                        <a href="{$vo.img_url|default='__STATIC__/img/holder.jpg'}" target="_blank">
+                                            <img class="layui-upload-img" src="{$vo.img_url|default='__STATIC__/img/holder.jpg'}">
+                                        </a>
+                                    </div>
+                                    <button type="button" class="layui-btn btn-upload-img" >{$vo.name}</button>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-main">
+                        <div class="layui-form-item">
+                            <br>
+                            <div class="layui-col-sm1 layui-col-md1 layui-col-lg1">&nbsp;</div>
+                            <div class="layui-col-xs12 layui-col-sm11 layui-col-md11 layui-col-lg11">
+                                <div class="layui-form-item">
+                                    创建时间：{$data.create_time|default=''}
+                                </div>
+                                <div class="layui-form-item">
+                                    登录次数：{$data.login_times|default=''}
+                                </div>
+                                <div class="layui-form-item">
+                                    最后一次登录ip：{$data.last_login_ip|default=''}
+                                </div>
+                                <div class="layui-form-item">
+                                    最后一次登录时间：{$data.last_login_time|default=''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tpl-form-action">
+            <button class="layui-btn layui-btn-radius layui-btn-lg" lay-submit lay-filter="formSubmit">保存</button>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    layui.use(['form','laydate', 'upload'], function () {
+        var form = layui.form
+            ,upload = layui.upload
+            ,laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#birthday' //生日日期
+        });
+
+        /*上传头像*/
+        upload.render({
+            elem: '.tpl-img-avatar'
+            ,url: '{:url("uploadImg")}'
+            ,size: 500 //限制文件大小，单位 KB
+            ,exts: "jpg|png|gif|bmp|jpeg"
+            ,done: function(res){
+                if(res.code){
+                    var control = this.item;
+                    $(control).attr('src', res.data); //图片链接
+                    $(control).closest('div').find('input').val(res.data); //赋值上传
+                } else {
+                    layer.alert(res.msg);
+                }
+            }
+        });
+
+        /*上传相关图片*/
+        upload.render({
+            elem: '.btn-upload-img'
+            ,url: '{:url("uploadImg")}'
+            ,size: 2048 //限制文件大小，单位 KB
+            ,exts: "jpg|png|gif|bmp|jpeg"
+            ,done: function(res){
+                if(res.code){
+                    var control = this.item;
+                    $(control).parent().find('.layui-upload-img').attr('src', res.data); //图片链接
+                    $(control).parent().parent().find('.img-url').val(res.data); //赋值上传
+                } else {
+                    layer.alert(res.msg);
+                }
+            }
+        });
+
+        //监听省市区三级联动
+        form.on('select(region)', function (data) {
+            var id = data.value;
+            var position_now = $(data.elem).attr('id');
+            var position_next = '';
+            var position_change = '';
+
+            if (position_now == 'province') {
+                position_next = '#city';
+                position_change = '#district';
+            } else if (position_now == 'city'){
+                position_next = '#district';
+                position_change = '';
+            }
+
+            ajaxRegion(id, position_next, position_change);
+        });
+
+        /**
+         * 省市区变更
+         */
+        function ajaxRegion(id, position, position_change) {
+            $.post('{:url("getRegion")}', {pid:id}, function (result) {
+                var _html = "<option value=''>请选择</option>";
+                $.each(result, function (key, val) {
+                    _html += "<option value='"+val.id+"'>"+val.name+"</option>";
+                });
+                $(position).html(_html);
+                $(position_change).html("<option value=''>请选择</option>");
+                form.render('select');
+            });
+        }
+
+        //监听提交
+        form.on('submit(formSubmit)', function(data){
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+            $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
+                layer.close(index);
+                if (result.code) {
+                    layer.msg(result.msg, {shade:[0.5,'#000'],time:2000}, function () {
+                        window.location.href = result.url;
+                    });
+                } else {
+                    $('#token').val(result.data.token);
+                    layer.alert(result.msg, {icon:2, title:'保存失败！'});
+                }
+            }, 'json');
+            return false;
+        });
+    });
+
+</script>
+{/block}

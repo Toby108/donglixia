@@ -1,0 +1,147 @@
+{extend name="common/index"}
+{block name="content"}
+<div class="layui-row">
+    <form id="searchForm" class="layui-form layui-form-pane tpl-form-search" method="post" action="" onkeydown="if(event.keyCode=='13'){reloadTable('#searchForm');return false;}">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">部门名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" placeholder="部门名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-btn-group">
+                    <a class="layui-btn layui-btn-normal" data-type="reload" onclick="reloadTable('#searchForm');">搜索</a>
+                    <a class="layui-btn" href="javascript:;" onclick="deptEdit(0,0,'');">新增</a>
+                    <a class="layui-btn layui-btn-danger">删除</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<table id="deptTable" lay-filter="deptTable"></table>
+
+<script type="text/html" id="operating">
+    <div class="layui-btn-group">
+        <a class="layui-btn layui-btn-xs" onclick="deptEdit({{d.dept_id}}, {{d.pid}}, '{{d.name}}');">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </div>
+</script>
+
+<div  id="deptModal" style="display: none;">
+    <div class="layui-row" style="padding: 15px 10px;margin: 0 auto;">
+        <div class="layui-col-md12">
+            <form id="editForm" action="" class="layui-form">
+                <input type="hidden" name="dept_id" value="">
+                <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
+                <div class="layui-form-item">
+                    <div class="layui-form-label">上级部门：</div>
+                    <div class="layui-input-inline">
+                        <select name="pid">
+                            <option value="0">顶级</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">部门名称：</div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" class="layui-input">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    var tableIns = null;
+    var form = null;
+    layui.use(['form','laydate', 'table'], function () {
+        form = layui.form;
+        var laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.jquery;
+
+        /*注册日期，执行一个laydate实例*/
+        laydate.render({elem: '#create_begin'});
+        laydate.render({elem: '#create_end'});
+
+        //表格数据渲染
+        tableIns = table.render({
+            elem: '#deptTable'
+            ,url: '{:url("getDataList")}'
+            ,page:true
+            ,limit: table_limit
+            ,limits: table_limits
+            ,cols: [[
+                {type:'numbers', title:'序号', width:80}
+                ,{field:'name_text', title:'名称'}
+                ,{fixed: 'right', title:'操作', toolbar: '#operating', align:'center'}
+            ]]
+            ,where: getFormJson('#searchForm')
+        });
+
+        //监听工具条
+        table.on('tool(deptTable)', function(obj){
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('子部门也将被删除，确定继续吗？', function(index){
+                    $.post('{:url("delete")}',{id:data.dept_id}, function (result) {
+                        layer.close(index);
+                        if (result.code) {
+                            reloadTable('#searchForm');
+                        } else {
+                            layer.alert(result.msg, {icon:2});
+                        }
+                    }, 'json');
+                });
+            }
+        });
+    });
+
+    /*弹窗编辑*/
+    function deptEdit(dept_id, pid, name) {
+        var modal = layer.open({
+            type: 5
+            , title: '添加|编辑'
+            , btn: ['确定', '取消']
+            , offset: '150px'
+            , content: $('#deptModal').html()
+            , success: function (element, index) {
+                var ele = $(element).find('form');
+                $.post('{:url("getDeptList")}', {}, function (result) {
+                    var _html = "<option value='0'>顶级</option>";
+                    $.each(result, function (key, val) {
+                        _html += "<option value='"+val.dept_id+"'>"+val.name+"</option>";
+                    });
+                    ele.find('select[name="pid"]').html(_html).val(pid);
+                    ele.find('input[name="dept_id"]').val(dept_id);
+                    ele.find('input[name="name"]').val(name);
+                    form.render('select');
+                });
+            }
+            , yes: function (index, element) {
+                var ele = $(element).find('form');
+                var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+                $.post('{:url("save")}', ele.serialize(), function (result) {
+                    layer.close(index);
+                    $('#token').val(result.data.token);
+                    if (result.code) {
+                        layer.close(modal);
+                        layer.msg(result.msg, {time: 1000}, function () {
+                            $(".layui-laypage-btn")[0].click();//重新加载当前页数据表格
+                        });
+                    } else {
+                        layer.alert(result.msg, {icon: 2, title: '保存失败！'});
+                    }
+                }, 'json');
+            }
+        });
+    }
+
+</script>
+
+{/block}

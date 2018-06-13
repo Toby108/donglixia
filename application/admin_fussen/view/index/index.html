@@ -1,0 +1,132 @@
+{extend name="common/index"}
+{block name="css"}
+<style>
+    html {
+        background-color: #f2f2f2;
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    阅读数
+                    <span class="layui-badge layui-bg-blue layuiadmin-badge">周</span>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{$read_num}</p>
+                    <p>
+                        总计阅读数
+                        <span class="layuiadmin-span-color">*** <i class="layui-inline layui-icon layui-icon-flag"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    文章数
+                    <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{$article_count}</p>
+                    <p>
+                        新增
+                        <span class="layuiadmin-span-color">*** <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    产品数
+                    <span class="layui-badge layui-bg-green layuiadmin-badge">年</span>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+
+                    <p class="layuiadmin-big-font">{$goods_count}</p>
+                    <p>
+                        新增
+                        <span class="layuiadmin-span-color">*** <i class="layui-inline layui-icon layui-icon-dollar"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    用户数
+                    <span class="layui-badge layui-bg-orange layuiadmin-badge">月</span>
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+
+                    <p class="layuiadmin-big-font">{$user_count}</p>
+                    <p>
+                        最近一个月
+                        <span class="layuiadmin-span-color">*** <i class="layui-inline layui-icon layui-icon-user"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!--<div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    最近更新
+                    <a href="#" class="layui-a-tips">全部更新</a>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-xs12 layui-col-sm4">
+                            <div class="layuiadmin-card-text">
+                                <div class="layui-text-top"><i class="layui-icon layui-icon-user"></i><a href="/admin_fussen/user/index.html">用户列表</a></div>
+                                <p class="layui-text-center">修复开启 isLazyimg:true 后, 图片懒加载但是图片不存在的报错问题</p>
+                                <p class="layui-text-bottom"><a href="/admin_fussen/user/index.html">流加载</a><span>7 天前</span></p>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm4">
+                            <div class="layuiadmin-card-text">
+                                <div class="layui-text-top"><i class="layui-icon layui-icon-read"></i><a href="/admin_fussen/article_cat/index.html">文章栏目</a></div>
+                                <p class="layui-text-center">修复开启 size 参数后，文件超出规定大小时，提示信息有误的问题</p>
+                                <p class="layui-text-bottom"><a href="/admin_fussen/article_cat/index.html">文件上传</a><span>7 天前</span></p>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm4">
+                            <div class="layuiadmin-card-text">
+                                <div class="layui-text-top"><i class="layui-icon layui-icon-read"></i><a href="/admin_fussen/article/index.html">文章列表</a></div>
+                                <p class="layui-text-center">增加 form.val(filter, fields)方法，用于给指定表单集合的元素初始赋值</p>
+                                <p class="layui-text-bottom"><a href="/admin_fussen/article/index.html">表单</a><span>7 天前</span></p>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm4">
+                            <div class="layuiadmin-card-text">
+                                <div class="layui-text-top"><i class="layui-icon layui-icon-headset"></i><a href="/admin_fussen/role/index.html">角色权限</a></div>
+                                <p class="layui-text-center">修复 checkbox 复选框组件在高分辨屏下出现的样式不雅问题</p>
+                                <p class="layui-text-bottom"><a href="/admin_fussen/role/index.html">表单</a><span>7 天前</span></p>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm4">
+                            <div class="layuiadmin-card-text">
+                                <div class="layui-text-top"><i class="layui-icon layui-icon-form"></i><a href="/admin_fussen/goods_cat/index.html">产品分类</a></div>
+                                <p class="layui-text-center">对 select 组件新增上下键（↑ ↓）回车键（Enter）选择功能</p>
+                                <p class="layui-text-bottom"><a href="/admin_fussen/goods_cat/index.html">表单</a><span>7 天前</span></p>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm4">
+                            <div class="layuiadmin-card-text">
+                                <div class="layui-text-top"><i class="layui-icon layui-icon-form"></i><a href="/admin_fussen/goods/index.html">产品列表</a></div>
+                                <p class="layui-text-center">优化 switch 开关组件，让其能根据文本自由伸缩宽</p>
+                                <p class="layui-text-bottom"><a href="/admin_fussen/goods/index.html">表单</a><span>7 天前</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+
+    </div>
+</div>
+
+{/block}

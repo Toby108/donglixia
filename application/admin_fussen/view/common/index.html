@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{:session('config.web_name')} 后台</title>
+    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/select.multiple.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_578787_q4uqu10rf8k.css">
+    <link rel="stylesheet" href="__ADMIN__/css/main.css">
+    {block name="css"}{/block}
+
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">{:session('config.web_name')} 后台</div>
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item nav-display">
+                <a href="javascript:;" class="tpl-icon-rotate"><i title="隐藏/显示侧边栏" class="layui-icon layui-icon-shrink-right"> </i></a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;" >语言：{eq name="'config.language'|session" value="2"}English{else/}中文{/eq}</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" onclick="changeLanguage(1);" {eq name="'config.language'|session" value="1"} class="layui-btn-disabled layui-bg-gray" {/eq}>中文</a></dd>
+                    <dd><a href="javascript:;" onclick="changeLanguage(2);" {eq name="'config.language'|session" value="2"} class="layui-btn-disabled layui-bg-gray" {/eq}>English</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <!--<li class="layui-nav-item layui-hide-xs"><a >当前身份：{:session('userInfo.role_name')}</a></li>-->
+            <!--<li class="layui-nav-item layui-hide-xs">-->
+                <!--<a href="javascript:;" >消息<span class="layui-badge">0</span></a>-->
+            <!--</li>-->
+            <li class="layui-nav-item layui-hide-xs"><a href="{:url('login/clearCache')}" class="clearCached">清除缓存</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="{:session('userInfo.avatar')}" class="layui-nav-img">
+                    {:session('userInfo.nick_name')}
+                </a>
+                <dl class="layui-nav-child">
+                    <dd class="layui-hide-sm layui-show-xs"><a href="{:url('login/clearCache')}" class="clearCached">清除缓存</a></dd>
+                    <dd class="layui-hide-sm layui-show-xs"><a href="#">消息提醒</a></dd>
+                    <dd><a href="javascript:;" onclick="changePwd({:session('userInfo.uid')}, '修改密码');">修改密码</a></dd>
+                    <dd><a href="{:url('User/edit')}?uid={:session('userInfo.uid')}">修改资料</a></dd>
+                    <dd><a href="{:url('login/loginOut')}">退出登录</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree">
+                {volist name="menu" id="vo"}
+                    {notempty name="vo.child"}
+                        <li class="layui-nav-item {eq name='vo.extend' value='1'} layui-nav-itemed {/eq}
+                        {eq name='vo.menu_id' value='$menuCurrent.pid_display'}layui-nav-itemed{/eq}">
+                            <a href="javascript:;"><i class="iconfont icon-liebiao1"> </i>{$vo.name}</a>
+                            <dl class="layui-nav-child">
+                            {volist name="vo.child" id="ch"}
+                                <dd {eq name='ch.menu_id' value='$menuCurrent.id_display'}class="layui-this"{/eq}>
+                                    <a href="{$ch.url_text}" {eq name="$ch.open_type" value="2"} target="_blank"{/eq}>
+                                        <i class="layui-icon layui-icon-file"></i>{$ch.name}
+                                    </a>
+                                </dd>
+                            {/volist}
+                            </dl>
+                        </li>
+                    {else/}
+                        <li class="layui-nav-item {eq name='vo.menu_id' value='$menuCurrent.id_display'}layui-this{/eq}">
+                            <a href="{$vo.url_text}" {eq name="$vo.open_type" value="2"} target="_blank"{/eq}>
+                                <i class="layui-icon layui-icon-file"> </i>{$vo.name}
+                            </a>
+                        </li>
+                    {/notempty}
+                {/volist}
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body">
+        <div class="layui-breadcrumb tpl-breadcrumb"  lay-separator=">">
+            <a >当前位置</a>
+            {$breadcrumb}
+        </div>
+        <!-- 内容主体区域 -->
+        <div class="layui-main">
+            {block name="content"}{/block}
+        </div>
+    </div>
+</div>
+
+<div  id="pwdModalCommon" style="display: none;">
+    <div class="layui-row" style="padding: 15px 10px;margin: 0 auto;text-align: center;">
+        <div class="layui-col-md12">
+            <form action="" class="layui-form" id="pwdFormCommon">
+                <input type="hidden" name="uid" value="">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">新密码：</div>
+                    <div class="layui-input-inline">
+                        <input type="password" name="password" class="layui-input" lay-verify="required">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">确认密码：</div>
+                    <div class="layui-input-inline">
+                        <input type="password" name="confirm" class="layui-input" lay-verify="required">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<span id="password_strong_common" style="display: none;">{:session('userInfo.password_strong')}</span>
+
+<script src="__STATIC__/js/jquery-3.2.1.min.js"></script>
+<script src="__STATIC__/plugins/layui/layui.js"></script>
+<script src="__ADMIN__/js/main.js"></script>
+
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript">
+    //定义全局变量
+    var table_limit = {$table_limit|default='20'};
+    var table_limits = [10,15,30,50,100];
+
+    $(function(){
+        //如果被劫持，则刷新页面
+        if ( typeof(_atn_obj_) != "undefined") {
+            window.location.reload();
+        }
+        //实例化layui 的 tab元素
+        layui.use('element');
+
+        //弱密码，弹窗提示修改
+        var password_strong = $('#password_strong_common').text();
+        if (password_strong === '0') {
+            var uid = {:session('userInfo.uid')};
+            var title= '您的登录密码太简单，请及时修改！';
+            changePwd(uid,title);
+        }
+    });
+
+    function changeLanguage(type) {
+        $.post('{:url("Index/changeLanguage")}', {type:type}, function (result) {
+            window.location.reload();
+        }, 'json');
+    }
+</script>
+{block name="script"}{/block}
+</body>
+</html>

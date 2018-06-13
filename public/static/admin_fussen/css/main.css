@@ -1,0 +1,452 @@
+html {
+    color: #666;
+}
+
+[lay-href], [lay-tips], [layadmin-event] {
+    cursor: pointer
+}
+
+.layadmin-header {
+    display: none;
+    height: 50px;
+    line-height: 50px;
+    margin-bottom: 0;
+    border-radius: 0
+}
+
+.layui-layout-admin .layui-header{
+    height: 50px;
+}
+
+.layui-layout-admin .layui-header .layui-nav .layui-nav-item, .layui-layout-admin .layui-logo {
+    height: 50px;
+    line-height: 50px
+}
+
+.layui-layout-admin .layui-header .layui-nav .layui-nav-child a {
+    color: #333
+}
+
+.layui-layout-admin .layui-logo {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1002;
+    height: 49px;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-weight: 300;
+    background-repeat: no-repeat;
+    background-position: center center
+}
+
+.layui-layout-admin .layui-logo, .layui-layout-admin .layui-logo a {
+    color: #fff;
+    color: rgba(255, 255, 255, .8)
+}
+
+.layui-layout-admin .layui-logo {
+    background-color: #20222A;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .15)
+}
+
+.layui-layout-admin .layui-side {
+    top: 50px;
+    z-index: 1001;
+}
+
+.layui-body{
+    overflow-y: scroll;
+}
+
+.layadmin-pagetabs,
+.layui-layout-admin .layui-footer,
+.layui-layout-admin .layui-header .layui-nav .layui-nav-item {
+    transition: all .3s;
+    -webkit-transition: all .3s
+}
+
+.layui-layout-admin .layui-body {
+    bottom: 0;
+    top: 50px;
+}
+
+.layui-layout-admin .layui-header {
+    border-bottom: 1px solid #f6f6f6;
+    box-sizing: border-box;
+    background-color: #fff
+}
+
+.layui-layout-admin .layui-header a, .layui-layout-admin .layui-header a cite {
+    color: #333
+}
+
+.layui-layout-admin .layui-header a:hover {
+    color: #000
+}
+
+.layui-layout-admin .layui-header .layui-nav .layui-nav-more {
+    border-top-color: #666
+}
+
+.layui-layout-admin .layui-header .layui-nav .layui-nav-mored {
+    border-color: transparent transparent #666
+}
+
+.layui-layout-admin .layui-header .layui-nav .layui-this:after, .layui-layout-admin .layui-header .layui-nav-bar {
+    height: 2px;
+    background-color: #20222A
+}
+
+.layui-layout-admin .layui-header .layui-nav-child {
+    top: 55px
+}
+
+.layui-layout-admin .layui-header .layui-layout-right .layui-nav-child {
+    left: auto;
+    right: 0
+}
+
+.layui-layout-admin .layui-header .layui-nav .layui-nav-child dd.layui-this, .layui-layout-admin .layui-header .layui-nav .layui-nav-child dd.layui-this a {
+    background: 0 0
+}
+
+.layui-side .layui-nav .layui-nav-child .layui-nav-child {
+    background: 0 0 !important
+}
+
+.layui-side .layui-nav .layui-nav-child a {
+    padding-left: 33px
+}
+
+.layui-side .layui-nav .layui-nav-child .layui-nav-child a {
+    padding-left: 60px
+}
+
+
+.layui-body .tpl-breadcrumb{
+    width: 100%;
+    padding-left: 37px;
+    box-sizing: border-box;
+    z-index: 9;
+    border-bottom: 1px solid #E5E5E5;
+    background-color: #F5F5F5;
+    height: 25px;
+    line-height: 25px;
+    margin-bottom: 10px;
+}
+
+.layui-main .tpl-form-action, .layui-container .tpl-form-action{
+    text-align: center;
+    display: block;
+    background-color: #F5F5F5;
+    border-top: 1px solid #E5E5E5;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 14px 20px 15px;
+}
+
+.layui-upload-img {
+    width: 200px;
+    height: 150px;
+}
+
+.layui-tab-item .layui-form-item .layui-upload,
+.layui-tab-item .layui-form-item .layui-upload-list {
+    text-align: center;
+}
+
+.tpl-form-label-long .layui-form-label{
+    width: 115px;
+    padding: 9px 5px;
+}
+
+.tpl-form-label-long .layui-input-block{
+    margin-left: 130px;
+}
+
+.tpl-form-search .layui-inline .layui-form-label{
+    width: auto;
+    min-width: 60px;
+    padding: 9px 5px;
+}
+
+.tpl-form-search .layui-form-item .layui-input-inline{
+    margin-right: 0;
+}
+
+.tpl-form-search .layui-inline .layui-form-mid{
+    margin-right: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .layadmin-panel-selection {
+        margin: 0;
+        width: auto
+    }
+
+    .layui-body .layui-nav .layui-nav-item {
+        display: block
+    }
+
+}
+
+@media screen and (max-width: 992px) {
+    .layui-layout-admin .layui-side,
+    .layui-layout-admin .layui-logo {
+        width: 0
+    }
+
+    .layui-nav .nav-display .tpl-icon-rotate {
+        transform:rotate(180deg);
+        -ms-transform:rotate(180deg); 	/* IE 9 */
+        -moz-transform:rotate(180deg); 	/* Firefox */
+        -webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+        -o-transform:rotate(180deg); 	/* Opera */
+    }
+
+    .layadmin-pagetabs,
+    .layui-layout-admin .layui-body,
+    .layui-layout-admin .layui-footer,
+    .layui-layout-admin .layui-layout-left {
+        left: 0;
+        z-index: 1;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .layui-inline {
+        margin-right: 0;
+        margin-bottom: 10px !important;
+        clear: both;
+    }
+    .layui-form-item .layui-input-inline {
+        display: block;
+        float: none;
+        width: 260px;
+        left: 0;
+        margin: 0 auto;
+    }
+}
+
+.tpl-img-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+
+
+.layui-card-header {
+    position: relative
+}
+
+.layui-card-header .layui-icon {
+    line-height: initial;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    margin-top: -7px
+}
+
+
+.layui-card-header .layui-a-tips {
+    position: absolute;
+    right: 15px;
+    color: #01AAED
+}
+
+.layuiadmin-card-text {
+    background-color: #f8f8f8;
+    color: #777;
+    padding: 24px
+}
+
+.layuiadmin-card-text .layui-text-top {
+    padding-bottom: 10px
+}
+
+.layuiadmin-card-text .layui-text-top i {
+    margin-right: 10px;
+    font-size: 24px;
+    color: #009688
+}
+
+.layuiadmin-card-text .layui-text-top a {
+    line-height: 24px;
+    font-size: 16px;
+    vertical-align: top
+}
+
+.layuiadmin-card-text .layui-text-center {
+    height: 44px;
+    line-height: 22px;
+    margin-bottom: 10px;
+    overflow: hidden
+}
+
+.layuiadmin-card-text .layui-text-bottom {
+    position: relative
+}
+
+.layuiadmin-card-text .layui-text-bottom a {
+    color: #777;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    word-break: break-all
+}
+
+.layuiadmin-card-text .layui-text-bottom span {
+    color: #CCC;
+    font-size: 12px;
+    position: absolute;
+    right: 0
+}
+
+.layuiadmin-badge, .layuiadmin-btn-group, .layuiadmin-span-color {
+    position: absolute;
+    right: 15px
+}
+
+.layuiadmin-card-link a:hover, .layuiadmin-card-team li a:hover, .layuiadmin-card-text a:hover {
+    color: #01AAED;
+    transition: all .3s
+}
+
+.layuiadmin-card-status {
+    padding: 0 10px 10px
+}
+
+.layuiadmin-card-status dd {
+    padding: 15px 0;
+    border-bottom: 1px solid #EEE;
+    display: -webkit-flex;
+    display: flex
+}
+
+.layuiadmin-card-status dd:last-child {
+    border: none
+}
+
+.layuiadmin-card-status dd div.layui-status-img, .layuiadmin-card-team .layui-team-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #009688;
+    margin-right: 15px
+}
+
+.layuiadmin-card-status dd div.layui-status-img a {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    text-align: center;
+    line-height: 32px
+}
+
+.layuiadmin-card-status dd div.layui-status-img img, .layuiadmin-card-team .layui-team-img img {
+    width: 50%;
+    height: 50%
+}
+
+.layuiadmin-card-status dd div a {
+    color: #01AAED
+}
+
+.layuiadmin-card-status dd div span {
+    color: #BBB
+}
+
+.layuiadmin-card-link {
+    padding-left: 10px;
+    font-size: 0
+}
+
+.layuiadmin-card-link a {
+    display: inline-block;
+    width: 25%;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 12px
+}
+
+.layuiadmin-card-link button {
+    vertical-align: top
+}
+
+.layuiadmin-card-link button:hover {
+    color: #009688
+}
+
+.layuiadmin-card-team li {
+    padding: 10px 0 10px 10px
+}
+
+.layuiadmin-card-team .layui-team-img {
+    display: inline-block;
+    margin-right: 8px;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px
+}
+
+.layuiadmin-card-team span {
+    color: #777
+}
+
+.layuiadmin-badge {
+    top: 50%;
+    margin-top: -9px;
+    color: #01AAED
+}
+
+.layuiadmin-card-list {
+    padding: 15px
+}
+
+.layuiadmin-card-list p.layuiadmin-big-font {
+    font-size: 36px;
+    color: #666;
+    line-height: 36px;
+    padding: 5px 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap
+}
+
+.layuiadmin-card-list p.layuiadmin-normal-font {
+    padding-bottom: 10px;
+    font-size: 20px;
+    color: #666;
+    line-height: 24px
+}
+
+.layuiadmin-span-color {
+    font-size: 14px
+}
+
+.layuiadmin-span-color i {
+    padding-left: 5px
+}
+
+.layuiadmin-card-status li {
+    position: relative;
+    padding: 10px 0;
+    border-bottom: 1px solid #EEE
+}
+
+.layuiadmin-card-status li h3 {
+    padding-bottom: 5px;
+    font-weight: 700
+}
+
+.layuiadmin-card-status li p {
+    padding-bottom: 10px
+}
+
+.layuiadmin-card-status li > span {
+    color: #999
+}
