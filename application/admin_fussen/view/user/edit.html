@@ -55,18 +55,18 @@
                                 <input type="text" name="real_name" value="{$data.real_name|default=''}" placeholder="请输入真实姓名" class="layui-input">
                             </div>
                         </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">用户类型：</label>
-                            <div class="layui-input-block">
-                                {notempty name="basicList"}
-                                {volist name="basicList" id="vo"}
-                                {eq name="vo.cat_code" value="AL"}
-                                <input type="radio" name="type" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.type|default='159'"}checked{/eq}>
-                                {/eq}
-                                {/volist}
-                                {/notempty}
-                            </div>
-                        </div>
+                        <!--<div class="layui-form-item">-->
+                            <!--<label class="layui-form-label">用户类型：</label>-->
+                            <!--<div class="layui-input-block">-->
+                                <!--{notempty name="basicList"}-->
+                                <!--{volist name="basicList" id="vo"}-->
+                                <!--{eq name="vo.cat_code" value="AL"}-->
+                                <!--<input type="radio" name="type" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.type|default='159'"}checked{/eq}>-->
+                                <!--{/eq}-->
+                                <!--{/volist}-->
+                                <!--{/notempty}-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="layui-form-item">
                             <label class="layui-form-label">部门：</label>
                             <div class="layui-input-block">

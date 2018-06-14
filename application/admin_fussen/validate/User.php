@@ -18,9 +18,9 @@ class User extends Validate
         'nick_name' => 'require|unique:user|token|checkPwd'
         ,'tel' => 'require|unique:user'
         ,'card_no' => 'unique:user'
-        ,'type' => 'require'
+//        ,'type' => 'require'
         ,'role_id' => 'require'
-        ,'login_rank' => 'require'
+//        ,'login_rank' => 'require'
     ];
 
     /*返回错误信息*/
@@ -31,9 +31,9 @@ class User extends Validate
         ,'tel.require' => '手机号不能为空！'
         ,'tel.unique' => '手机号已被使用！'
         ,'card_no.unique' => '证件号已被使用！'
-        ,'type.require' => '请选择用户类型！'
+//        ,'type.require' => '请选择用户类型！'
         ,'role_id.require' => '请选择角色权限！'
-        ,'login_rank.require' => '请选择数据权限！'
+//        ,'login_rank.require' => '请选择数据权限！'
     ];
 
     protected $scene = [
