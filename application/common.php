@@ -418,7 +418,7 @@ if (!function_exists('create_order_sn')) {
 
 
 /**
- * 处理图片，从临时文件夹转移到 img/** 文件夹
+ * 处理图片，从临时文件夹转移到 img/** 文件夹1
  * @param array $img temp文件夹中的图片路径集
  * @param string $folder
  * @return array
