@@ -38,8 +38,6 @@ class Login extends Controller
         if (!empty(user_info('uid'))) {
             $this->redirect('Index/index');
         }
-        $is_captcha = Db::name('system_config')->where('code', 'is_captcha')->value('value');
-        $this->assign('is_captcha', $is_captcha);
 
         return $this->fetch();
     }
@@ -55,8 +53,7 @@ class Login extends Controller
         }
 
         //验证码校验
-        $is_captcha = Db::name('system_config')->where('code', 'is_captcha')->value('value');
-        if($is_captcha == 1 && (empty($param['vercode']) || !captcha_check($param['vercode']))){
+        if( cookie('error_num') > 2 && (empty($param['vercode']) || !captcha_check($param['vercode']))){
             $this->error('验证码错误');
         };
 
@@ -101,6 +98,7 @@ class Login extends Controller
             $this->setSession($userInfo);//设置session
 
         } catch (\Exception $e) {
+            cookie('error_num', cookie('error_num') + 1);
             $this->error($e->getMessage());
         }
 
@@ -347,6 +345,8 @@ class Login extends Controller
         $lang = Cookie::get('remember_language') ? Cookie::get('remember_language') : 1;
         Db::name('system_config')->where('code', 'language')->update(['value'=>$lang]);
         setSessionConfig();//缓存系统设置
+
+        cookie('error_num', 0);//错误次数归0
     }
 
     /**
