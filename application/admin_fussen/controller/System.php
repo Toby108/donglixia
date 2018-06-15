@@ -11,8 +11,6 @@ namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\SystemConfig;
 use app\admin_fussen\parent\Controller;
-use think\Cookie;
-use think\Session;
 
 class System extends Controller
 {
