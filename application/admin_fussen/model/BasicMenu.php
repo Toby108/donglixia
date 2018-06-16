@@ -76,7 +76,7 @@ class BasicMenu extends ComBasicMenu
     {
         $res = $value;
         if (empty($value) && !empty($data['pid'])) {
-            $max = Db::name('basic_menu')->where('pid', $data['pid'])->max('sort');
+            $max = Db::name('basic_menu')->where('pid', $data['pid'])->max('sort_num');
             $res = $max+1;
         }
         return $res;
@@ -115,7 +115,7 @@ class BasicMenu extends ComBasicMenu
         }
         $menuList = $this->where($map)
             ->field('menu_id,pid,name,url as url_text,params,open_type,extend')
-            ->order('sort asc')
+            ->order('sort_num asc')
             ->select();
         $menuList = \Tree::getTree($menuList, 'menu_id');
         return $menuList;

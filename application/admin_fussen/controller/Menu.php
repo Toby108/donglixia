@@ -52,9 +52,9 @@ class Menu extends Controller
         }
         $count = $this->currentModel->where($map)->count();
         $list = $this->currentModel->where($map)
-            ->field('menu_id,pid,pid as pid_text,name,sort,url,description,display as display_text, 
+            ->field('menu_id,pid,pid as pid_text,name,sort_num,url,description,display as display_text, 
             open_type as open_type_text,name as name_text,extend as extend_text')
-            ->order('sort asc')
+            ->order('sort_num asc')
             ->select();
         $list = \Tree::get_Table_tree($list, 'name_text', 'menu_id');
 
@@ -94,9 +94,9 @@ class Menu extends Controller
             $this->error('没有需要保存的数据！');
         }
 
-        if (empty($param['sort'])) {
-            $max_sort = $this->currentModel->where('pid', $param['pid'])->max('sort');
-            $param['sort'] = $max_sort+1;
+        if (empty($param['sort_num'])) {
+            $max_sort = $this->currentModel->where('pid', $param['pid'])->max('sort_num');
+            $param['sort_num'] = $max_sort+1;
         }
 
         //验证数据
@@ -150,7 +150,7 @@ class Menu extends Controller
         }
 
         //格式化，获取重新排序的数据
-        $menuList = reset_sort($param['menu_id'], 'basic_menu', $param['type'], 'sort');
+        $menuList = reset_sort($param['menu_id'], 'basic_menu', $param['type']);
 
         //保存数据
         $res = $this->currentModel->saveAll($menuList);
@@ -176,7 +176,7 @@ class Menu extends Controller
             $map['menu_id'] = ['<>', $param['menu_id']];
         }
 
-        $data =  $this->currentModel->where($map)->field('menu_id as id,name')->order('sort')->select();
+        $data =  $this->currentModel->where($map)->field('menu_id as id,name')->order('sort_num')->select();
         $this->success('获取成功', null, $data);
     }
 }

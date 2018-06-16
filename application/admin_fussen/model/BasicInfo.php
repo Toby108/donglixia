@@ -64,7 +64,7 @@ class BasicInfo extends ComBasicInfo
     public function getBasicList($cat_code, $code)
     {
         $basic_pid = Db::name('basic_info')->where('cat_code', $cat_code)->where('code', $code)->value('basic_id');
-        return Db::name('basic_info')->where('pid', $basic_pid)->field('basic_id,name')->order('sort')->select();
+        return Db::name('basic_info')->where('pid', $basic_pid)->field('basic_id,name')->order('sort_num')->select();
     }
 
 }

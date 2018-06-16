@@ -46,8 +46,8 @@ class BasicInfo extends Controller
         }
 
         return $this->currentModel->where($map)
-            ->field('basic_id,pid as pid_text,code,name,sort,description,status')
-            ->order('pid,sort asc')->layTable();
+            ->field('basic_id,pid as pid_text,code,name,sort_num,description,status')
+            ->order('pid,sort_num asc')->layTable();
     }
 
     /**
@@ -90,9 +90,9 @@ class BasicInfo extends Controller
             $param['code'] = $res['data'];
         }
 
-        if (empty($param['sort'])) {
-            $max_sort = $this->currentModel->where('pid', $param['pid'])->max('sort');
-            $param['sort'] = $max_sort+1;
+        if (empty($param['sort_num'])) {
+            $max_sort = $this->currentModel->where('pid', $param['pid'])->max('sort_num');
+            $param['sort_num'] = $max_sort+1;
         }
 
         //验证数据
@@ -140,7 +140,7 @@ class BasicInfo extends Controller
         }
 
         //格式化，获取重新排序的数据
-        $list = reset_sort($param['basic_id'], 'basic_info', $param['type'], 'sort');
+        $list = reset_sort($param['basic_id'], 'basic_info', $param['type']);
 
         //保存数据
         $res = $this->currentModel->saveAll($list);
@@ -182,7 +182,7 @@ class BasicInfo extends Controller
             $map['basic_id'] = ['<>', $param['basic_id']];
         }
 
-        $data =  $this->currentModel->where($map)->field('basic_id as id,name,cat_code')->order('sort')->select();
+        $data =  $this->currentModel->where($map)->field('basic_id as id,name,cat_code')->order('sort_num')->select();
         $this->success('获取成功', null, $data);
     }
 
