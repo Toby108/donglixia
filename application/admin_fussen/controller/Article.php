@@ -79,7 +79,8 @@ class Article extends Controller
         if (!empty($art_id)) {
             /*获取当前文章信息*/
             $data = $this->currentModel->where('art_id', $art_id)->field(true)->field('public_time as public_date_hh_ii_ss')->find();
-            $cat_id_arr = (new ArticleCatModel)->getParentId($data['cat_id']);
+            $cat_id_arr = getParentIds($data['cat_id'], 'article_cat');
+
             $data['cat_id_multi'] = json_encode($cat_id_arr);
             $this->assign('data', $data);
         }

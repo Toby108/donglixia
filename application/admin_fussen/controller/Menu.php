@@ -77,7 +77,7 @@ class Menu extends Controller
 
         if (!empty($param['menu_id'])) {
             $data = $this->currentModel->where('menu_id', $param['menu_id'])->find();
-            $pid_arr = $this->currentModel->getParentId($data['pid']);
+            $pid_arr = getParentIds($data['pid'], 'menu');
             $data['pid_multi'] = json_encode($pid_arr);
             $this->assign('data', $data);
         }
@@ -129,7 +129,7 @@ class Menu extends Controller
     }
 
     /**
-     * 根据id，获取子菜单
+     * 根据id，获取下一级菜单
      * @param $id
      * @return mixed
      * @throws \think\exception\DbException

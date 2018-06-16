@@ -34,7 +34,7 @@ class BasicInfo extends Controller
         $param = $this->request->param();
 
         if (!empty($param['pid'])) {
-            $ids = $this->currentModel->getChildId($param['pid'], false);
+            $ids = getChildIds($param['pid'], 'basic_info', false);
             $map['basic_id'] = ['in', $ids];
         }
 
@@ -61,7 +61,7 @@ class BasicInfo extends Controller
 
         if (!empty($param['basic_id'])) {
             $data = $this->currentModel->where('basic_id', $param['basic_id'])->find();
-            $pid_arr = $this->currentModel->getParentId($data['pid']);
+            $pid_arr = getParentIds($data['pid'], 'basic_info');
             $data['pid_multi'] = json_encode($pid_arr);
             $this->assign('data', $data);
         }

@@ -6,6 +6,7 @@
 // +----------------------------------------------------------------------
 // | DateTime: 2018-02-09 16:17
 // +----------------------------------------------------------------------
+use think\Db;
 
 // 应用公共（函数）文件
 
@@ -98,6 +99,50 @@ if (!function_exists('array_depth')) {
             }
         }
         return $max_depth;
+    }
+}
+
+/**
+ * 递归获取下级资料id集合
+ * @param $id
+ * @param $table_name
+ * @param bool $merge
+ * @return array
+ */
+if (!function_exists('getChildIds')) {
+    function getChildIds($id, $table_name, $merge = true)
+    {
+        $id = explode(',', $id);
+        $pk = Db::name($table_name)->getPk();//获取当前表主键
+        $ids = Db::name($table_name)->whereIn('pid', $id)->column($pk);
+        foreach ($ids as $k=>$v) {
+            $ids = array_merge($ids, getChildIds($v, $table_name, false));
+        }
+        if ($merge) $ids = array_merge($id, $ids);
+        return $ids;
+    }
+}
+
+/**
+ * 递归获取上级资料id集合
+ * @param $id
+ * @param $table_name
+ * @param bool $merge
+ * @return array
+ */
+if (!function_exists('getParentIds')) {
+    function getParentIds($id, $table_name, $merge = true)
+    {
+        static $res = [];
+        $pk = Db::name($table_name)->getPk();//获取当前表主键
+        $pid = Db::name($table_name)->where($pk, $id)->value('pid');
+        if (!empty($pid)){
+            $res[] = $pid;
+            getParentIds($pid, $table_name, false);
+        }
+        if ($merge) array_push($res, $id);
+        asort($res);
+        return $res;
     }
 }
 
