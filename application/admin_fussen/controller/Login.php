@@ -239,12 +239,12 @@ class Login extends Controller
 
         if ($type == 1) {
             //若现在绑定，则根据输入的帐号密码，绑定信息
-            if (empty($param['keyword']) || empty($param['password'])) {
-                $this->error('帐号和密码不能为空');
+            if (empty($param['tel'])) {
+                $this->error('手机号不能为空');
             }
 
             $User = new User();
-            $userInfo = $User->getUserInfo(['nick_name|tel' => $param['keyword']], $param['password']);
+            $userInfo = $User->getUserInfo(['tel' => $param['keyword']]);
             if (isset($userInfo['status']) && $userInfo['status'] == false) {
                 $this->error($userInfo['msg']);
             }

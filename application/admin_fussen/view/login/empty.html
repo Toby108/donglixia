@@ -64,15 +64,9 @@
             <form action="" class="layui-form" id="bindForm">
                 <input type="hidden" name="type" value="1">
                 <div class="layui-form-item">
-                    <div class="layui-form-label">帐号：</div>
+                    <div class="layui-form-label">手机号：</div>
                     <div class="layui-input-inline">
-                        <input type="text" name="keyword" class="layui-input" lay-verify="required" placeholder="帐号/手机号">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-form-label">密码：</div>
-                    <div class="layui-input-inline">
-                        <input type="password" name="password" class="layui-input" lay-verify="required" placeholder="密码">
+                        <input type="text" name="keyword" class="layui-input" lay-verify="required" placeholder="手机号">
                     </div>
                 </div>
             </form>
@@ -101,9 +95,9 @@
         layui.use('layer', function () {
             var modal = layer.open({
                 type: 1
-                , title: '绑定已有帐号'
+                , title: '填写手机号'
                 , closeBtn: 0
-                , btn: ['提交', '跳过']
+                , btn: ['提交']
                 , content: $('#bindModal').html()
                 , yes: function (index, element) {
                     $.post('{:url("login/bindUser")}', $(element).find('form').serialize(), function (result) {
@@ -115,9 +109,6 @@
                             layer.alert(result.msg, {icon:2, title:'保存失败！'});
                         }
                     }, 'json');
-                }
-                , btn2: function(){
-                    window.location.href = '{:url("login/bindUser")}';
                 }
                 , cancel: function(){
                     window.location.href = '{:url("login/bindUser")}';
