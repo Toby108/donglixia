@@ -238,7 +238,7 @@ class Login extends Controller
         }
 
         if ($type == 1) {
-            //若现在绑定，则根据输入的帐号密码，绑定信息
+            //若现在绑定，则根据输入的帐号密码，绑定信息1
             if (empty($param['tel'])) {
                 $this->error('手机号不能为空');
             }
