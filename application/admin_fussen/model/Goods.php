@@ -88,47 +88,4 @@ class Goods extends ComGoods
         return !empty($value) ? htmlspecialchars_decode($value) : '';
     }
 
-    /**
-     * 重新排序
-     * @param $id
-     * @param $type
-     * @return mixed
-     */
-    public function resetSort($id, $type)
-    {
-        //获取同级别的数据
-        $data = Db::name('goods')->field('art_id,sort_num')->order('sort_num,art_id asc')->select();
-
-        //将序号重新按1开始排序
-        foreach ($data as $key => $val) {
-            $data[$key]['sort_num'] = $key+1;
-        }
-        //处理更改排序操作
-        foreach ($data as $key => $val) {
-            if ($type == 'asc') {
-                if (($key == '0') && $val['art_id'] == $id) {
-                    break;//首位菜单 点升序，直接中断
-                }
-                //升序操作：当前菜单序号减一，前一位的序号加一
-                if ($val['art_id'] == $id) {
-                    $data[$key-1]['sort_num']++;
-                    $data[$key]['sort_num']--;
-                    break;
-                }
-            } elseif ($type == 'desc') {
-                if (($key == count($data)) && $val['art_id'] == $id) {
-                    break;//末位菜单 点降序，直接中断
-                }
-                //降序操作：当前菜单序号加一，后一位的序号减一
-                if ($val['art_id'] == $id && isset($data[$key+1])) {
-                    $data[$key]['sort_num']++;
-                    $data[$key+1]['sort_num']--;
-                    break;
-                }
-            }
-        }
-        return $data;
-    }
-
-
 }

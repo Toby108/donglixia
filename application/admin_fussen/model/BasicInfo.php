@@ -56,49 +56,6 @@ class BasicInfo extends ComBasicInfo
     }
 
     /**
-     * 重新排序
-     * @param $id
-     * @param $type
-     * @return mixed
-     */
-    public function resetSort($id, $type)
-    {
-        //获取同级别的菜单数据
-        $pid = Db::name('basic_info')->where('basic_id', $id)->value('pid');
-        $data = Db::name('basic_info')->where('pid', $pid)->field('basic_id,sort')->order('sort,basic_id asc')->select();
-
-        //将序号重新按1开始排序
-        foreach ($data as $key => $val) {
-            $data[$key]['sort'] = $key+1;
-        }
-        //处理更改排序操作
-        foreach ($data as $key => $val) {
-            if ($type == 'asc') {
-                if (($key == '0') && $val['basic_id'] == $id) {
-                    break;//首位菜单 点升序，直接中断
-                }
-                //升序操作：当前菜单序号减一，前一位的序号加一
-                if ($val['basic_id'] == $id) {
-                    $data[$key-1]['sort']++;
-                    $data[$key]['sort']--;
-                    break;
-                }
-            } elseif ($type == 'desc') {
-                if (($key == count($data)) && $val['basic_id'] == $id) {
-                    break;//末位菜单 点降序，直接中断
-                }
-                //降序操作：当前菜单序号加一，后一位的序号减一
-                if ($val['basic_id'] == $id && isset($data[$key+1])) {
-                    $data[$key]['sort']++;
-                    $data[$key+1]['sort']--;
-                    break;
-                }
-            }
-        }
-        return $data;
-    }
-
-    /**
      * 获取某一资料列表
      * @param $cat_code
      * @param $code

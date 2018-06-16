@@ -77,7 +77,7 @@ class Menu extends Controller
 
         if (!empty($param['menu_id'])) {
             $data = $this->currentModel->where('menu_id', $param['menu_id'])->find();
-            $pid_arr = getParentIds($data['pid'], 'menu');
+            $pid_arr = get_parent_ids($data['pid'], 'basic_menu');
             $data['pid_multi'] = json_encode($pid_arr);
             $this->assign('data', $data);
         }
@@ -150,7 +150,7 @@ class Menu extends Controller
         }
 
         //格式化，获取重新排序的数据
-        $menuList = $this->currentModel->resetSort($param['menu_id'], $param['type']);
+        $menuList = reset_sort($param['menu_id'], 'basic_menu', $param['type'], 'sort');
 
         //保存数据
         $res = $this->currentModel->saveAll($menuList);

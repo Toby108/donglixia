@@ -34,7 +34,7 @@ class BasicInfo extends Controller
         $param = $this->request->param();
 
         if (!empty($param['pid'])) {
-            $ids = getChildIds($param['pid'], 'basic_info', false);
+            $ids = get_child_ids($param['pid'], 'basic_info', false);
             $map['basic_id'] = ['in', $ids];
         }
 
@@ -61,7 +61,7 @@ class BasicInfo extends Controller
 
         if (!empty($param['basic_id'])) {
             $data = $this->currentModel->where('basic_id', $param['basic_id'])->find();
-            $pid_arr = getParentIds($data['pid'], 'basic_info');
+            $pid_arr = get_parent_ids($data['pid'], 'basic_info');
             $data['pid_multi'] = json_encode($pid_arr);
             $this->assign('data', $data);
         }
@@ -140,7 +140,7 @@ class BasicInfo extends Controller
         }
 
         //格式化，获取重新排序的数据
-        $list = $this->currentModel->resetSort($param['basic_id'], $param['type']);
+        $list = reset_sort($param['basic_id'], 'basic_info', $param['type'], 'sort');
 
         //保存数据
         $res = $this->currentModel->saveAll($list);

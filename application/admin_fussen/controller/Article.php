@@ -79,7 +79,7 @@ class Article extends Controller
         if (!empty($art_id)) {
             /*获取当前文章信息*/
             $data = $this->currentModel->where('art_id', $art_id)->field(true)->field('public_time as public_date_hh_ii_ss')->find();
-            $cat_id_arr = getParentIds($data['cat_id'], 'article_cat');
+            $cat_id_arr = get_parent_ids($data['cat_id'], 'article_cat');
 
             $data['cat_id_multi'] = json_encode($cat_id_arr);
             $this->assign('data', $data);
@@ -150,7 +150,7 @@ class Article extends Controller
         }
         try{
             //格式化，获取重新排序的数据
-            $list = $this->currentModel->resetSort($param['art_id'], $param['type']);
+            $list = reset_sort($param['art_id'], 'article', $param['type']);
 
             //保存数据
             $this->currentModel->saveAll($list);
