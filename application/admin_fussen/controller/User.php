@@ -214,15 +214,15 @@ class User extends Controller
     {
         $param = $this->request->param();
 
-        if (empty($param['password'])) {
+        if (empty($param['user_pwd'])) {
             $this->error('新密码不能为空');
         }
 
-        if ($param['password'] != $param['confirm']) {
+        if ($param['user_pwd'] != $param['confirm']) {
             $this->error('两次输入的密码不一致');
         }
 
-        if (!password_strength($param['password'])) {
+        if (!password_strength($param['user_pwd'])) {
             $this->error('密码太简单，请重新修改');
         }
 

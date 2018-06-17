@@ -48,7 +48,7 @@ class Login extends Controller
     public function login()
     {
         $param = $this->request->param();//获取参数
-        if (empty($param['keyword']) || empty($param['password'])) {
+        if (empty($param['keyword']) || empty($param['user_pwd'])) {
             $this->error('用户名 或 密码不能为空！');
         }
 
@@ -61,7 +61,7 @@ class Login extends Controller
         //记住密码，有效期一个月
         if(isset($param['remember']) && $param['remember'] == 1){
             Cookie::set('remember_name', $param['keyword']);
-            Cookie::set('remember_pwd', $param['password']);
+            Cookie::set('remember_pwd', $param['user_pwd']);
             Cookie::set('remember_language', $param['language']);
         };
 
@@ -69,7 +69,7 @@ class Login extends Controller
         Cookie::set('back_url', redirect()->restore()->getData());
 
         $data['nick_name|tel'] = $param['keyword'];
-        $data['password'] = $param['password'];
+        $data['user_pwd'] = $param['user_pwd'];
         $this->loginGo($data);//设置session，实现登录并跳转
     }
 
@@ -80,9 +80,9 @@ class Login extends Controller
     public function loginGo($data)
     {
         $password = '';
-        if (!empty($data['password'])) {
-            $password = $data['password'];
-            unset($data['password']);
+        if (!empty($data['user_pwd'])) {
+            $password = $data['user_pwd'];
+            unset($data['user_pwd']);
         }
 
         $url = !empty(Cookie::get('back_url')) ? Cookie::get('back_url') : 'Index/index';

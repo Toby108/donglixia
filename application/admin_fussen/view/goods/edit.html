@@ -71,7 +71,7 @@
                     <label class="layui-form-label">产品状态：</label>
                     <div class="layui-input-block">
                         {volist name="stateList" id="vo"}
-                        <input type="radio" name="state" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.state|default='175'"}checked{/eq}>
+                        <input type="radio" name="state" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.state|default='175'"}checked{/eq}>
                         {/volist}
                     </div>
                 </div>

@@ -20,7 +20,7 @@
             <div class="layui-form-item">
                 <input type="password" style="position: absolute; top: -999px"/><!--禁止浏览器自动填充密码-->
                 <label class="tpl-user-login-icon layui-icon layui-icon-password"></label>
-                <input type="password" name="password" value="{:cookie('remember_pwd')}" lay-verify="required" placeholder="密码" class="layui-input" title="密码" >
+                <input type="password" name="user_pwd" value="{:cookie('remember_pwd')}" lay-verify="required" placeholder="密码" class="layui-input" title="密码" >
             </div>
             {gt name="'error_num'|cookie" value="2"}
             <div class="layui-form-item">

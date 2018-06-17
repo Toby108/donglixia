@@ -50,17 +50,17 @@ class User extends Validate
     protected function checkPwd($value, $rule, $data)
     {
         //添加用户时，新密码必填
-        if (empty($data['uid']) && empty($data['password'])) {
+        if (empty($data['uid']) && empty($data['user_pwd'])) {
             return '密码不能为空';
         }
 
         //编辑用户时，验证确认密码
-        if (!empty($data['password'])) {
-            if (empty($data['confirm']) || ($data['password'] != $data['confirm'])) {
+        if (!empty($data['user_pwd'])) {
+            if (empty($data['confirm']) || ($data['user_pwd'] != $data['confirm'])) {
                 return '两次输入的密码不一致';
             }
 
-            if (!password_strength($data['password'])) {
+            if (!password_strength($data['user_pwd'])) {
                 return '密码太简单，请重新修改';
             }
         }
