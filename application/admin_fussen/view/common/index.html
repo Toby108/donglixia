@@ -41,7 +41,7 @@
                 <dl class="layui-nav-child">
                     <dd class="layui-hide-sm layui-show-xs"><a href="{:url('login/clearCache')}" class="clearCached">清除缓存</a></dd>
                     <dd class="layui-hide-sm layui-show-xs"><a href="#">消息提醒</a></dd>
-                    <dd><a href="javascript:;" onclick="changePwd({:session('userInfo.uid')}, '修改密码');">修改密码</a></dd>
+                    <dd><a href="javascript:;" onclick="changePwd({:session('userInfo.uid')}, '修改密码', '{:url("user/changePassword")}');">修改密码</a></dd>
                     <dd><a href="{:url('User/edit')}?uid={:session('userInfo.uid')}">修改资料</a></dd>
                     <dd><a href="{:url('login/loginOut')}">退出登录</a></dd>
                 </dl>

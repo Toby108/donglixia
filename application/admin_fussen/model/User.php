@@ -58,7 +58,7 @@ class User extends ComUser
      * @param $value
      * @return string
      */
-    public function setPasswordAttr($value)
+    public function setUserPwdAttr($value)
     {
         return strtoupper(md5($value));
     }

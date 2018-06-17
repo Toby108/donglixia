@@ -61,7 +61,7 @@
 <!--操作列-->
 <script type="text/html" id="operating">
     <div class="layui-btn-group">
-        <a class="layui-btn layui-btn-normal layui-btn-xs" href="javascript:;" onclick="changePwd({{d.uid}}, '修改密码');">改密码</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" href="javascript:;" onclick="changePwd({{d.uid}}, '修改密码', '{:url("user/changePassword")}');">改密码</a>
         <a class="layui-btn layui-btn-xs" href="javascript:;" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" href="javascript:;" lay-event="del">删除</a>
     </div>

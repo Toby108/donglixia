@@ -11,6 +11,7 @@ namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\SystemConfig;
 use app\admin_fussen\parent\Controller;
+use think\Db;
 
 class System extends Controller
 {
@@ -52,15 +53,24 @@ class System extends Controller
             $this->error('没有需要保存的数据！');
         }
 
-        foreach ($data as $k=>$v) {
-            if ($v['sys_code'] == 'logo' && !empty($v['sys_value'])) {
-                $data[$k]['sys_value'] = current(imgTempFileMove([$v['sys_value']], 'admin_fussen/images/web/'));
-            }
-        }
         $SystemConfig = new SystemConfig();
-        $SystemConfig->saveAll($data);
+        try {
+            foreach ($data as $k=>$v) {
+                if ($v['sys_code'] == 'web_logo' && !empty($v['sys_value'])) {
+                    $data[$k]['sys_value'] = current(imgTempFileMove([$v['sys_value']], 'admin_fussen/images/web/'));
+                    $sys_value = Db::name('system_config')->where('sys_code', 'web_logo')->value('sys_value');
+                    if (!empty($sys_value) && $sys_value != $v['sys_value']) {
+                        delete_file($sys_value);
+                    }
+                }
+            }
+            $SystemConfig->saveAll($data);
+            setSessionConfig();//缓存系统设置
+        } catch (\Exception $e) {
+            $msg = !empty($SystemConfig->getError()) ? $SystemConfig->getError() : $e->getMessage();
+            $this->error($msg);
+        }
 
-        setSessionConfig();//缓存系统设置
         $this->success('保存成功！');
     }
 
