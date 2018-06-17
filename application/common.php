@@ -503,7 +503,7 @@ if (!function_exists('setSessionConfig')) {
      */
     function setSessionConfig()
     {
-        $data = \think\Db::name('system_config')->where('pid', '<>', 0)->field('id,view_name,code,value')->select();
+        $data = \think\Db::name('system_config')->where('pid', '<>', 0)->field('id,view_name,sys_code,sys_value')->select();
         $config = [];
         foreach ($data as $k=>$v) {
             $config[$v['sys_code']] = $v['sys_value'];
