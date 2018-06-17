@@ -52,7 +52,7 @@ class BasicInfo extends ComBasicInfo
     public function getPersonList()
     {
         $basic_ids = $this->where('cat_code', 'person')->column('basic_id');//人员资料id
-        return $this->whereIn('pid', $basic_ids)->field('basic_id,pid,cat_code,code,name')->select();
+        return $this->whereIn('pid', $basic_ids)->field('basic_id,pid,cat_code,code,name')->order('sort_num')->select();
     }
 
     /**

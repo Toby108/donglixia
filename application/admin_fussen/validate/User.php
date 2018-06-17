@@ -19,8 +19,8 @@ class User extends Validate
         ,'tel' => 'require|unique:user'
         ,'card_no' => 'unique:user'
         ,'type' => 'require'
-        ,'role_id' => 'require'
-        ,'login_rank' => 'require'
+        ,'role_id' => 'requireIf:type,159'
+        ,'login_rank' => 'requireIf:type,159'
     ];
 
     /*返回错误信息*/
@@ -32,8 +32,8 @@ class User extends Validate
         ,'tel.unique' => '手机号已被使用！'
         ,'card_no.unique' => '证件号已被使用！'
         ,'type.require' => '请选择用户类型！'
-        ,'role_id.require' => '请选择角色权限！'
-        ,'login_rank.require' => '请选择数据权限！'
+        ,'role_id.requireIf' => '当前用户类型为“后台管理员”，角色权限不能为空！'
+        ,'login_rank.requireIf' => '当前用户类型为“后台管理员”，数据权限不能为空！'
     ];
 
     protected $scene = [

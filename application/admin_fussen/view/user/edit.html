@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">用户类型：</label>
+                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>用户类型：</label>
                             <div class="layui-input-block">
                                 {notempty name="basicList"}
                                 {volist name="basicList" id="vo"}
@@ -81,9 +81,9 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>角色权限：</label>
+                            <label class="layui-form-label">角色权限：</label>
                             <div class="layui-input-block">
-                                <select name="role_id[]" multiple lay-search lay-verify="required">
+                                <select name="role_id[]" multiple lay-search>
                                     <option value="">请选择</option>
                                     {notempty name="roleList"}
                                     {volist name="roleList" id="vo"}
