@@ -13,6 +13,7 @@ use app\admin_fussen\model\BasicMenu;
 use app\admin_fussen\model\User;
 use app\common\parent\Controller as CoreController;
 use think\Cookie;
+use think\Db;
 use think\Session;
 use think\Request;
 
@@ -106,6 +107,37 @@ class Controller extends CoreController
     }
 
     /**
+     * 删除，并记录日志
+     * @param $id
+     */
+    public function delete($id)
+    {
+        try{
+            //若存在pid字段，则先删除子部门资料
+            $table_name = $this->currentModel->getTableName();
+            if (has_field($table_name, 'pid')) {
+                $data_child = Db::name($table_name)->whereIn('pid', $id)->select();
+                if (!empty($data_child)) {
+                    foreach ($data_child as $k => $v) {
+                        $this->currentModel->dataChangelog($v, 3);//记录删除日志
+                    }
+                    $this->currentModel->whereIn('pid', $id)->delete();
+                }
+            }
+
+            //删除当前资料，并记录删除日志
+            $pk = $this->currentModel->getPk();
+            $data = Db::name($table_name)->where($pk, $id)->find();
+            $this->currentModel->dataChangelog($data, 3);//记录删除日志
+            $this->currentModel->whereIn($pk, $id)->delete();//删除当前资料
+        } catch (\Exception $e) {
+            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
+            $this->error($msg);
+        }
+        $this->success('删除成功!');
+    }
+
+    /**
      * @note上传图片
      */
     public function uploadImg()
@@ -123,4 +155,5 @@ class Controller extends CoreController
             }
         }
     }
+
 }

@@ -152,22 +152,6 @@ class BasicInfo extends Controller
     }
 
     /**
-     * 删除
-     * @param $id
-     */
-    public function delete($id)
-    {
-        try{
-            $this->currentModel->whereIn('pid', $id)->delete();//删除子类资料
-            $this->currentModel->whereIn('basic_id', $id)->delete();//删除当前资料
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
-        }
-        $this->success('删除成功!');
-    }
-
-    /**
      * 根据pid 获取下拉列表，级联选择
      * @return array
      */

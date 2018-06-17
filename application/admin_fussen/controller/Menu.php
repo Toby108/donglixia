@@ -113,22 +113,6 @@ class Menu extends Controller
     }
 
     /**
-     * 删除
-     * @param $id
-     */
-    public function delete($id)
-    {
-        try{
-            $this->currentModel->whereIn('pid', $id)->delete();//删除子菜单资料
-            $this->currentModel->whereIn('menu_id', $id)->delete();//删除当前资料
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
-        }
-        $this->success('删除成功!');
-    }
-
-    /**
      * 根据id，获取下一级菜单
      * @param $id
      * @return mixed

@@ -580,3 +580,29 @@ if (!function_exists('has_field')) {
     }
 }
 
+if (!function_exists('delete_dir')) {
+    /**
+     * 递归删除目录下，某一个时间点之前的文件
+     * @param $dir string 目录路径
+     * @param $time int 小时 72h=3天
+     */
+    function delete_dir($dir, $time = 72)
+    {
+        if (is_dir($dir)) {
+            $dh = opendir($dir);// 打开目录，然后读取其内容
+            while ($file = readdir($dh) !== false) {
+                if ($file != "." && $file != "..") {
+                    $fullpath = $dir . "/" . $file;
+                    if (!is_dir($fullpath)) {
+                        if ((time() - filemtime($fullpath)) / 3600 > $time) {
+                            unlink($fullpath);
+                        }
+                    } else {
+                        delete_dir($fullpath, $time);
+                    }
+                }
+            }
+            closedir($dh);
+        }
+    }
+}

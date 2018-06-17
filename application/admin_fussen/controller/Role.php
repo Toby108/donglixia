@@ -115,19 +115,5 @@ class Role extends Controller
         $this->success('保存成功！', 'index');
     }
 
-    /**
-     * 删除
-     * @param $id
-     */
-    public function delete($id)
-    {
-        try{
-            $this->currentModel->whereIn('role_id', $id)->delete();//删除当前资料
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
-        }
-        $this->success('删除成功!');
-    }
 }
 
