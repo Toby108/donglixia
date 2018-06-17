@@ -24,7 +24,7 @@ class Login extends Controller
         if (substr_count($_SERVER['HTTP_HOST'], '.') === 1) {
             header('Location: http://www.'.$_SERVER['HTTP_HOST']);
         }
-        $web_name = Db::name('system_config')->where('code', 'web_name')->value('value');
+        $web_name = Db::name('system_config')->where('sys_code', 'web_name')->value('sys_value');
         $this->assign('web_name', !empty($web_name) ? $web_name : 'CMS');
     }
 
@@ -343,7 +343,7 @@ class Login extends Controller
 
         //语言：1中文，2English
         $lang = Cookie::get('remember_language') ? Cookie::get('remember_language') : 1;
-        Db::name('system_config')->where('code', 'language')->update(['value'=>$lang]);
+        Db::name('system_config')->where('sys_code', 'language')->update(['sys_value'=>$lang]);
         setSessionConfig();//缓存系统设置
 
         cookie('error_num', 0);//错误次数归0

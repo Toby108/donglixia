@@ -41,8 +41,8 @@ class Menu extends Controller
         if (!empty($param['pid'])) {
             $map['pid'] = $param['pid'];
         }
-        if (!empty($param['name'])) {
-            $map['name'] = ['like', '%'.$param['name'].'%'];
+        if (!empty($param['menu_name'])) {
+            $map['menu_name'] = ['like', '%'.$param['menu_name'].'%'];
         }
         if (!empty($param['url'])) {
             $map['url'] = ['like', '%'.$param['url'].'%'];
@@ -52,11 +52,11 @@ class Menu extends Controller
         }
         $count = $this->currentModel->where($map)->count();
         $list = $this->currentModel->where($map)
-            ->field('menu_id,pid,pid as pid_text,name,sort_num,url,description,display as display_text, 
-            open_type as open_type_text,name as name_text,extend as extend_text')
+            ->field('menu_id,pid,pid as pid_text,menu_name,sort_num,url,description,display as display_text, 
+            open_type as open_type_text,menu_name as menu_name_text,is_extend as is_extend_text')
             ->order('sort_num asc')
             ->select();
-        $list = \Tree::get_Table_tree($list, 'name_text', 'menu_id');
+        $list = \Tree::get_Table_tree($list, 'menu_name_text', 'menu_id');
 
         foreach ($list as $key=>$val) {
             unset($list[$key]['child']);
@@ -136,7 +136,7 @@ class Menu extends Controller
      */
     public function getChildInfo($id)
     {
-        return $this->currentModel->where('pid', $id)->field('menu_id,pid,name,url')->select();
+        return $this->currentModel->where('pid', $id)->field('menu_id,pid,menu_name,url')->select();
     }
 
     /**
@@ -176,7 +176,7 @@ class Menu extends Controller
             $map['menu_id'] = ['<>', $param['menu_id']];
         }
 
-        $data =  $this->currentModel->where($map)->field('menu_id as id,name')->order('sort_num')->select();
+        $data =  $this->currentModel->where($map)->field('menu_id as id,menu_name')->order('sort_num')->select();
         $this->success('获取成功', null, $data);
     }
 }

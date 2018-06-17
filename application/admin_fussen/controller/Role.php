@@ -37,8 +37,8 @@ class Role extends Controller
     public function getDataList()
     {
         $param = $this->request->param();
-        if (!empty($param['name'])) {
-            $map['name'] = ['like', '%'.$param['name'].'%'];//角色名称
+        if (!empty($param['role_name'])) {
+            $map['role_name'] = ['like', '%'.$param['role_name'].'%'];//角色名称
         }
         if (empty($map)) {
             $map[] = ['exp', '1=1'];
@@ -57,7 +57,7 @@ class Role extends Controller
         $param = $this->request->param();
 
         if (!empty($param['role_id'])) {
-            $data = $this->currentModel->where('role_id', $param['role_id'])->field('role_id,name,describe,auth')->find();
+            $data = $this->currentModel->where('role_id', $param['role_id'])->field('role_id,role_name,describe,auth')->find();
             $this->assign('data', $data);
         }
 

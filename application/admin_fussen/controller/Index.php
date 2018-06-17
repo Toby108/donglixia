@@ -48,7 +48,7 @@ class Index extends Controller
     public function changeLanguage($type = 1)
     {
         Session::set('config.language', $type);
-        Db::name('system_config')->where('code', 'language')->update(['value'=>$type]);
+        Db::name('system_config')->where('area_code', 'language')->update(['area_value'=>$type]);
         $this->success('切换成功');
     }
 }

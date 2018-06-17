@@ -93,12 +93,12 @@ class User extends Controller
         $this->assign('avatar', $avatar);
 
         /*获取下拉列表：角色权限*/
-        $roleList = (new UserRole())->field('role_id,name,describe')->select();
+        $roleList = (new UserRole())->field('role_id,role_name,describe')->select();
         $this->assign('roleList', $roleList);
 
         /*获取下拉列表：部门*/
-        $deptList = (new UserDept())->field('dept_id,pid,name')->select();
-        $deptList = \Tree::get_Table_tree($deptList, 'name', 'dept_id');
+        $deptList = (new UserDept())->field('dept_id,pid,dept_name')->select();
+        $deptList = \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
         $this->assign('deptList', $deptList);
 
         /*获取下拉列表：推荐人*/
@@ -249,7 +249,7 @@ class User extends Controller
     public function getRegion($pid)
     {
         $pid = !empty($pid) ? $pid : 0;
-        return Db::name('basic_region')->where('parent_id', $pid)->field('id,name,code')->select();
+        return Db::name('basic_region')->where('parent_id', $pid)->field('id,area_name,area_code')->select();
     }
 
 

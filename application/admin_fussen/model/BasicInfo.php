@@ -19,7 +19,7 @@ class BasicInfo extends ComBasicInfo
      * @param $value
      * @return string
      */
-    protected function getStatusTextAttr($value)
+    protected function getStateTextAttr($value)
     {
         return $value == '1' ? '启用' : '禁用';
     }
@@ -32,7 +32,7 @@ class BasicInfo extends ComBasicInfo
      */
     protected function getIsSystemTextAttr($value, $data)
     {
-        return $data['status'] == '1' ? '是' : '否';
+        return $data['state'] == '1' ? '是' : '否';
     }
 
     /**
@@ -42,7 +42,7 @@ class BasicInfo extends ComBasicInfo
      */
     protected function getPidTextAttr($value)
     {
-        return !empty($value) ? $this->where('basic_id', $value)->value('name') : '顶级';
+        return !empty($value) ? $this->where('basic_id', $value)->value('basic_name') : '顶级';
     }
 
     /**
@@ -52,19 +52,19 @@ class BasicInfo extends ComBasicInfo
     public function getPersonList()
     {
         $basic_ids = $this->where('cat_code', 'person')->column('basic_id');//人员资料id
-        return $this->whereIn('pid', $basic_ids)->field('basic_id,pid,cat_code,code,name')->order('sort_num')->select();
+        return $this->whereIn('pid', $basic_ids)->field('basic_id,pid,cat_code,basic_code,basic_name')->order('sort_num')->select();
     }
 
     /**
      * 获取某一资料列表
      * @param $cat_code
-     * @param $code
+     * @param $basic_code
      * @return false|\PDOStatement|string|\think\Collection
      */
-    public function getBasicList($cat_code, $code)
+    public function getBasicList($cat_code, $basic_code)
     {
-        $basic_pid = Db::name('basic_info')->where('cat_code', $cat_code)->where('code', $code)->value('basic_id');
-        return Db::name('basic_info')->where('pid', $basic_pid)->field('basic_id,name')->order('sort_num')->select();
+        $basic_pid = Db::name('basic_info')->where('cat_code', $cat_code)->where('basic_code', $basic_code)->value('basic_id');
+        return Db::name('basic_info')->where('pid', $basic_pid)->field('basic_id,basic_name')->order('sort_num')->select();
     }
 
 }

@@ -15,17 +15,17 @@ class BasicInfo extends Validate
 {
     /*字段规则*/
     protected $rule = [
-        'name' => 'require|token'
+        'basic_name' => 'require|token'
         ,'cat_code' => 'require'
-        ,'code' => 'require'
+        ,'basic_code' => 'require'
     ];
 
     /*返回错误信息*/
     protected $message = [
-        "name.require" => '资料名称不能为空！'
-        ,"name.token" => '请勿重复提交！'
+        "basic_name.require" => '资料名称不能为空！'
+        ,"basic_name.token" => '请勿重复提交！'
         ,"cat_code.require" => '上级代号不能为空！'
-        ,"code.require" => '代号不能为空！'
+        ,"basic_code.require" => '代号不能为空！'
     ];
 
     protected $scene = [

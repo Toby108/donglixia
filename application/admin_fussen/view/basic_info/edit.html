@@ -15,13 +15,13 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>资料名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="name" value="{$data.name|default=''}" lay-verify="required" placeholder="请输入" class="layui-input">
+                        <input type="text" name="basic_name" value="{$data.basic_name|default=''}" lay-verify="required" placeholder="请输入" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">资料代号：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="code" value="{$data.code|default=''}" placeholder="请输入" class="layui-input">
+                        <input type="text" name="basic_code" value="{$data.basic_code|default=''}" placeholder="请输入" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -39,7 +39,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">资料数值：</label>
                     <div class="layui-input-block">
-                        <input type="number" name="value" value="{$data.value|default=''}" class="layui-input">
+                        <input type="number" name="basic_value" value="{$data.basic_value|default=''}" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -51,8 +51,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">资料状态：</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="status" value="1" title="启用" {eq name="$data.status|default=1" value="1"}checked{/eq}>
-                        <input type="radio" name="status" value="0" title="禁用" {eq name="$data.status|default=1" value="0"}checked{/eq}>
+                        <input type="radio" name="state" value="1" title="启用" {eq name="$data.state|default=1" value="1"}checked{/eq}>
+                        <input type="radio" name="state" value="0" title="禁用" {eq name="$data.state|default=1" value="0"}checked{/eq}>
                     </div>
                 </div>
             </div>

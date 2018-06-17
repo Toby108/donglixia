@@ -29,7 +29,7 @@ class BasicMenu extends ComBasicMenu
      * @param $value
      * @return string
      */
-    protected function getExtendTextAttr($value)
+    protected function getIsExtendTextAttr($value)
     {
         return $value == '1' ? '是' : '否';
     }
@@ -69,10 +69,10 @@ class BasicMenu extends ComBasicMenu
      */
     protected function getPidTextAttr($value)
     {
-        return !empty($value) ? Db::name('basic_menu')->where('menu_id', $value)->value('name') : '顶级';
+        return !empty($value) ? Db::name('basic_menu')->where('menu_id', $value)->value('menu_name') : '顶级';
     }
 
-    protected function setSortAttr($value, $data)
+    protected function setSortNumAttr($value, $data)
     {
         $res = $value;
         if (empty($value) && !empty($data['pid'])) {
@@ -91,8 +91,8 @@ class BasicMenu extends ComBasicMenu
      */
     public function get_breadcrumb($id, &$res = [])
     {
-        $data = $this->where('menu_id', $id)->field('menu_id,pid,name,url as url_text,params')->find();
-        $res[$data['menu_id']] = (!empty($data['url_text']) && ($data['url_text'] != '#')) ? "<a href='{$data['url_text']}'>{$data['name']}</a>" : "<a>{$data['name']}</a>";
+        $data = $this->where('menu_id', $id)->field('menu_id,pid,menu_name,url as url_text,params')->find();
+        $res[$data['menu_id']] = (!empty($data['url_text']) && ($data['url_text'] != '#')) ? "<a href='{$data['url_text']}'>{$data['menu_name']}</a>" : "<a>{$data['menu_name']}</a>";
         if ($data['pid'] != 0) {
             $res[$data['pid']] = $this->get_breadcrumb($data['pid']);
         }
@@ -114,7 +114,7 @@ class BasicMenu extends ComBasicMenu
             $map['menu_id'] = ['in', implode(',', $auth)];
         }
         $menuList = $this->where($map)
-            ->field('menu_id,pid,name,url as url_text,params,open_type,extend')
+            ->field('menu_id,pid,menu_name,url as url_text,params,open_type,is_extend')
             ->order('sort_num asc')
             ->select();
         $menuList = \Tree::getTree($menuList, 'menu_id');
@@ -138,7 +138,7 @@ class BasicMenu extends ComBasicMenu
         $res = Db::name('basic_menu')
             ->whereLike('url', '%'.$http_url)
             ->whereOr('', 'exp', "url='$controller' AND LOCATE(params,'".http_build_query($request->get())."') > 0")
-            ->field('menu_id,menu_id as id_display,pid,pid as pid_display,display,extend')
+            ->field('menu_id,menu_id as id_display,pid,pid as pid_display,display,is_extend')
             ->find();
         /*若当前链接菜单为隐藏，则继续查找，页面左侧菜单定位在父级菜单*/
         if ($res['display'] == 2) {

@@ -38,15 +38,15 @@ class BasicInfo extends Controller
             $map['basic_id'] = ['in', $ids];
         }
 
-        if (!empty($param['name'])) {
-            $map['name'] = ['like','%'.$param['name'].'%'];
+        if (!empty($param['basic_name'])) {
+            $map['basic_name'] = ['like','%'.$param['basic_name'].'%'];
         }
         if (empty($map)) {
             $map[] = ['exp', '1=1'];
         }
 
         return $this->currentModel->where($map)
-            ->field('basic_id,pid as pid_text,code,name,sort_num,description,status')
+            ->field('basic_id,pid as pid_text,basic_code,basic_name,sort_num,description,state')
             ->order('pid,sort_num asc')->layTable();
     }
 
@@ -79,15 +79,15 @@ class BasicInfo extends Controller
         }
 
         $param['pid'] = !empty($param['pid']) ? $param['pid'] : 0 ;
-        $cat_code = $this->currentModel->where('basic_id', $param['pid'])->value('code');
+        $cat_code = $this->currentModel->where('basic_id', $param['pid'])->value('basic_code');
         $param['cat_code'] = !empty($cat_code) ? $cat_code : 'top';
 
-        if (empty($param['code'])) {
+        if (empty($param['basic_code'])) {
             $res = $this->createCode($param['pid']);
-            if ($res['code'] != 1) {
+            if ($res['basic_code'] != 1) {
                 $this->error($res['msg'], null, ['token'=>$this->request->token()]);
             }
-            $param['code'] = $res['data'];
+            $param['basic_code'] = $res['data'];
         }
 
         if (empty($param['sort_num'])) {
@@ -176,13 +176,13 @@ class BasicInfo extends Controller
         $param = $this->request->param();
         $pid = !empty($param['id']) ? $param['id'] : 0;
         $map['pid'] = $pid;
-        $map['status'] = 1;//状态：0禁用，1启用
+        $map['state'] = 1;//状态：0禁用，1启用
 
         if (!empty($param['basic_id'])) {
             $map['basic_id'] = ['<>', $param['basic_id']];
         }
 
-        $data =  $this->currentModel->where($map)->field('basic_id as id,name,cat_code')->order('sort_num')->select();
+        $data =  $this->currentModel->where($map)->field('basic_id as id,basic_name,cat_code')->order('sort_num')->select();
         $this->success('获取成功', null, $data);
     }
 
@@ -193,7 +193,7 @@ class BasicInfo extends Controller
      */
     public function getBasicInfo($id)
     {
-        return $this->currentModel->where('basic_id', $id)->field('basic_id,pid,cat_code,code,name')->find();
+        return $this->currentModel->where('basic_id', $id)->field('basic_id,pid,cat_code,basic_code,basic_name')->find();
     }
 
     /**
@@ -207,8 +207,8 @@ class BasicInfo extends Controller
             return ['code'=>0, 'msg'=>'当前新资料代号无规律可循，请手动输入'];
         }
 
-        $max_code = $this->currentModel->where('pid', $pid)->order('code desc')->value('code');
-        $cat_code = $this->currentModel->where('basic_id', $pid)->value('code');
+        $max_code = $this->currentModel->where('pid', $pid)->order('basic_code desc')->value('basic_code');
+        $cat_code = $this->currentModel->where('basic_id', $pid)->value('basic_code');
 
         //若上级代号非AA类型
         if (!preg_match('/^[A-Z]{2}/',$cat_code)) {

@@ -506,7 +506,7 @@ if (!function_exists('setSessionConfig')) {
         $data = \think\Db::name('system_config')->where('pid', '<>', 0)->field('id,view_name,code,value')->select();
         $config = [];
         foreach ($data as $k=>$v) {
-            $config[$v['code']] = $v['value'];
+            $config[$v['sys_code']] = $v['sys_value'];
         }
         session('config', $config);
     }

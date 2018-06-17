@@ -2,7 +2,7 @@
     {foreach name="data" item="vo"}
     <div class="layui-form-item">
         <input type="hidden" name="sys[{$vo.id}][id]" value="{$vo.id}">
-        <input type="hidden" name="sys[{$vo.id}][code]" value="{$vo.code}">
+        <input type="hidden" name="sys[{$vo.id}][sys_code]" value="{$vo.sys_code}">
         <label class="layui-form-label">{$vo.view_name}：</label>
         {switch name="vo.type"}
         {case value="text"}

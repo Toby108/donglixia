@@ -70,7 +70,7 @@ class User extends Model
      */
     public function getCardTypeTextAttr($value, $data)
     {
-        return Db::name('basic_info')->where('basic_id', $data['card_type'])->value('name');
+        return Db::name('basic_info')->where('basic_id', $data['card_type'])->value('basic_name');
     }
 
     /**

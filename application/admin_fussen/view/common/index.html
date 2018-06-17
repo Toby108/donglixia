@@ -54,14 +54,14 @@
             <ul class="layui-nav layui-nav-tree">
                 {volist name="menu" id="vo"}
                     {notempty name="vo.child"}
-                        <li class="layui-nav-item {eq name='vo.extend' value='1'} layui-nav-itemed {/eq}
+                        <li class="layui-nav-item {eq name='vo.is_extend' value='1'} layui-nav-itemed {/eq}
                         {eq name='vo.menu_id' value='$menuCurrent.pid_display'}layui-nav-itemed{/eq}">
-                            <a href="javascript:;"><i class="iconfont icon-liebiao1"> </i>{$vo.name}</a>
+                            <a href="javascript:;"><i class="iconfont icon-liebiao1"> </i>{$vo.menu_name}</a>
                             <dl class="layui-nav-child">
                             {volist name="vo.child" id="ch"}
                                 <dd {eq name='ch.menu_id' value='$menuCurrent.id_display'}class="layui-this"{/eq}>
                                     <a href="{$ch.url_text}" {eq name="$ch.open_type" value="2"} target="_blank"{/eq}>
-                                        <i class="layui-icon layui-icon-file"></i>{$ch.name}
+                                        <i class="layui-icon layui-icon-file"></i>{$ch.menu_name}
                                     </a>
                                 </dd>
                             {/volist}
@@ -70,7 +70,7 @@
                     {else/}
                         <li class="layui-nav-item {eq name='vo.menu_id' value='$menuCurrent.id_display'}layui-this{/eq}">
                             <a href="{$vo.url_text}" {eq name="$vo.open_type" value="2"} target="_blank"{/eq}>
-                                <i class="layui-icon layui-icon-file"> </i>{$vo.name}
+                                <i class="layui-icon layui-icon-file"> </i>{$vo.menu_name}
                             </a>
                         </li>
                     {/notempty}

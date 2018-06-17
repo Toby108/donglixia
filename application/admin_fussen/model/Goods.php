@@ -22,7 +22,7 @@ class Goods extends ComGoods
      */
     public function getStateTextAttr($value, $data)
     {
-        return Db::name('basic_info')->where('basic_id', $data['state'])->value('name');
+        return Db::name('basic_info')->where('basic_id', $data['state'])->value('basic_name');
     }
 
     /**

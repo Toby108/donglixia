@@ -15,7 +15,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>菜单名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="name" value="{$data.name|default=''}" lay-verify="required" placeholder="请输入" class="layui-input">
+                        <input type="text" name="menu_name" value="{$data.menu_name|default=''}" lay-verify="required" placeholder="请输入" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -48,8 +48,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">默认展开：</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="extend" value="1" title="是" {eq name="$data.extend|default=0" value="1"}checked{/eq}>
-                        <input type="radio" name="extend" value="0" title="否" {eq name="$data.extend|default=0" value="0"}checked{/eq}>
+                        <input type="radio" name="is_extend" value="1" title="是" {eq name="$data.is_extend|default=0" value="1"}checked{/eq}>
+                        <input type="radio" name="is_extend" value="0" title="否" {eq name="$data.is_extend|default=0" value="0"}checked{/eq}>
                     </div>
                 </div>
                 <div class="layui-form-item">

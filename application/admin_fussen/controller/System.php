@@ -53,8 +53,8 @@ class System extends Controller
         }
 
         foreach ($data as $k=>$v) {
-            if ($v['code'] == 'logo' && !empty($v['value'])) {
-                $data[$k]['value'] = current(imgTempFileMove([$v['value']], 'admin_fussen/images/web/'));
+            if ($v['sys_code'] == 'logo' && !empty($v['sys_value'])) {
+                $data[$k]['sys_value'] = current(imgTempFileMove([$v['sys_value']], 'admin_fussen/images/web/'));
             }
         }
         $SystemConfig = new SystemConfig();

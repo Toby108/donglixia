@@ -19,7 +19,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">菜单名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="name" class="layui-input">
+                    <input type="text" name="menu_name" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -70,10 +70,10 @@
             ,cols: [[
                 {type:'numbers', title:'序号', width:50}
                 ,{field:'pid_text', title:'上级分类', width: 100}
-                ,{field:'name_text', title:'菜单名称', minWidth: 180}
+                ,{field:'menu_name_text', title:'菜单名称', minWidth: 180}
                 ,{field:'url', title:'链接地址', minWidth: 150}
                 ,{field:'display_text', title:'是否显示', align:'center', width: 75}
-                ,{field:'extend_text', title:'默认展开', align:'center', width: 95}
+                ,{field:'is_extend_text', title:'默认展开', align:'center', width: 95}
                 ,{field:'open_type_text', title:'打开方式', width: 95}
                 ,{title:'更改排序', align:'center', width: 75, templet: function (data) {
                     return '<div class="layui-btn-group">' +

@@ -8,7 +8,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>角色名称：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="name" value="{$data.name|default=''}" placeholder="请输入" class="layui-input" lay-verify="required">
+                    <input type="text" name="role_name" value="{$data.role_name|default=''}" placeholder="请输入" class="layui-input" lay-verify="required">
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
             ,cols: [[
                 {type:'numbers', title:'序号', width:60}
                 ,{field:'pid_text', title:'上级菜单', width: 100}
-                ,{field:'name_text', title:'菜单名称', minWidth: 150}
+                ,{field:'menu_name_text', title:'菜单名称', minWidth: 150}
                 ,{field:'url', title:'链接地址', minWidth: 250}
                 ,{field:'description', title:'简介', minWidth: 80}
                 ,{title:'操作', width: 100, align:'center', templet: function (data) {

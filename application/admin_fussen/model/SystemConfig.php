@@ -29,7 +29,7 @@ class SystemConfig extends Model
      */
     public function getWebInfoList()
     {
-        $wen_info_id = Db::name('system_config')->where('code', 'web_info')->value('id');
+        $wen_info_id = Db::name('system_config')->where('sys_code', 'web_info')->value('id');
         return $this->getPidData($wen_info_id);
     }
 
@@ -39,7 +39,7 @@ class SystemConfig extends Model
      */
     public function getSystemConfigList()
     {
-        $system_config_id = Db::name('system_config')->where('code', 'system_config')->value('id');
+        $system_config_id = Db::name('system_config')->where('sys_code', 'system_config')->value('id');
         return $this->getPidData($system_config_id);
     }
 
@@ -51,7 +51,7 @@ class SystemConfig extends Model
     public function getPidData($pid)
     {
         return $this->where('pid', $pid)
-            ->field('id,pid,view_name,code,value,value_range,sort_num,describe,type')
+            ->field('id,pid,view_name,sys_code,sys_value,value_range,sort_num,describe,type')
             ->order('sort_num')
             ->select();
     }

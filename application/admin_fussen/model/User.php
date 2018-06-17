@@ -44,8 +44,8 @@ class User extends ComUser
         }
 
         $res['avatar'] = !empty($res['avatar']) ? Request::instance()->domain().$res['avatar'] : '';//头像完整路径
-        $res['role_name'] = Db::name('user_role')->where('role_id', $res['role_id'])->value('name');//角色名称
-        $res['dept_name'] = Db::name('user_dept')->where('dept_id', $res['dept_id'])->value('name');//部门中文名称
+        $res['role_name'] = Db::name('user_role')->where('role_id', $res['role_id'])->value('role_name');//角色名称
+        $res['dept_name'] = Db::name('user_dept')->where('dept_id', $res['dept_id'])->value('dept_name');//部门中文名称
         $res['unionid'] = empty($item['wechat_unionid']) ? false : true;//开放平台，微信id
         $res['password_flag'] = !empty($res['password']) ? 1 : 0;//是否存在密码：0无，1有
         $res['password_strong'] = !empty($password) ? (password_strength($password) ? 1 : 0) : 1;//密码强弱程度：0弱，1强
