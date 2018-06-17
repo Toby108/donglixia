@@ -160,7 +160,7 @@ class Menu extends Controller
             $map['menu_id'] = ['<>', $param['menu_id']];
         }
 
-        $data =  $this->currentModel->where($map)->field('menu_id as id,menu_name')->order('sort_num')->select();
+        $data =  $this->currentModel->where($map)->field('menu_id as id,menu_name as name')->order('sort_num')->select();
         $this->success('获取成功', null, $data);
     }
 }

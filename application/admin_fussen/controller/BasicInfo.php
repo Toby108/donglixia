@@ -166,7 +166,7 @@ class BasicInfo extends Controller
             $map['basic_id'] = ['<>', $param['basic_id']];
         }
 
-        $data =  $this->currentModel->where($map)->field('basic_id as id,basic_name,cat_code')->order('sort_num')->select();
+        $data =  $this->currentModel->where($map)->field('basic_id as id,basic_name as name,cat_code')->order('sort_num')->select();
         $this->success('获取成功', null, $data);
     }
 
