@@ -527,6 +527,8 @@ if (!function_exists('reset_sort')) {
         //判断是否存在'pid'，若存在，则只取同级别数据
         if (has_field($table_name, 'pid')) {
             $map['pid'] = Db::name($table_name)->where($pk, $id)->value('pid');
+        } elseif (has_field($table_name, 'language')) {
+            $map['language'] = session('config.language');
         } else {
             $map[] = ['exp', '1=1'];
         }

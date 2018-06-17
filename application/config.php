@@ -252,8 +252,6 @@ return [
         // 验证码位数
         'length'   => 3,
         // 验证成功后是否重置
-        'reset'    => true,
-        // 关闭验证码杂点
-        'useNoise'    => false
+        'reset'    => true
     ],
 ];
