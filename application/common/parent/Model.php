@@ -142,7 +142,7 @@ abstract class Model extends ModelCore
         //过滤非表字段数据,反转字段名为键,获取与当前save数据的交集
         $paramsJson = !empty($this->field) ? array_intersect_key($data, array_flip($this->field)) : $data;
         $logData['table_name'] = $this->name;
-        $logData['type'] = !empty($type) ? $type : $this->hasPk($data) ? 2 : 1;
+        $logData['type'] = !empty($type) ? $type : ($this->hasPk($data) ? 2 : 1);
         $logData['content'] = json_encode($paramsJson);
         $logData['create_by'] = !empty(Session::get('userInfo.uid')) ? Session::get('userInfo.uid') :  (!empty($paramsJson['create_by']) ? $paramsJson['create_by'] : 0);
         $logData['create_time'] = time();
