@@ -53,14 +53,14 @@ class Trash extends Controller
     }
 
     /**
-     * 恢复
+     * 还原
      * @param $id
      */
     public function recover($id)
     {
         $data = Db::name('data_change_log')->where('id', $id)->field('table_name,content')->find();
         if (empty($data['content'])) {
-            $this->error('资料内容为空，恢复失败!');
+            $this->error('资料内容为空，还原失败!');
         }
         try {
             $data['content'] = json_decode($data['content'], true);
@@ -70,7 +70,7 @@ class Trash extends Controller
             $this->error($e->getMessage());
         }
 
-        $this->success('恢复成功!');
+        $this->success('还原成功!');
     }
 
     /**

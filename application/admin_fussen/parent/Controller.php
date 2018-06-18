@@ -138,6 +138,28 @@ class Controller extends CoreController
     }
 
     /**
+     * 更改排序
+     */
+    public function changeSort()
+    {
+        $param = $this->request->param();
+        if (empty($param['id']) || empty($param['type'])) {
+            $this->error('参数错误');
+        }
+
+        try {
+            $table_name = $this->currentModel->getTableName();//获取表名
+            $list = reset_sort($param['id'], $table_name, $param['type']);//格式化，获取重新排序的数据
+            $this->currentModel->saveAll($list);//保存数据
+        } catch (\Exception $e) {
+            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
+            $this->error($msg);
+        }
+
+        $this->success('操作成功');
+    }
+
+    /**
      * @note上传图片
      */
     public function uploadImg()

@@ -139,29 +139,6 @@ class Article extends Controller
         $this->success('获取成功', null, $data);
     }
 
-    /**
-     * 更改排序
-     */
-    public function changeSort()
-    {
-        $param = $this->request->param();
-        if (empty($param['art_id']) || empty($param['type'])) {
-            $this->error('参数错误');
-        }
-        try{
-            //格式化，获取重新排序的数据
-            $list = reset_sort($param['art_id'], 'article', $param['type']);
-
-            //保存数据
-            $this->currentModel->saveAll($list);
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
-        }
-
-        $this->success('操作成功');
-    }
-
 
 }
 

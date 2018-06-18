@@ -68,7 +68,7 @@
             ,limits: table_limits
             ,cellMinWidth:50
             ,cols: [[
-                {type:'numbers', title:'序号', width:50}
+                {type:'numbers', title:'序号', width:45}
                 ,{field:'pid_text', title:'上级分类', width: 100}
                 ,{field:'menu_name_text', title:'菜单名称', minWidth: 180}
                 ,{field:'url', title:'链接地址', minWidth: 150}
@@ -77,8 +77,8 @@
                 ,{field:'open_type_text', title:'打开方式', width: 95}
                 ,{title:'更改排序', align:'center', width: 75, templet: function (data) {
                     return '<div class="layui-btn-group">' +
-                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.menu_id+',\'asc\');"><i class="iconfont icon-xiangshang1"></i></a>' +
-                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.menu_id+',\'desc\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.menu_id+',\'asc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.menu_id+',\'desc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangxia1"></i></a>' +
                         '</div>';
                 }}
                 ,{title:'操作', toolbar: '#operating', width: 100, align:'center'}
@@ -130,16 +130,6 @@
         });
     });
 
-
-    function changeSort(id, type) {
-        $.post("{:url('changeSort')}", {menu_id:id, type:type}, function (result) {
-            if (result.code) {
-                reloadTable('#searchForm');
-            } else {
-                layer.msg(result.msg);
-            }
-        }, 'json');
-    }
 </script>
 
 {/block}

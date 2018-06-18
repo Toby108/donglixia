@@ -124,28 +124,6 @@ class Menu extends Controller
     }
 
     /**
-     * 更改排序
-     */
-    public function changeSort()
-    {
-        $param = $this->request->param();
-        if (empty($param['menu_id']) || empty($param['type'])) {
-            $this->error('菜单id 或 排序类型不能为空');
-        }
-
-        //格式化，获取重新排序的数据
-        $menuList = reset_sort($param['menu_id'], 'basic_menu', $param['type']);
-
-        //保存数据
-        $res = $this->currentModel->saveAll($menuList);
-        if ($res === false) {
-            $this->error($this->currentModel->getError());
-        }
-
-        $this->success('操作成功');
-    }
-
-    /**
      * 根据pid 获取下拉列表，级联选择
      * @return array
      */

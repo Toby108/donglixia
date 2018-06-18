@@ -60,7 +60,7 @@
             ,limits: table_limits
             ,cellMinWidth: 50
             ,cols: [[
-                {type:'numbers', title:'序号', width:60}
+                {type:'numbers', title:'序号', width:80}
                 ,{field:'pid_text', title:'上级分类', width: '15%'}
                 ,{field:'basic_name', title:'名称', width: '15%', edit: 'text'}
                 ,{field:'basic_code', title:'代号', width: '8%', edit: 'text'}
@@ -71,8 +71,8 @@
                 ,{field:'description', title:'简介', minWidth:50}
                 ,{title:'更改排序' , width: '10%', align:'center', templet: function (data) {
                     return '<div class="layui-btn-group">' +
-                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.basic_id+',\'asc\');"><i class="iconfont icon-xiangshang1"></i></a>' +
-                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.basic_id+',\'desc\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.basic_id+',\'asc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.basic_id+',\'desc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangxia1"></i></a>' +
                         '</div>';
                 }}
                 ,{title:'操作', toolbar: '#operating', width: 100, align:'center'}
@@ -181,16 +181,6 @@
         });
     });
 
-    /*更改排序*/
-    function changeSort(id, type) {
-        $.post("{:url('changeSort')}", {basic_id:id, type:type}, function (result) {
-            if (result.code) {
-                reloadTable('#searchForm');
-            } else {
-                layer.alert(result.msg, {icon:2});
-            }
-        }, 'json');
-    }
 </script>
 
 {/block}

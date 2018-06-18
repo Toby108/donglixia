@@ -140,7 +140,7 @@
         if (password_strong === '0') {
             var uid = {:session('userInfo.uid')};
             var title= '您的登录密码太简单，请及时修改！';
-            changePwd(uid,title);
+            changePwd(uid, title, '{:url("user/changePassword")}');
         }
     });
 

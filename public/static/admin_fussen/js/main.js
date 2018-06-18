@@ -117,5 +117,14 @@ function changePwd(uid, title, url) {
     });
 }
 
-
+/*更改排序*/
+function changeSort(id, type, url) {
+    $.post(url, {id:id, type:type}, function (result) {
+        if (result.code) {
+            reloadTable('#searchForm');
+        } else {
+            layer.alert(result.msg, {icon:2});
+        }
+    }, 'json');
+}
 

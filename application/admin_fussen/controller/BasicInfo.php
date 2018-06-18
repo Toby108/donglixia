@@ -130,28 +130,6 @@ class BasicInfo extends Controller
     }
 
     /**
-     * 更改排序
-     */
-    public function changeSort()
-    {
-        $param = $this->request->param();
-        if (empty($param['basic_id']) || empty($param['type'])) {
-            $this->error('资料id 或 排序类型不能为空');
-        }
-
-        //格式化，获取重新排序的数据
-        $list = reset_sort($param['basic_id'], 'basic_info', $param['type']);
-
-        //保存数据
-        $res = $this->currentModel->saveAll($list);
-        if ($res === false) {
-            $this->error($this->currentModel->getError());
-        }
-
-        $this->success('操作成功');
-    }
-
-    /**
      * 根据pid 获取下拉列表，级联选择
      * @return array
      */

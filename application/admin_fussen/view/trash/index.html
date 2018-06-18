@@ -69,10 +69,11 @@
         table.on('tool(trashTable)', function(obj){
             var data = obj.data;
             if (obj.event === 'recover') {
-                layer.confirm('确定恢复该笔数据吗？', function(index){
+                layer.confirm('确定还原该笔数据吗？', function(index){
                     $.post('{:url("recover")}',{id:data.id}, function (result) {
                         layer.close(index);
                         if (result.code) {
+                            layer.msg(result.msg);
                             reloadTable('#searchForm');
                         } else {
                             layer.alert(result.msg, {icon:2});

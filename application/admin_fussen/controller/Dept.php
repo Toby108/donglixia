@@ -23,7 +23,7 @@ class Dept extends Controller
 
     public function index()
     {
-        $deptList = $this->currentModel->field('dept_id,pid,dept_name')->select();
+        $deptList = $this->currentModel->field('dept_id,pid,dept_name')->order('sort_num')->select();
         $deptList = \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
         $this->assign('deptList', $deptList);
         return $this->fetch();
@@ -47,6 +47,7 @@ class Dept extends Controller
         $count = $this->currentModel->where($map)->count();
         $list = $this->currentModel->where($map)
             ->page($param['page'], $param['limit'])
+            ->order('sort_num')
             ->field('dept_id,pid,dept_name,dept_name as dept_name_text')
             ->select();
         $list = \Tree::get_Table_tree($list, 'dept_name_text', 'dept_id');

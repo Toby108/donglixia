@@ -96,8 +96,8 @@
                 ,{field:'read_num', title:'阅读次数', width: '8%', align:'center'}
                 ,{title:'更改排序' , width: '8%', align:'center', templet: function (data) {
                     return '<div class="layui-btn-group">' +
-                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.art_id+',\'asc\');"><i class="iconfont icon-xiangshang1"></i></a>' +
-                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.art_id+',\'desc\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.art_id+',\'asc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.art_id+',\'desc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangxia1"></i></a>' +
                         '</div>';
                 }}
                 ,{field:'public_date', title:'发布时间', width: '13%'}
@@ -154,16 +154,5 @@
         });
     });
 
-
-    /*更改排序*/
-    function changeSort(id, type) {
-        $.post("{:url('changeSort')}", {art_id:id, type:type}, function (result) {
-            if (result.code) {
-                reloadTable('#searchForm');
-            } else {
-                layer.alert(result.msg, {icon:2});
-            }
-        }, 'json');
-    }
 </script>
 {/block}

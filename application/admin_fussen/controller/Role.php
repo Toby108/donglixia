@@ -44,7 +44,7 @@ class Role extends Controller
             $map[] = ['exp', '1=1'];
         }
 
-        return $this->currentModel->where($map)->layTable();
+        return $this->currentModel->where($map)->order('sort_num')->layTable();
 
     }
 
