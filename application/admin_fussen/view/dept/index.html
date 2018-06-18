@@ -137,9 +137,8 @@
                     $('#token').val(result.data.token);
                     if (result.code) {
                         layer.close(modal);
-                        layer.msg(result.msg, {time: 1000}, function () {
-                            $(".layui-laypage-btn")[0].click();//重新加载当前页数据表格
-                        });
+                        reloadTable('#searchForm');//重新加载数据表格
+                        layer.msg(result.msg, {time: 1000});
                     } else {
                         layer.alert(result.msg, {icon: 2, title: '保存失败！'});
                     }
