@@ -11,11 +11,9 @@ namespace app\admin_fussen\controller;
 
 use app\admin_fussen\parent\Controller;
 use app\admin_fussen\model\Goods as GoodsModel;
-use app\admin_fussen\model\GoodsCat as GoodsCatModel;
 use app\admin_fussen\model\BasicInfo as BasicInfoModel;
 use think\Db;
 use think\Request;
-use think\Cookie;
 use think\Session;
 
 class Goods extends Controller
@@ -166,7 +164,6 @@ class Goods extends Controller
 
         $this->success('操作成功');
     }
-
 
 }
 
