@@ -62,9 +62,13 @@ class Trash extends Controller
         if (empty($data['content'])) {
             $this->error('资料内容为空，恢复失败!');
         }
+        try {
+            $data['content'] = json_decode($data['content'], true);
+            Db::name($data['table_name'])->insert($data['content']);
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+        }
 
-        $data['content'] = json_decode($data['content'], true);
-        Db::name($data['table_name'])->insert($data['content']);
         $this->success('恢复成功!');
     }
 
