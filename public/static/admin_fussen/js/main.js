@@ -69,7 +69,7 @@ function reloadTable(form, curr) {
     $.each(arr, function () {
         where[this.name] = this.value || '';
     });
-    history.pushState({}, '', window.location.origin+window.location.pathname);
+    // history.pushState({}, '', window.location.origin+window.location.pathname);//去除链接参数
     tableIns.reload({
         where: where
         ,page:{

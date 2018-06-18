@@ -21,9 +21,14 @@ class DataChangeLog extends Model
 
             $res[$k]['id'] = $v['id'];
             $res[$k]['table_name'] = $v['table_name'];
-            $res[$k]['goods_name'] = !empty($content['goods_name']) ? $content['goods_name'] : '';
             $res[$k]['create_by'] = $v['create_by'];
             $res[$k]['create_time'] = $v['create_time'];
+            $res[$k]['title'] = '';//标题
+            if (!empty($content['goods_name'])) {
+                $res[$k]['title'] = $content['goods_name'];
+            } elseif (!empty($content['title'])) {
+                $res[$k]['title'] = $content['title'];
+            }
         }
         return $res;
     }
