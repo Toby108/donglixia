@@ -166,6 +166,13 @@ class User extends Controller
             $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
             $this->error($msg, null, ['token' => $this->request->token()]);
         }
+
+        //如果是本人修改自己的资料，则刷新session
+        if ($this->currentModel->uid == user_info('uid')) {
+            $userInfo = $this->currentModel->getUserInfo(['uid'=>user_info('uid')]);
+            session('userInfo', $userInfo);//刷新session
+        }
+
         $this->success('保存成功！', 'edit?uid=' . $this->currentModel->uid);
     }
 
