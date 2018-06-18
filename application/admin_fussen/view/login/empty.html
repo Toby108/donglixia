@@ -102,7 +102,7 @@
                 , yes: function (index, element) {
                     $.post('{:url("login/bindUser")}', $(element).find('form').serialize(), function (result) {
                         if (result.code) {
-                            layer.msg('保存成功', {shade:[0.5,'#000'],time:2000}, function () {
+                            layer.msg('保存成功', {shade:[0.5,'#000'],time:1000}, function () {
                                 window.location.href = result.url;
                             });
                         } else {
