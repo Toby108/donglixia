@@ -65,6 +65,7 @@ class Trash extends Controller
         try {
             $data['content'] = json_decode($data['content'], true);
             Db::name($data['table_name'])->insert($data['content']);
+            Db::name('data_change_log')->where('id', $id)->delete();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
