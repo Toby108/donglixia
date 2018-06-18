@@ -93,11 +93,11 @@ class User extends Controller
         $this->assign('avatar', $avatar);
 
         /*获取下拉列表：角色权限*/
-        $roleList = (new UserRole())->field('role_id,role_name,describe')->select();
+        $roleList = (new UserRole())->field('role_id,role_name,describe')->order('sort_num')->select();
         $this->assign('roleList', $roleList);
 
         /*获取下拉列表：部门*/
-        $deptList = (new UserDept())->field('dept_id,pid,dept_name')->select();
+        $deptList = (new UserDept())->field('dept_id,pid,dept_name')->order('sort_num')->select();
         $deptList = \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
         $this->assign('deptList', $deptList);
 
