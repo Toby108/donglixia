@@ -24,6 +24,7 @@ class Query extends CoreQuery
 
         /*查找数据*/
         if (!empty($param['limit'])) {
+            $param['limit'] = $param['limit'] < 200 ? $param['limit'] : 200;
             $list = $this->options($options)->page($param['page'], $param['limit'])->select();
         } else {
             $list = $this->options($options)->select();
