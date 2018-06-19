@@ -157,7 +157,7 @@ class User extends Controller
             if (!empty($param['img'])) {
                 foreach ($param['img'] as $k => $v) {
                     //将图片文件从 img/temp 文件夹，移到 img/user 文件夹中
-                    $res = current(imgTempFileMove([$v['img_url']], 'admin_fussen/user'));
+                    $res = current(imgTempFileMove([$v['img_url']], 'admin_fussen/images/user/'));
                     $param['img'][$k]['img_url'] = $res;
                 }
                 $this->currentModel->userImage()->saveAll($param['img']);
