@@ -1,0 +1,100 @@
+{extend name="common/index"}
+{block name="content"}
+<div class="layui-row">
+    <form id="searchForm" class="layui-form layui-form-pane tpl-form-search" method="post" action="" onkeydown="if(event.keyCode=='13'){reloadTable('#searchForm');return false;}">
+        <div class="layui-form-item">
+            <input type="hidden" name="table_name" value="{$table_name|default=''}">
+            <div class="layui-inline">
+                <label class="layui-form-label">时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="create_begin" id="create_begin" class="layui-input">
+                </div>
+                <div class="layui-form-mid">--</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="create_end" id="create_end" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-btn-group">
+                    <a class="layui-btn layui-btn-normal" data-type="reload" onclick="reloadTable('#searchForm');">搜索</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<table id="trashTable" lay-filter="trashTable"></table>
+
+<script type="text/html" id="operating">
+    <div class="layui-btn-group">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" href="javascript:;" lay-event="recover">还原</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" href="javascript:;" lay-event="del">彻底删除</a>
+    </div>
+</script>
+
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    var tableIns = null;
+    var form = null;
+    layui.use(['form','laydate', 'table'], function () {
+        form = layui.form;
+        var laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.jquery;
+
+        /*注册日期，执行一个laydate实例*/
+        laydate.render({elem: '#create_begin'});
+        laydate.render({elem: '#create_end'});
+
+        //表格数据渲染
+        tableIns = table.render({
+            elem: '#trashTable'
+            ,url: '{:url("Trash/getDataList")}'
+            ,page: true
+            ,limit: table_limit
+            ,limits: table_limits
+            ,cols: [[
+                {type:'numbers', title:'序号', width:80}
+                ,{field:'title', title:'标题'}
+                ,{field:'create_time', title:'删除时间'}
+                ,{field:'create_by', title:'执行者'}
+                ,{title:'操作', toolbar: '#operating', align:'center'}
+            ]]
+            ,where: getFormJson('#searchForm')
+        });
+
+        //监听工具条
+        table.on('tool(trashTable)', function(obj){
+            var data = obj.data;
+            if (obj.event === 'recover') {
+                layer.confirm('确定还原该笔数据吗？', function(index){
+                    $.post('{:url("recover")}',{id:data.id}, function (result) {
+                        layer.close(index);
+                        if (result.code) {
+                            layer.msg(result.msg);
+                            reloadTable('#searchForm');
+                        } else {
+                            layer.alert(result.msg, {icon:2});
+                        }
+                    }, 'json');
+                });
+            } else if (obj.event === 'del') {
+                layer.confirm('确定彻底删除吗？', function(index){
+                    $.post('{:url("delete")}',{id:data.id}, function (result) {
+                        layer.close(index);
+                        if (result.code) {
+                            reloadTable('#searchForm');
+                        } else {
+                            layer.alert(result.msg, {icon:2});
+                        }
+                    }, 'json');
+                });
+            }
+        });
+    });
+
+
+</script>
+{/block}

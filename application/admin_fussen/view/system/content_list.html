@@ -2,36 +2,36 @@
     {foreach name="data" item="vo"}
     <div class="layui-form-item">
         <input type="hidden" name="sys[{$vo.id}][id]" value="{$vo.id}">
-        <input type="hidden" name="sys[{$vo.id}][code]" value="{$vo.code}">
+        <input type="hidden" name="sys[{$vo.id}][sys_code]" value="{$vo.sys_code}">
         <label class="layui-form-label">{$vo.view_name}：</label>
         {switch name="vo.type"}
         {case value="text"}
         <div class="layui-input-block">
-            <input type="text" name="sys[{$vo.id}][value]" value="{$vo.value}" class="layui-input">
+            <input type="text" name="sys[{$vo.id}][sys_value]" value="{$vo.sys_value}" class="layui-input">
         </div>
         {/case}
         {case value="textarea"}
         <div class="layui-input-block">
-            <textarea name="sys[{$vo.id}][value]" class="layui-textarea">{$vo.value}</textarea>
+            <textarea name="sys[{$vo.id}][sys_value]" class="layui-textarea">{$vo.sys_value}</textarea>
         </div>
         {/case}
         {case value="img"}
         <div class="layui-input-block" style="text-align: center;">
-            <input type="hidden" name="sys[{$vo.id}][value]" value="{$vo.value|default='__STATIC__/img/logo-w.png'}">
-            <img src="{$vo.value|default='__STATIC__/img/logo-w.png'}" class="tpl-img-avatar">
+            <input type="hidden" name="sys[{$vo.id}][sys_value]" value="{$vo.sys_value|default='__STATIC__/img/logo-w.png'}">
+            <img src="{$vo.sys_value|default='__STATIC__/img/logo-w.png'}" class="tpl-img-avatar">
         </div>
         {/case}
         {case value="radio"}
         <div class="layui-input-block">
             {foreach name="vo.value_range" item="ra" key="ra_key"}
-            <input type="radio" name="sys[{$vo.id}][value]" value="{$ra}" title="{$ra_key}" class="layui-input"
-            {eq name="ra" value="$vo.value"} checked {/eq}>
+            <input type="radio" name="sys[{$vo.id}][sys_value]" value="{$ra}" title="{$ra_key}" class="layui-input"
+            {eq name="ra" value="$vo.sys_value"} checked {/eq}>
             {/foreach}
         </div>
         {/case}
         {default /}
         <div class="layui-input-block">
-            <input type="text" name="sys[{$vo.id}][value]" value="{$vo.value}" class="layui-input">
+            <input type="text" name="sys[{$vo.id}][sys_value]" value="{$vo.sys_value}" class="layui-input">
         </div>
         {/switch}
         </div>

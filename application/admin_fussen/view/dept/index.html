@@ -6,7 +6,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">部门名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="name" placeholder="部门名称" class="layui-input">
+                    <input type="text" name="dept_name" placeholder="部门名称" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -24,7 +24,7 @@
 
 <script type="text/html" id="operating">
     <div class="layui-btn-group">
-        <a class="layui-btn layui-btn-xs" onclick="deptEdit({{d.dept_id}}, {{d.pid}}, '{{d.name}}');">编辑</a>
+        <a class="layui-btn layui-btn-xs" onclick="deptEdit({{d.dept_id}}, {{d.pid}}, '{{d.dept_name}}');">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </div>
 </script>
@@ -46,7 +46,7 @@
                 <div class="layui-form-item">
                     <div class="layui-form-label">部门名称：</div>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" class="layui-input">
+                        <input type="text" name="dept_name" class="layui-input">
                     </div>
                 </div>
             </form>
@@ -78,8 +78,14 @@
             ,limits: table_limits
             ,cols: [[
                 {type:'numbers', title:'序号', width:80}
-                ,{field:'name_text', title:'名称'}
-                ,{fixed: 'right', title:'操作', toolbar: '#operating', align:'center'}
+                ,{field:'dept_name_text', title:'名称'}
+                ,{title:'更改排序', align:'center', width: '15%', templet: function (data) {
+                    return '<div class="layui-btn-group">' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.dept_id+',\'asc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.dept_id+',\'desc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '</div>';
+                }}
+                ,{fixed: 'right', title:'操作', toolbar: '#operating', align:'center', width: '15%'}
             ]]
             ,where: getFormJson('#searchForm')
         });
@@ -115,11 +121,11 @@
                 $.post('{:url("getDeptList")}', {}, function (result) {
                     var _html = "<option value='0'>顶级</option>";
                     $.each(result, function (key, val) {
-                        _html += "<option value='"+val.dept_id+"'>"+val.name+"</option>";
+                        _html += "<option value='"+val.dept_id+"'>"+val.dept_name+"</option>";
                     });
                     ele.find('select[name="pid"]').html(_html).val(pid);
                     ele.find('input[name="dept_id"]').val(dept_id);
-                    ele.find('input[name="name"]').val(name);
+                    ele.find('input[name="dept_name"]').val(name);
                     form.render('select');
                 });
             }
@@ -131,9 +137,8 @@
                     $('#token').val(result.data.token);
                     if (result.code) {
                         layer.close(modal);
-                        layer.msg(result.msg, {time: 1000}, function () {
-                            $(".layui-laypage-btn")[0].click();//重新加载当前页数据表格
-                        });
+                        reloadTable('#searchForm');//重新加载数据表格
+                        layer.msg(result.msg, {time: 1000});
                     } else {
                         layer.alert(result.msg, {icon: 2, title: '保存失败！'});
                     }

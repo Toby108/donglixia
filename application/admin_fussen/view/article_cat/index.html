@@ -79,7 +79,13 @@
             ,cols: [[
                 {type:'numbers', title:'序号', width:80}
                 ,{field:'cat_name_text', title:'名称'}
-                ,{fixed: 'right', title:'操作', toolbar: '#operating', align:'center'}
+                ,{title:'更改排序', align:'center', width: '15%', templet: function (data) {
+                    return '<div class="layui-btn-group">' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.menu_id+',\'asc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.menu_id+',\'desc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '</div>';
+                }}
+                ,{fixed: 'right', title:'操作', toolbar: '#operating', align:'center', width: '15%'}
             ]]
             ,where: getFormJson('#searchForm')
         });
@@ -131,9 +137,8 @@
                     $('#token').val(result.data.token);
                     if (result.code) {
                         layer.close(modal);
-                        layer.msg(result.msg, {time: 1000}, function () {
-                            $(".layui-laypage-btn")[0].click();//重新加载当前页数据表格
-                        });
+                        reloadTable('#searchForm');//重新加载数据表格
+                        layer.msg(result.msg, {time: 1000});
                     } else {
                         layer.alert(result.msg, {icon: 2, title: '保存失败！'});
                     }

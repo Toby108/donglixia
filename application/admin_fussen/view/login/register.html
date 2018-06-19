@@ -24,7 +24,7 @@
         </div>
         <div class="layui-form-item">
             <label class="tpl-user-login-icon layui-icon layui-icon-password"></label>
-            <input type="password" name="password" lay-verify="pass" placeholder="密码" class="layui-input">
+            <input type="password" name="user_pwd" lay-verify="pass" placeholder="密码" class="layui-input">
         </div>
         <div class="layui-form-item">
             <label class="tpl-user-login-icon layui-icon layui-icon-password"></label>
@@ -67,7 +67,7 @@
                 var field = obj.field;
 
                 //确认密码
-                if(field.password !== field.repass){
+                if(field.user_pwd !== field.repass){
                     return layer.msg('两次密码输入不一致');
                 }
 

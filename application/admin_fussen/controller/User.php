@@ -93,12 +93,12 @@ class User extends Controller
         $this->assign('avatar', $avatar);
 
         /*获取下拉列表：角色权限*/
-        $roleList = (new UserRole())->field('role_id,name,describe')->select();
+        $roleList = (new UserRole())->field('role_id,role_name,describe')->order('sort_num')->select();
         $this->assign('roleList', $roleList);
 
         /*获取下拉列表：部门*/
-        $deptList = (new UserDept())->field('dept_id,pid,name')->select();
-        $deptList = \Tree::get_Table_tree($deptList, 'name', 'dept_id');
+        $deptList = (new UserDept())->field('dept_id,pid,dept_name')->order('sort_num')->select();
+        $deptList = \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
         $this->assign('deptList', $deptList);
 
         /*获取下拉列表：推荐人*/
@@ -166,22 +166,14 @@ class User extends Controller
             $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
             $this->error($msg, null, ['token' => $this->request->token()]);
         }
-        $this->success('保存成功！', 'edit?uid=' . $this->currentModel->uid);
-    }
 
-    /**
-     * 删除
-     * @param $id
-     */
-    public function delete($id)
-    {
-        try{
-            $this->currentModel->whereIn('uid', $id)->delete();//删除当前资料
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
+        //如果是本人修改自己的资料，则刷新session
+        if ($this->currentModel->uid == user_info('uid')) {
+            $userInfo = $this->currentModel->getUserInfo(['uid'=>user_info('uid')]);
+            session('userInfo', $userInfo);//刷新session
         }
-        $this->success('删除成功!');
+
+        $this->success('保存成功！', 'edit?uid=' . $this->currentModel->uid);
     }
 
     /**
@@ -214,15 +206,15 @@ class User extends Controller
     {
         $param = $this->request->param();
 
-        if (empty($param['password'])) {
+        if (empty($param['user_pwd'])) {
             $this->error('新密码不能为空');
         }
 
-        if ($param['password'] != $param['confirm']) {
+        if ($param['user_pwd'] != $param['confirm']) {
             $this->error('两次输入的密码不一致');
         }
 
-        if (!password_strength($param['password'])) {
+        if (!password_strength($param['user_pwd'])) {
             $this->error('密码太简单，请重新修改');
         }
 
@@ -249,7 +241,7 @@ class User extends Controller
     public function getRegion($pid)
     {
         $pid = !empty($pid) ? $pid : 0;
-        return Db::name('basic_region')->where('parent_id', $pid)->field('id,name,code')->select();
+        return Db::name('basic_region')->where('parent_id', $pid)->field('id,area_name,area_code')->select();
     }
 
 

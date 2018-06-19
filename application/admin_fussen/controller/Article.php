@@ -79,7 +79,8 @@ class Article extends Controller
         if (!empty($art_id)) {
             /*获取当前文章信息*/
             $data = $this->currentModel->where('art_id', $art_id)->field(true)->field('public_time as public_date_hh_ii_ss')->find();
-            $cat_id_arr = (new ArticleCatModel)->getParentId($data['cat_id']);
+            $cat_id_arr = get_parent_ids($data['cat_id'], 'article_cat');
+
             $data['cat_id_multi'] = json_encode($cat_id_arr);
             $this->assign('data', $data);
         }
@@ -120,7 +121,7 @@ class Article extends Controller
     }
 
     /**
-     * 根据cat_id 获取下拉列表，级联选择
+     * 根据pid 获取下拉列表，级联选择
      * @return array
      */
     public function getCatList()
@@ -136,29 +137,6 @@ class Article extends Controller
 
         $data =  Db::name('article_cat')->where($map)->field('cat_id as id,cat_name as name')->order('sort_num')->select();
         $this->success('获取成功', null, $data);
-    }
-
-    /**
-     * 更改排序
-     */
-    public function changeSort()
-    {
-        $param = $this->request->param();
-        if (empty($param['art_id']) || empty($param['type'])) {
-            $this->error('参数错误');
-        }
-        try{
-            //格式化，获取重新排序的数据
-            $list = $this->currentModel->resetSort($param['art_id'], $param['type']);
-
-            //保存数据
-            $this->currentModel->saveAll($list);
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
-        }
-
-        $this->success('操作成功');
     }
 
 

@@ -41,7 +41,7 @@
                 <dl class="layui-nav-child">
                     <dd class="layui-hide-sm layui-show-xs"><a href="{:url('login/clearCache')}" class="clearCached">清除缓存</a></dd>
                     <dd class="layui-hide-sm layui-show-xs"><a href="#">消息提醒</a></dd>
-                    <dd><a href="javascript:;" onclick="changePwd({:session('userInfo.uid')}, '修改密码');">修改密码</a></dd>
+                    <dd><a href="javascript:;" onclick="changePwd({:session('userInfo.uid')}, '修改密码', '{:url("user/changePassword")}');">修改密码</a></dd>
                     <dd><a href="{:url('User/edit')}?uid={:session('userInfo.uid')}">修改资料</a></dd>
                     <dd><a href="{:url('login/loginOut')}">退出登录</a></dd>
                 </dl>
@@ -54,14 +54,14 @@
             <ul class="layui-nav layui-nav-tree">
                 {volist name="menu" id="vo"}
                     {notempty name="vo.child"}
-                        <li class="layui-nav-item {eq name='vo.extend' value='1'} layui-nav-itemed {/eq}
+                        <li class="layui-nav-item {eq name='vo.is_extend' value='1'} layui-nav-itemed {/eq}
                         {eq name='vo.menu_id' value='$menuCurrent.pid_display'}layui-nav-itemed{/eq}">
-                            <a href="javascript:;"><i class="iconfont icon-liebiao1"> </i>{$vo.name}</a>
+                            <a href="javascript:;"><i class="iconfont icon-liebiao1"> </i>{$vo.menu_name}</a>
                             <dl class="layui-nav-child">
                             {volist name="vo.child" id="ch"}
                                 <dd {eq name='ch.menu_id' value='$menuCurrent.id_display'}class="layui-this"{/eq}>
                                     <a href="{$ch.url_text}" {eq name="$ch.open_type" value="2"} target="_blank"{/eq}>
-                                        <i class="layui-icon layui-icon-file"></i>{$ch.name}
+                                        <i class="layui-icon layui-icon-file"></i>{$ch.menu_name}
                                     </a>
                                 </dd>
                             {/volist}
@@ -70,7 +70,7 @@
                     {else/}
                         <li class="layui-nav-item {eq name='vo.menu_id' value='$menuCurrent.id_display'}layui-this{/eq}">
                             <a href="{$vo.url_text}" {eq name="$vo.open_type" value="2"} target="_blank"{/eq}>
-                                <i class="layui-icon layui-icon-file"> </i>{$vo.name}
+                                <i class="layui-icon layui-icon-file"> </i>{$vo.menu_name}
                             </a>
                         </li>
                     {/notempty}
@@ -98,7 +98,7 @@
                 <div class="layui-form-item">
                     <div class="layui-form-label">新密码：</div>
                     <div class="layui-input-inline">
-                        <input type="password" name="password" class="layui-input" lay-verify="required">
+                        <input type="password" name="user_pwd" class="layui-input" lay-verify="required">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -124,7 +124,7 @@
 <![endif]-->
 <script type="text/javascript">
     //定义全局变量
-    var table_limit = {$table_limit|default='20'};
+    var table_limit = {$table_limit|default='10'};
     var table_limits = [10,15,30,50,100];
 
     $(function(){
@@ -140,7 +140,7 @@
         if (password_strong === '0') {
             var uid = {:session('userInfo.uid')};
             var title= '您的登录密码太简单，请及时修改！';
-            changePwd(uid,title);
+            changePwd(uid, title, '{:url("user/changePassword")}');
         }
     });
 

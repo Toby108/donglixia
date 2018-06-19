@@ -23,8 +23,8 @@ class Dept extends Controller
 
     public function index()
     {
-        $deptList = $this->currentModel->field('dept_id,pid,name')->select();
-        $deptList = \Tree::get_Table_tree($deptList, 'name', 'dept_id');
+        $deptList = $this->currentModel->field('dept_id,pid,dept_name')->order('sort_num')->select();
+        $deptList = \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
         $this->assign('deptList', $deptList);
         return $this->fetch();
     }
@@ -36,8 +36,8 @@ class Dept extends Controller
     {
         $param = $this->request->param();
 
-        if (!empty($param['name'])) {
-            $map['name'] = ['like', '%'.$param['name'].'%'];
+        if (!empty($param['dept_name'])) {
+            $map['dept_name'] = ['like', '%'.$param['dept_name'].'%'];
         }
 
         if (empty($map)) {
@@ -47,9 +47,10 @@ class Dept extends Controller
         $count = $this->currentModel->where($map)->count();
         $list = $this->currentModel->where($map)
             ->page($param['page'], $param['limit'])
-            ->field('dept_id,pid,name,name as name_text')
+            ->order('sort_num')
+            ->field('dept_id,pid,dept_name,dept_name as dept_name_text')
             ->select();
-        $list = \Tree::get_Table_tree($list, 'name_text', 'dept_id');
+        $list = \Tree::get_Table_tree($list, 'dept_name_text', 'dept_id');
         return ['code'=>0, 'msg'=>'', 'count'=>$count, 'data'=>$list];
     }
 
@@ -78,30 +79,13 @@ class Dept extends Controller
         $this->success('保存成功！', 'index', ['token'=>$token]);
     }
 
-
-    /**
-     * 删除
-     * @param $id
-     */
-    public function delete($id)
-    {
-        try{
-            $this->currentModel->whereIn('pid', $id)->delete();//删除子部门资料
-            $this->currentModel->whereIn('dept_id', $id)->delete();//删除当前资料
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
-        }
-        $this->success('删除成功!');
-    }
-
     /**
      * 获取部门列表
      */
     public function getDeptList()
     {
-        $deptList = $this->currentModel->field('dept_id,pid,name')->select();
-        return \Tree::get_Table_tree($deptList, 'name', 'dept_id');
+        $deptList = $this->currentModel->field('dept_id,pid,dept_name')->select();
+        return \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
     }
 }
 

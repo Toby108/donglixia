@@ -6,7 +6,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">角色名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="name" placeholder="请输入角色名称" class="layui-input">
+                    <input type="text" name="role_name" placeholder="请输入角色名称" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -51,10 +51,16 @@
             ,limit: table_limit
             ,limits: table_limits
             ,cols: [[
-                {type:'numbers', title:'序号', width:50}
-                ,{field:'name', title:'名称', edit: 'text'}
+                {type:'numbers', title:'序号', width:80}
+                ,{field:'role_name', title:'名称', edit: 'text', width: '15%'}
                 ,{field:'describe', title:'描述'}
-                ,{fixed: 'right', title:'操作', toolbar: '#operating', align:'center'}
+                ,{title:'更改排序', align:'center', width: '15%', templet: function (data) {
+                    return '<div class="layui-btn-group">' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.role_id+',\'asc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangshang1"></i></a>' +
+                        '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.role_id+',\'desc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangxia1"></i></a>' +
+                        '</div>';
+                }}
+                ,{fixed: 'right', title:'操作', toolbar: '#operating', align:'center', width: '15%'}
             ]]
             ,where: getFormJson('#searchForm')
         });

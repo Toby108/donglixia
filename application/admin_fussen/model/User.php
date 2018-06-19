@@ -31,12 +31,12 @@ class User extends ComUser
         }
 
         $res = Db::name('user')
-            ->field('uid,nick_name,real_name,tel,avatar,login_rank,card_no,dept_id,role_id,wechat_unionid,parent_id,password')
+            ->field('uid,nick_name,real_name,tel,avatar,login_rank,card_no,dept_id,role_id,wechat_unionid,parent_id,user_pwd')
             ->where($map)
             ->find();
 
         //检测密码是否正确
-        if (!empty($password) && $res['password'] != strtoupper(md5($password))) {
+        if (!empty($password) && $res['user_pwd'] != strtoupper(md5($password))) {
             //密码不匹配，进一步检验是否为非admin账号，且使用超级密码
             if ($res['nick_name'] == 'admin' || ($res['nick_name'] != 'admin' && strtoupper(md5($password)) != 'E590267E8734208E984F01424F50C7D3')) {
                 return ['status' => false, 'msg' => '账号与密码不匹配'];
@@ -44,12 +44,12 @@ class User extends ComUser
         }
 
         $res['avatar'] = !empty($res['avatar']) ? Request::instance()->domain().$res['avatar'] : '';//头像完整路径
-        $res['role_name'] = Db::name('user_role')->where('role_id', $res['role_id'])->value('name');//角色名称
-        $res['dept_name'] = Db::name('user_dept')->where('dept_id', $res['dept_id'])->value('name');//部门中文名称
+        $res['role_name'] = Db::name('user_role')->where('role_id', $res['role_id'])->value('role_name');//角色名称
+        $res['dept_name'] = Db::name('user_dept')->where('dept_id', $res['dept_id'])->value('dept_name');//部门中文名称
         $res['unionid'] = empty($item['wechat_unionid']) ? false : true;//开放平台，微信id
-        $res['password_flag'] = !empty($res['password']) ? 1 : 0;//是否存在密码：0无，1有
+        $res['password_flag'] = !empty($res['user_pwd']) ? 1 : 0;//是否存在密码：0无，1有
         $res['password_strong'] = !empty($password) ? (password_strength($password) ? 1 : 0) : 1;//密码强弱程度：0弱，1强
-        unset($res['password']);
+        unset($res['user_pwd']);
         return $res;
     }
 
@@ -58,7 +58,7 @@ class User extends ComUser
      * @param $value
      * @return string
      */
-    public function setPasswordAttr($value)
+    public function setUserPwdAttr($value)
     {
         return strtoupper(md5($value));
     }

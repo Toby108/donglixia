@@ -59,17 +59,6 @@
                 return false;
             });
 
-            //重置密码
-            form.on('submit(LAY-user-forget-resetpass)', function(obj){
-                var field = obj.field;
-
-                //确认密码
-                if(field.password !== field.repass){
-                    return layer.msg('两次密码输入不一致');
-                }
-
-                return false;
-            });
         });
     });
 </script>

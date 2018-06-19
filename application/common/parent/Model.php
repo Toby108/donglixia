@@ -127,7 +127,7 @@ abstract class Model extends ModelCore
         $result =  parent::save($data,$where,$sequence);
         if ($result)
         {
-            $this->log($data);
+            $this->dataChangelog($data);
         }
         return $result;
     }
@@ -135,14 +135,15 @@ abstract class Model extends ModelCore
     /**
      * 将新增和修改的数据写入日志
      * @param $data
+     * @param $type int 类型：1insert，2update， 3删除
      */
-    private function log($data = [])
+    public function dataChangelog($data = [], $type = 0)
     {
         //过滤非表字段数据,反转字段名为键,获取与当前save数据的交集
-        $paramsJson = array_intersect_key($data, array_flip($this->field));
+        $paramsJson = !empty($this->field) ? array_intersect_key($data, array_flip($this->field)) : $data;
         $logData['table_name'] = $this->name;
-        $logData['type'] = $this->hasPk($data) ? 2 : 1;//类型：1insert，2update
-        $logData['content'] = json_encode($paramsJson);
+        $logData['type'] = !empty($type) ? $type : ($this->hasPk($data) ? 2 : 1);
+        $logData['content'] = json_encode($paramsJson, JSON_UNESCAPED_UNICODE);
         $logData['create_by'] = !empty(Session::get('userInfo.uid')) ? Session::get('userInfo.uid') :  (!empty($paramsJson['create_by']) ? $paramsJson['create_by'] : 0);
         $logData['create_time'] = time();
         Db::name('data_change_log')->insert($logData);
@@ -203,4 +204,12 @@ abstract class Model extends ModelCore
         }
     }
 
+    /**
+     * 获取当前实例化后的模型对应的表名
+     * @return bool|string
+     */
+    public function getTableName()
+    {
+        return $this->name;
+    }
 }

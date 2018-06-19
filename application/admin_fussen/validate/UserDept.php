@@ -15,14 +15,14 @@ class UserDept extends Validate
 {
     /*字段规则*/
     protected $rule = [
-        'name' => 'require|token'
+        'dept_name' => 'require|token'
 
     ];
 
     /*返回错误信息*/
     protected $message = [
-        "name.require" => '部门名称不能为空！'
-        ,"name.token" => '请勿重复提交！'
+        "dept_name.require" => '部门名称不能为空！'
+        ,"dept_name.token" => '请勿重复提交！'
     ];
 
     protected $scene = [

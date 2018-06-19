@@ -69,7 +69,7 @@ function reloadTable(form, curr) {
     $.each(arr, function () {
         where[this.name] = this.value || '';
     });
-    history.pushState({}, '', window.location.origin+window.location.pathname);
+    // history.pushState({}, '', window.location.origin+window.location.pathname);//去除链接参数
     tableIns.reload({
         where: where
         ,page:{
@@ -95,7 +95,7 @@ $('.nav-display').on('click', function () {
 });
 
 /*弹窗显示修改密码*/
-function changePwd(uid, title) {
+function changePwd(uid, title, url) {
     layui.use('layer', function () {
         $('#pwdFormCommon').find('input[name="uid"]').val(uid);
         var modal = layer.open({
@@ -104,7 +104,7 @@ function changePwd(uid, title) {
             , btn: ['确定', '取消']
             , content: $('#pwdModalCommon').html()
             , yes: function (index, element) {
-                $.post('/admin_layui/user/changePassword.html', $(element).find('form').serialize(), function (result) {
+                $.post(url, $(element).find('form').serialize(), function (result) {
                     if (result.code) {
                         layer.close(modal);
                         layer.msg(result.msg, {time: 2000});
@@ -117,5 +117,14 @@ function changePwd(uid, title) {
     });
 }
 
-
+/*更改排序*/
+function changeSort(id, type, url) {
+    $.post(url, {id:id, type:type}, function (result) {
+        if (result.code) {
+            reloadTable('#searchForm');
+        } else {
+            layer.alert(result.msg, {icon:2});
+        }
+    }, 'json');
+}
 

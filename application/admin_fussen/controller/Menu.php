@@ -41,8 +41,8 @@ class Menu extends Controller
         if (!empty($param['pid'])) {
             $map['pid'] = $param['pid'];
         }
-        if (!empty($param['name'])) {
-            $map['name'] = ['like', '%'.$param['name'].'%'];
+        if (!empty($param['menu_name'])) {
+            $map['menu_name'] = ['like', '%'.$param['menu_name'].'%'];
         }
         if (!empty($param['url'])) {
             $map['url'] = ['like', '%'.$param['url'].'%'];
@@ -52,11 +52,11 @@ class Menu extends Controller
         }
         $count = $this->currentModel->where($map)->count();
         $list = $this->currentModel->where($map)
-            ->field('menu_id,pid,pid as pid_text,name,sort,url,description,display as display_text, 
-            open_type as open_type_text,name as name_text,extend as extend_text')
-            ->order('sort asc')
+            ->field('menu_id,pid,pid as pid_text,menu_name,sort_num,url,description,display as display_text, 
+            open_type as open_type_text,menu_name as menu_name_text,is_extend as is_extend_text')
+            ->order('sort_num asc')
             ->select();
-        $list = \Tree::get_Table_tree($list, 'name_text', 'menu_id');
+        $list = \Tree::get_Table_tree($list, 'menu_name_text', 'menu_id');
 
         foreach ($list as $key=>$val) {
             unset($list[$key]['child']);
@@ -77,7 +77,7 @@ class Menu extends Controller
 
         if (!empty($param['menu_id'])) {
             $data = $this->currentModel->where('menu_id', $param['menu_id'])->find();
-            $pid_arr = $this->currentModel->getParentId($data['pid']);
+            $pid_arr = get_parent_ids($data['pid'], 'basic_menu');
             $data['pid_multi'] = json_encode($pid_arr);
             $this->assign('data', $data);
         }
@@ -94,9 +94,9 @@ class Menu extends Controller
             $this->error('没有需要保存的数据！');
         }
 
-        if (empty($param['sort'])) {
-            $max_sort = $this->currentModel->where('pid', $param['pid'])->max('sort');
-            $param['sort'] = $max_sort+1;
+        if (empty($param['sort_num'])) {
+            $max_sort = $this->currentModel->where('pid', $param['pid'])->max('sort_num');
+            $param['sort_num'] = $max_sort+1;
         }
 
         //验证数据
@@ -113,52 +113,14 @@ class Menu extends Controller
     }
 
     /**
-     * 删除
-     * @param $id
-     */
-    public function delete($id)
-    {
-        try{
-            $this->currentModel->whereIn('pid', $id)->delete();//删除子菜单资料
-            $this->currentModel->whereIn('menu_id', $id)->delete();//删除当前资料
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
-        }
-        $this->success('删除成功!');
-    }
-
-    /**
-     * 根据id，获取子菜单
+     * 根据id，获取下一级菜单
      * @param $id
      * @return mixed
      * @throws \think\exception\DbException
      */
     public function getChildInfo($id)
     {
-        return $this->currentModel->where('pid', $id)->field('menu_id,pid,name,url')->select();
-    }
-
-    /**
-     * 更改排序
-     */
-    public function changeSort()
-    {
-        $param = $this->request->param();
-        if (empty($param['menu_id']) || empty($param['type'])) {
-            $this->error('菜单id 或 排序类型不能为空');
-        }
-
-        //格式化，获取重新排序的数据
-        $menuList = $this->currentModel->resetSort($param['menu_id'], $param['type']);
-
-        //保存数据
-        $res = $this->currentModel->saveAll($menuList);
-        if ($res === false) {
-            $this->error($this->currentModel->getError());
-        }
-
-        $this->success('操作成功');
+        return $this->currentModel->where('pid', $id)->field('menu_id,pid,menu_name,url')->select();
     }
 
     /**
@@ -176,7 +138,7 @@ class Menu extends Controller
             $map['menu_id'] = ['<>', $param['menu_id']];
         }
 
-        $data =  $this->currentModel->where($map)->field('menu_id as id,name')->order('sort')->select();
+        $data =  $this->currentModel->where($map)->field('menu_id as id,menu_name as name')->order('sort_num')->select();
         $this->success('获取成功', null, $data);
     }
 }

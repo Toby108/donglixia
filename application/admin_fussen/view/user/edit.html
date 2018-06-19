@@ -33,13 +33,14 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>密码：</label>
                             <div class="layui-input-block">
-                                <input type="password" name="password" placeholder="请输入密码" class="layui-input" autocomplete="off">
+                                <input type="password" style="position: absolute; top: -999px"/><!--禁止浏览器自动填充密码-->
+                                <input type="password" name="user_pwd" placeholder="请输入密码" class="layui-input" lay-verify="required">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>确认密码：</label>
                             <div class="layui-input-block">
-                                <input type="password" name="confirm" placeholder="请再次确认密码" class="layui-input" autocomplete="off">
+                                <input type="password" name="confirm" placeholder="请再次确认密码" class="layui-input" lay-verify="required">
                             </div>
                         </div>
                         {/empty}
@@ -55,18 +56,18 @@
                                 <input type="text" name="real_name" value="{$data.real_name|default=''}" placeholder="请输入真实姓名" class="layui-input">
                             </div>
                         </div>
-                        <!--<div class="layui-form-item">-->
-                            <!--<label class="layui-form-label">用户类型：</label>-->
-                            <!--<div class="layui-input-block">-->
-                                <!--{notempty name="basicList"}-->
-                                <!--{volist name="basicList" id="vo"}-->
-                                <!--{eq name="vo.cat_code" value="AL"}-->
-                                <!--<input type="radio" name="type" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.type|default='159'"}checked{/eq}>-->
-                                <!--{/eq}-->
-                                <!--{/volist}-->
-                                <!--{/notempty}-->
-                            <!--</div>-->
-                        <!--</div>-->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>用户类型：</label>
+                            <div class="layui-input-block">
+                                {notempty name="basicList"}
+                                {volist name="basicList" id="vo"}
+                                {eq name="vo.cat_code" value="AL"}
+                                <input type="radio" name="type" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.type|default='159'"}checked{/eq}>
+                                {/eq}
+                                {/volist}
+                                {/notempty}
+                            </div>
+                        </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">部门：</label>
                             <div class="layui-input-block">
@@ -74,37 +75,37 @@
                                     <option value="">请选择</option>
                                     {notempty name="deptList"}
                                     {volist name="deptList" id="vo"}
-                                    <option value="{$vo.dept_id}" {eq name="vo.dept_id" value="$data.dept_id|default=''"}selected{/eq}>{$vo.name}</option>
+                                    <option value="{$vo.dept_id}" {eq name="vo.dept_id" value="$data.dept_id|default=''"}selected{/eq}>{$vo.dept_name}</option>
                                     {/volist}
                                     {/notempty}
                                 </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>角色权限：</label>
+                            <label class="layui-form-label">角色权限：</label>
                             <div class="layui-input-block">
-                                <select name="role_id[]" multiple lay-search lay-verify="required">
+                                <select name="role_id[]" multiple lay-search>
                                     <option value="">请选择</option>
                                     {notempty name="roleList"}
                                     {volist name="roleList" id="vo"}
-                                    <option value="{$vo.role_id}" {in name="vo.role_id" value="$data.role_id|default='2'"}selected{/in}>{$vo.name}{notempty name="$vo.describe"} —— （{$vo.describe}）{/notempty}</option>
+                                    <option value="{$vo.role_id}" {in name="vo.role_id" value="$data.role_id|default='2'"}selected{/in}>{$vo.role_name}{notempty name="$vo.describe"} —— （{$vo.describe}）{/notempty}</option>
                                     {/volist}
                                     {/notempty}
                                 </select>
                             </div>
                         </div>
-                        <!--<div class="layui-form-item">-->
-                            <!--<label class="layui-form-label">数据权限：</label>-->
-                            <!--<div class="layui-input-block">-->
-                                <!--{notempty name="basicList"}-->
-                                <!--{volist name="basicList" id="vo"}-->
-                                <!--{eq name="vo.cat_code" value="AM"}-->
-                                <!--<input type="radio" name="login_rank" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.login_rank|default='161'"}checked{/eq}>-->
-                                <!--{/eq}-->
-                                <!--{/volist}-->
-                                <!--{/notempty}-->
-                            <!--</div>-->
-                        <!--</div>-->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据权限：</label>
+                            <div class="layui-input-block">
+                                {notempty name="basicList"}
+                                {volist name="basicList" id="vo"}
+                                {eq name="vo.cat_code" value="AM"}
+                                <input type="radio" name="login_rank" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.login_rank|default='161'"}checked{/eq}>
+                                {/eq}
+                                {/volist}
+                                {/notempty}
+                            </div>
+                        </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">推荐人：</label>
                             <div class="layui-input-block">
@@ -144,7 +145,7 @@
                                     {notempty name="basicList"}
                                     {volist name="basicList" id="vo"}
                                     {eq name="vo.cat_code" value="AB"}
-                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.card_type|default=''"}selected{/eq}>{$vo.name}</option>
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.card_type|default=''"}selected{/eq}>{$vo.basic_name}</option>
                                     {/eq}
                                     {/volist}
                                     {/notempty}
@@ -184,7 +185,7 @@
                                     {notempty name="basicList"}
                                     {volist name="basicList" id="vo"}
                                     {eq name="vo.cat_code" value="AE"}
-                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.bank|default=''"}selected{/eq}>{$vo.name}</option>
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.bank|default=''"}selected{/eq}>{$vo.basic_name}</option>
                                     {/eq}
                                     {/volist}
                                     {/notempty}
@@ -205,7 +206,7 @@
                                         <option value="">请选择省</option>
                                         {notempty name="provinceList"}
                                         {volist name="provinceList" id="vo"}
-                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.province|default='0'"}selected{/eq}>{$vo.name}</option>
+                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.province|default='0'"}selected{/eq}>{$vo.area_name}</option>
                                         {/volist}
                                         {/notempty}
                                     </select>
@@ -220,7 +221,7 @@
                                         <option value="">请选择市</option>
                                         {notempty name="cityList"}
                                         {volist name="cityList" id="vo"}
-                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.city|default='0'"}selected{/eq}>{$vo.name}</option>
+                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.city|default='0'"}selected{/eq}>{$vo.area_name}</option>
                                         {/volist}
                                         {/notempty}
                                     </select>
@@ -235,7 +236,7 @@
                                         <option value="">请选择区/县</option>
                                         {notempty name="districtList"}
                                         {volist name="districtList" id="vo"}
-                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.district|default='0'"}selected{/eq}>{$vo.name}</option>
+                                        <option value="{$vo.id}" {eq name="vo.id" value="$data.district|default='0'"}selected{/eq}>{$vo.area_name}</option>
                                         {/volist}
                                         {/notempty}
                                     </select>
@@ -256,7 +257,7 @@
                                     {notempty name="basicList"}
                                     {volist name="basicList" id="vo"}
                                     {eq name="vo.cat_code" value="AF"}
-                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.position|default=''"}selected{/eq}>{$vo.name}</option>
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.position|default=''"}selected{/eq}>{$vo.basic_name}</option>
                                     {/eq}
                                     {/volist}
                                     {/notempty}
@@ -271,7 +272,7 @@
                                     {notempty name="basicList"}
                                     {volist name="basicList" id="vo"}
                                     {eq name="vo.cat_code" value="AD"}
-                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.nation|default=''"}selected{/eq}>{$vo.name}</option>
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.nation|default=''"}selected{/eq}>{$vo.basic_name}</option>
                                     {/eq}
                                     {/volist}
                                     {/notempty}
@@ -286,7 +287,7 @@
                                     {notempty name="basicList"}
                                     {volist name="basicList" id="vo"}
                                     {eq name="vo.cat_code" value="AA"}
-                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.academic|default=''"}selected{/eq}>{$vo.name}</option>
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.academic|default=''"}selected{/eq}>{$vo.basic_name}</option>
                                     {/eq}
                                     {/volist}
                                     {/notempty}
@@ -301,7 +302,7 @@
                                     {notempty name="basicList"}
                                     {volist name="basicList" id="vo"}
                                     {eq name="vo.cat_code" value="AC"}
-                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.marriage|default=''"}selected{/eq}>{$vo.name}</option>
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.marriage|default=''"}selected{/eq}>{$vo.basic_name}</option>
                                     {/eq}
                                     {/volist}
                                     {/notempty}
@@ -316,7 +317,7 @@
                                     {notempty name="basicList"}
                                     {volist name="basicList" id="vo"}
                                     {eq name="vo.cat_code" value="AG"}
-                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.politics|default=''"}selected{/eq}>{$vo.name}</option>
+                                    <option value="{$vo.basic_id}" {eq name="vo.basic_id" value="$data.politics|default=''"}selected{/eq}>{$vo.basic_name}</option>
                                     {/eq}
                                     {/volist}
                                     {/notempty}
@@ -353,7 +354,7 @@
                                 {notempty name="basicList"}
                                 {volist name="basicList" id="vo"}
                                 {eq name="vo.cat_code" value="AI"}
-                                <input type="radio" name="onduty_state" value="{$vo.basic_id}" title="{$vo.name}" {eq name="vo.basic_id" value="$data.onduty_state|default='272'"}checked{/eq}>
+                                <input type="radio" name="onduty_state" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.onduty_state|default='272'"}checked{/eq}>
                                 {/eq}
                                 {/volist}
                                 {/notempty}
@@ -376,7 +377,7 @@
                                             <img class="layui-upload-img" src="{$vo.img_url|default='__STATIC__/img/holder.jpg'}">
                                         </a>
                                     </div>
-                                    <button type="button" class="layui-btn btn-upload-img" >{$vo.name}</button>
+                                    <button type="button" class="layui-btn btn-upload-img" >{$vo.basic_name}</button>
                                 </div>
                             </div>
                             {/volist}
@@ -485,7 +486,7 @@
             $.post('{:url("getRegion")}', {pid:id}, function (result) {
                 var _html = "<option value=''>请选择</option>";
                 $.each(result, function (key, val) {
-                    _html += "<option value='"+val.id+"'>"+val.name+"</option>";
+                    _html += "<option value='"+val.id+"'>"+val.area_name+"</option>";
                 });
                 $(position).html(_html);
                 $(position_change).html("<option value=''>请选择</option>");
@@ -499,7 +500,7 @@
             $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
                 layer.close(index);
                 if (result.code) {
-                    layer.msg(result.msg, {shade:[0.5,'#000'],time:2000}, function () {
+                    layer.msg(result.msg, {shade:[0.5,'#000'],time:1000}, function () {
                         window.location.href = result.url;
                     });
                 } else {

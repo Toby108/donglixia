@@ -18,9 +18,9 @@ class User extends Validate
         'nick_name' => 'require|unique:user|token|checkPwd'
         ,'tel' => 'require|unique:user'
         ,'card_no' => 'unique:user'
-//        ,'type' => 'require'
-        ,'role_id' => 'require'
-//        ,'login_rank' => 'require'
+        ,'type' => 'require'
+        ,'role_id' => 'requireIf:type,159'
+        ,'login_rank' => 'requireIf:type,159'
     ];
 
     /*返回错误信息*/
@@ -31,9 +31,9 @@ class User extends Validate
         ,'tel.require' => '手机号不能为空！'
         ,'tel.unique' => '手机号已被使用！'
         ,'card_no.unique' => '证件号已被使用！'
-//        ,'type.require' => '请选择用户类型！'
-        ,'role_id.require' => '请选择角色权限！'
-//        ,'login_rank.require' => '请选择数据权限！'
+        ,'type.require' => '请选择用户类型！'
+        ,'role_id.requireIf' => '当前用户类型为“后台管理员”，角色权限不能为空！'
+        ,'login_rank.requireIf' => '当前用户类型为“后台管理员”，数据权限不能为空！'
     ];
 
     protected $scene = [
@@ -50,17 +50,17 @@ class User extends Validate
     protected function checkPwd($value, $rule, $data)
     {
         //添加用户时，新密码必填
-        if (empty($data['uid']) && empty($data['password'])) {
+        if (empty($data['uid']) && empty($data['user_pwd'])) {
             return '密码不能为空';
         }
 
         //编辑用户时，验证确认密码
-        if (!empty($data['password'])) {
-            if (empty($data['confirm']) || ($data['password'] != $data['confirm'])) {
+        if (!empty($data['user_pwd'])) {
+            if (empty($data['confirm']) || ($data['user_pwd'] != $data['confirm'])) {
                 return '两次输入的密码不一致';
             }
 
-            if (!password_strength($data['password'])) {
+            if (!password_strength($data['user_pwd'])) {
                 return '密码太简单，请重新修改';
             }
         }

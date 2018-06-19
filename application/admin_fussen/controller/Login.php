@@ -24,7 +24,7 @@ class Login extends Controller
         if (substr_count($_SERVER['HTTP_HOST'], '.') === 1) {
             header('Location: http://www.'.$_SERVER['HTTP_HOST']);
         }
-        $web_name = Db::name('system_config')->where('code', 'web_name')->value('value');
+        $web_name = Db::name('system_config')->where('sys_code', 'web_name')->value('sys_value');
         $this->assign('web_name', !empty($web_name) ? $web_name : 'CMS');
     }
 
@@ -38,8 +38,6 @@ class Login extends Controller
         if (!empty(user_info('uid'))) {
             $this->redirect('Index/index');
         }
-        $is_captcha = Db::name('system_config')->where('code', 'is_captcha')->value('value');
-        $this->assign('is_captcha', $is_captcha);
 
         return $this->fetch();
     }
@@ -50,13 +48,12 @@ class Login extends Controller
     public function login()
     {
         $param = $this->request->param();//获取参数
-        if (empty($param['keyword']) || empty($param['password'])) {
+        if (empty($param['keyword']) || empty($param['user_pwd'])) {
             $this->error('用户名 或 密码不能为空！');
         }
 
         //验证码校验
-        $is_captcha = Db::name('system_config')->where('code', 'is_captcha')->value('value');
-        if($is_captcha == 1 && (empty($param['vercode']) || !captcha_check($param['vercode']))){
+        if( cookie('error_num') > 2 && (empty($param['vercode']) || !captcha_check($param['vercode']))){
             $this->error('验证码错误');
         };
 
@@ -64,7 +61,7 @@ class Login extends Controller
         //记住密码，有效期一个月
         if(isset($param['remember']) && $param['remember'] == 1){
             Cookie::set('remember_name', $param['keyword']);
-            Cookie::set('remember_pwd', $param['password']);
+            Cookie::set('remember_pwd', $param['user_pwd']);
             Cookie::set('remember_language', $param['language']);
         };
 
@@ -72,7 +69,7 @@ class Login extends Controller
         Cookie::set('back_url', redirect()->restore()->getData());
 
         $data['nick_name|tel'] = $param['keyword'];
-        $data['password'] = $param['password'];
+        $data['user_pwd'] = $param['user_pwd'];
         $this->loginGo($data);//设置session，实现登录并跳转
     }
 
@@ -83,9 +80,9 @@ class Login extends Controller
     public function loginGo($data)
     {
         $password = '';
-        if (!empty($data['password'])) {
-            $password = $data['password'];
-            unset($data['password']);
+        if (!empty($data['user_pwd'])) {
+            $password = $data['user_pwd'];
+            unset($data['user_pwd']);
         }
 
         $url = !empty(Cookie::get('back_url')) ? Cookie::get('back_url') : 'Index/index';
@@ -101,6 +98,7 @@ class Login extends Controller
             $this->setSession($userInfo);//设置session
 
         } catch (\Exception $e) {
+            cookie('error_num', cookie('error_num') + 1);
             $this->error($e->getMessage());
         }
 
@@ -241,12 +239,12 @@ class Login extends Controller
 
         if ($type == 1) {
             //若现在绑定，则根据输入的帐号密码，绑定信息
-            if (empty($param['keyword']) || empty($param['password'])) {
-                $this->error('帐号和密码不能为空');
+            if (empty($param['tel'])) {
+                $this->error('手机号不能为空');
             }
 
             $User = new User();
-            $userInfo = $User->getUserInfo(['nick_name|tel' => $param['keyword']], $param['password']);
+            $userInfo = $User->getUserInfo(['tel' => $param['keyword']]);
             if (isset($userInfo['status']) && $userInfo['status'] == false) {
                 $this->error($userInfo['msg']);
             }
@@ -345,8 +343,10 @@ class Login extends Controller
 
         //语言：1中文，2English
         $lang = Cookie::get('remember_language') ? Cookie::get('remember_language') : 1;
-        Db::name('system_config')->where('code', 'language')->update(['value'=>$lang]);
+        Db::name('system_config')->where('sys_code', 'language')->update(['sys_value'=>$lang]);
         setSessionConfig();//缓存系统设置
+
+        cookie('error_num', 0);//错误次数归0
     }
 
     /**

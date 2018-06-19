@@ -20,23 +20,23 @@
             <div class="layui-form-item">
                 <input type="password" style="position: absolute; top: -999px"/><!--禁止浏览器自动填充密码-->
                 <label class="tpl-user-login-icon layui-icon layui-icon-password"></label>
-                <input type="password" name="password" value="{:cookie('remember_pwd')}" lay-verify="required" placeholder="密码" class="layui-input" title="密码" >
+                <input type="password" name="user_pwd" value="{:cookie('remember_pwd')}" lay-verify="required" placeholder="密码" class="layui-input" title="密码" >
             </div>
-            {notempty name="is_captcha"}
+            {gt name="'error_num'|cookie" value="2"}
             <div class="layui-form-item">
                 <div class="layui-row">
                     <div class="layui-col-xs7">
                         <label class="tpl-user-login-icon layui-icon layui-icon-vercode"></label>
-                        <input type="text" name="vercode" id="captcha_input" lay-verify="required" placeholder="验证码" class="layui-input">
+                        <input type="text" name="vercode" lay-verify="required" placeholder="验证码" class="layui-input">
                     </div>
                     <div class="layui-col-xs5">
                         <div style="margin-left: 10px;overflow: hidden;">
-                            <img src="{:captcha_src()}" id="captcha_img" onclick="this.src='{:captcha_src()}?'+ Math.random();" alt="验证码" />
+                            <img src="{:captcha_src()}" alt="验证码" />
                         </div>
                     </div>
                 </div>
             </div>
-            {/notempty}
+            {/gt}
             <div class="layui-form-item" style="margin-bottom: 20px;">
                 <div class="layui-input-inline" style="width: 279px">
                     <span style="vertical-align: middle;display: inline-block;">语言：</span>
@@ -74,9 +74,9 @@
                     if (result.code) {
                         window.location.href = result.url;
                     } else {
-                        layer.alert(result.msg, {icon:2, title:'登录失败！'});
-                        $('#captcha_img').click();
-                        $('#captcha_input').val('');
+                        layer.alert(result.msg, {icon:2, title:'登录失败！'}, function () {
+                            window.location.reload();
+                        });
                     }
                 }, 'json');
 

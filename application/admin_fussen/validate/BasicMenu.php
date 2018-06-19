@@ -15,13 +15,13 @@ class BasicMenu extends Validate
 {
     /*字段规则*/
     protected $rule = [
-        'name' => 'require|token'
+        'menu_name' => 'require|token'
     ];
 
     /*返回错误信息*/
     protected $message = [
-        "name.require" => '菜单名称不能为空！'
-        ,"name.token" => '请勿重复提交！'
+        "menu_name.require" => '菜单名称不能为空！'
+        ,"menu_name.token" => '请勿重复提交！'
     ];
 
     protected $scene = [

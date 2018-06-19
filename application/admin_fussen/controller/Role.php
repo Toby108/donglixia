@@ -37,14 +37,14 @@ class Role extends Controller
     public function getDataList()
     {
         $param = $this->request->param();
-        if (!empty($param['name'])) {
-            $map['name'] = ['like', '%'.$param['name'].'%'];//角色名称
+        if (!empty($param['role_name'])) {
+            $map['role_name'] = ['like', '%'.$param['role_name'].'%'];//角色名称
         }
         if (empty($map)) {
             $map[] = ['exp', '1=1'];
         }
 
-        return $this->currentModel->where($map)->layTable();
+        return $this->currentModel->where($map)->order('sort_num')->layTable();
 
     }
 
@@ -57,7 +57,7 @@ class Role extends Controller
         $param = $this->request->param();
 
         if (!empty($param['role_id'])) {
-            $data = $this->currentModel->where('role_id', $param['role_id'])->field('role_id,name,describe,auth')->find();
+            $data = $this->currentModel->where('role_id', $param['role_id'])->field('role_id,role_name,describe,auth')->find();
             $this->assign('data', $data);
         }
 
@@ -115,19 +115,5 @@ class Role extends Controller
         $this->success('保存成功！', 'index');
     }
 
-    /**
-     * 删除
-     * @param $id
-     */
-    public function delete($id)
-    {
-        try{
-            $this->currentModel->whereIn('role_id', $id)->delete();//删除当前资料
-        } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
-        }
-        $this->success('删除成功!');
-    }
 }
 
