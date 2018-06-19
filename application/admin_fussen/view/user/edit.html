@@ -5,7 +5,7 @@
 <div class="layui-row">
     <form id="editForm" class="layui-form tpl-form-label-long" action="" >
         <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
-        <input type="hidden" name="uid" value="{$data.uid|default=''}">
+        <input type="hidden" name="user_id" value="{$data.user_id|default=''}">
         <div class="layui-tab layui-tab-card">
             <ul class="layui-tab-title">
                 <li class="layui-this">账号信息</li>
@@ -29,7 +29,7 @@
                                 <input type="text" name="nick_name" value="{$data.nick_name|default=''}" lay-verify="required" placeholder="请输入帐号" class="layui-input" autocomplete="off">
                             </div>
                         </div>
-                        {empty name="data.uid"}
+                        {empty name="data.user_id"}
                         <div class="layui-form-item">
                             <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>密码：</label>
                             <div class="layui-input-block">
@@ -113,7 +113,7 @@
                                     <option value="">请选择</option>
                                     {notempty name="parentList"}
                                     {volist name="parentList" id="vo"}
-                                    <option value="{$vo.uid}" {eq name="vo.uid" value="$data.parent_id|default=''"}selected{/eq}>{$vo.real_name}</option>
+                                    <option value="{$vo.user_id}" {eq name="vo.user_id" value="$data.parent_id|default=''"}selected{/eq}>{$vo.real_name}</option>
                                     {/volist}
                                     {/notempty}
                                 </select>
@@ -368,7 +368,7 @@
                             {volist name="imgList" id="vo" key="k"}
                             <div class="layui-col-xs6 layui-col-sm4 layui-col-md4 layui-col-lg3">
                                 <input type="hidden" name="img[{$k}][img_id]" value="{$vo.img_id}">
-                                <input type="hidden" name="img[{$k}][uid]" value="{$vo.uid}">
+                                <input type="hidden" name="img[{$k}][user_id]" value="{$vo.user_id}">
                                 <input type="hidden" name="img[{$k}][img_url]" value="{$vo.img_url}" class="img-url">
                                 <input type="hidden" name="img[{$k}][type]" value="{$vo.type}">
                                 <div class="layui-upload">

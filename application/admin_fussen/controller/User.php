@@ -73,10 +73,10 @@ class User extends Controller
     public function edit()
     {
         $param = $this->request->param();
-        $uid = !empty($param['uid']) ? $param['uid'] : '';
-        if (!empty($uid)) {
+        $user_id = !empty($param['user_id']) ? $param['user_id'] : '';
+        if (!empty($user_id)) {
             /*获取当前人员信息*/
-            $data = $this->currentModel->where('uid', $uid)->find();
+            $data = $this->currentModel->where('user_id', $user_id)->find();
             $this->assign('data', $data);
 
             /*获取下拉列表：市*/
@@ -102,7 +102,7 @@ class User extends Controller
         $this->assign('deptList', $deptList);
 
         /*获取下拉列表：推荐人*/
-        $parentList = $this->currentModel->getParentList($uid);
+        $parentList = $this->currentModel->getParentList($user_id);
         $this->assign('parentList', $parentList);
 
         /*获取下拉列表：省份*/
@@ -117,8 +117,8 @@ class User extends Controller
         /*获取相关图片列表*/
         $imgList = $BasicInfo->getBasicList('person', 'AJ');
         foreach ($imgList as $k => $v) {
-            $img = Db::name('user_image')->where('uid', $uid)->where('type', $v['basic_id'])->field('img_id,uid,type,img_url')->find();
-            $imgList[$k]['uid'] = $uid;
+            $img = Db::name('user_image')->where('user_id', $user_id)->where('type', $v['basic_id'])->field('img_id,user_id,type,img_url')->find();
+            $imgList[$k]['user_id'] = $user_id;
             $imgList[$k]['type'] = $v['basic_id'];
             $imgList[$k]['img_id'] = !empty($img['img_id']) ? $img['img_id'] : '';
             $imgList[$k]['img_url'] = !empty($img['img_url']) ? $img['img_url'] : '';
@@ -168,12 +168,12 @@ class User extends Controller
         }
 
         //如果是本人修改自己的资料，则刷新session
-        if ($this->currentModel->uid == user_info('uid')) {
-            $userInfo = $this->currentModel->getUserInfo(['uid'=>user_info('uid')]);
+        if ($this->currentModel->user_id == user_info('user_id')) {
+            $userInfo = $this->currentModel->getUserInfo(['user_id'=>user_info('user_id')]);
             session('userInfo', $userInfo);//刷新session
         }
 
-        $this->success('保存成功！', 'edit?uid=' . $this->currentModel->uid);
+        $this->success('保存成功！', 'edit?user_id=' . $this->currentModel->user_id);
     }
 
     /**
@@ -182,7 +182,7 @@ class User extends Controller
     public function updateField()
     {
         $param = $this->request->param();
-        if (empty($param['uid'])) {
+        if (empty($param['user_id'])) {
             $this->error('用户id不能为空');
         }
 
@@ -225,7 +225,7 @@ class User extends Controller
         }
 
         //登录者密码修改成功，刷新缓存Session
-        if ($param['uid'] == user_info('uid')) {
+        if ($param['user_id'] == user_info('user_id')) {
             Session::set('userInfo.password_strong', 1);
         }
 
@@ -253,7 +253,7 @@ class User extends Controller
         $i = 0;
         $data = [];
         $map = $this->getDataListMap();
-        $this->currentModel->where($map)->field('uid,nick_name,real_name,tel,card_type,card_no,sex,create_time,login_state')
+        $this->currentModel->where($map)->field('user_id,nick_name,real_name,tel,card_type,card_no,sex,create_time,login_state')
             ->chunk(100, function ($res) use (&$i, &$data) {
                 $res = collection($res)->append(['sex_text', 'card_type_text', 'login_state_text'])->toArray();
                 foreach ($res as $v) {

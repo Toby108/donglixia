@@ -109,7 +109,7 @@ class BasicMenu extends ComBasicMenu
     {
         $map = [];
         $map['display'] = 1;
-        if (user_info('uid') != 1) {
+        if (user_info('user_id') != 1) {
             $auth = model('UserRole')->whereIn('role_id', user_info('role_id'))->column('auth');
             $map['menu_id'] = ['in', implode(',', $auth)];
         }

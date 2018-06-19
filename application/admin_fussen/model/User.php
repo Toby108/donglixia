@@ -31,7 +31,7 @@ class User extends ComUser
         }
 
         $res = Db::name('user')
-            ->field('uid,nick_name,real_name,tel,avatar,login_rank,card_no,dept_id,role_id,wechat_unionid,parent_id,user_pwd')
+            ->field('user_id,nick_name,real_name,tel,avatar,login_rank,card_no,dept_id,role_id,wechat_unionid,parent_id,user_pwd')
             ->where($map)
             ->find();
 
@@ -65,17 +65,17 @@ class User extends ComUser
 
     /**
      * 获取推荐人列表
-     * @param int $uid
+     * @param int $user_id
      * @return false|\PDOStatement|string|\think\Collection
      */
-    public function getParentList($uid = 0)
+    public function getParentList($user_id = 0)
     {
-        if (!empty($uid)) {
-            $map['uid'] = ['<>', $uid];
+        if (!empty($user_id)) {
+            $map['user_id'] = ['<>', $user_id];
         } else {
             $map[] = ['exp', '1=1'];
         }
-        return $this->where($map)->field('uid,nick_name,real_name')->select();
+        return $this->where($map)->field('user_id,nick_name,real_name')->select();
     }
 
     /**
@@ -97,6 +97,6 @@ class User extends ComUser
      */
     public function userImage()
     {
-        return $this->hasMany('UserImage', 'uid');
+        return $this->hasMany('UserImage', 'user_id');
     }
 }

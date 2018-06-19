@@ -35,7 +35,7 @@ class Login extends Controller
     public function index()
     {
         //若session已存在，则直接跳往后台主页
-        if (!empty(user_info('uid'))) {
+        if (!empty(user_info('user_id'))) {
             $this->redirect('Index/index');
         }
 
@@ -248,16 +248,16 @@ class Login extends Controller
             if (isset($userInfo['status']) && $userInfo['status'] == false) {
                 $this->error($userInfo['msg']);
             }
-            Db::name('user')->where('uid', $userInfo['uid'])->update($data);
-            $uid = $userInfo['uid'];
+            Db::name('user')->where('user_id', $userInfo['user_id'])->update($data);
+            $user_id = $userInfo['user_id'];
         } else {
             //若不绑定，则直接生成新用户
             $data['role_id'] = 2;//角色：游客
             $data['avatar'] = VIEW_IMAGE_PATH . '/avatar/user' . rand(10, 50) . '.png';//头像
             $data['nick_name'] = $tencent['nickname'];
-            $uid = Db::name('user')->insertGetId($data);
+            $user_id = Db::name('user')->insertGetId($data);
         }
-        $this->loginGo(['uid' => $uid]);//设置session，实现登录并跳转
+        $this->loginGo(['user_id' => $user_id]);//设置session，实现登录并跳转
     }
 
     /**

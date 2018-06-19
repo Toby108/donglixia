@@ -30,12 +30,12 @@ class Controller extends CoreController
         }
 
         /*游客体验，直接进入后台*/
-        if (isset($param['uid']) && isset($param['visitor']) && $param['uid'] == '2' && $param['visitor'] =='1') {
-            Session::set('userInfo', (new User())->getUserInfo(['uid'=>$param['uid']]));
+        if (isset($param['user_id']) && isset($param['visitor']) && $param['user_id'] == '2' && $param['visitor'] =='1') {
+            Session::set('userInfo', (new User())->getUserInfo(['user_id'=>$param['user_id']]));
         }
 
         /*判断是否已登录*/
-        if (empty(user_info('uid'))) {
+        if (empty(user_info('user_id'))) {
             $this->redirect('Login/index');
         }
 
@@ -71,12 +71,12 @@ class Controller extends CoreController
     private function checkAuth($menu_id)
     {
         /*admin账号 或 更改登录者自己的数据，直接通过验证*/
-        $uid = $this->request->param('uid');
+        $user_id = $this->request->param('user_id');
         $action = $this->request->action();
 
-        if ($uid == (user_info('uid')) && ($action == 'edit' || $action == 'changepassword'))
+        if ($user_id == (user_info('user_id')) && ($action == 'edit' || $action == 'changepassword'))
             return true;
-        if ((user_info('nick_name') == 'admin') || (user_info('uid') == 1))
+        if ((user_info('nick_name') == 'admin') || (user_info('user_id') == 1))
             return true;
 
         //获取该账户对应的所有角色权限，并格式化为数组形式

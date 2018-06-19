@@ -50,12 +50,12 @@ abstract class Model extends ModelCore
 
     public function setCreateByAttr($value)
     {
-        return $value ? $value : (!empty(Session::get('userInfo.uid')) ? Session::get('userInfo.uid') : 0);
+        return $value ? $value : (!empty(Session::get('userInfo.user_id')) ? Session::get('userInfo.user_id') : 0);
     }
 
     public function setModifyByAttr($value)
     {
-        return $value ? $value : (!empty(Session::get('userInfo.uid')) ? Session::get('userInfo.uid') : 0);
+        return $value ? $value : (!empty(Session::get('userInfo.user_id')) ? Session::get('userInfo.user_id') : 0);
     }
 
     public function setLanguageAttr($value)
@@ -75,12 +75,12 @@ abstract class Model extends ModelCore
 
     public function getCreateByAttr($value)
     {
-        return Db::name('user')->where('uid', $value)->value('nick_name');
+        return Db::name('user')->where('user_id', $value)->value('nick_name');
     }
 
     public function getModifyByAttr($value)
     {
-        return Db::name('user')->where('uid', $value)->value('nick_name');
+        return Db::name('user')->where('user_id', $value)->value('nick_name');
     }
 
     /**
@@ -144,7 +144,7 @@ abstract class Model extends ModelCore
         $logData['table_name'] = $this->name;
         $logData['type'] = !empty($type) ? $type : ($this->hasPk($data) ? 2 : 1);
         $logData['content'] = json_encode($paramsJson, JSON_UNESCAPED_UNICODE);
-        $logData['create_by'] = !empty(Session::get('userInfo.uid')) ? Session::get('userInfo.uid') :  (!empty($paramsJson['create_by']) ? $paramsJson['create_by'] : 0);
+        $logData['create_by'] = !empty(Session::get('userInfo.user_id')) ? Session::get('userInfo.user_id') :  (!empty($paramsJson['create_by']) ? $paramsJson['create_by'] : 0);
         $logData['create_time'] = time();
         Db::name('data_change_log')->insert($logData);
     }

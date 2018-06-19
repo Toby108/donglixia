@@ -41,8 +41,8 @@
                 <dl class="layui-nav-child">
                     <dd class="layui-hide-sm layui-show-xs"><a href="{:url('login/clearCache')}" class="clearCached">清除缓存</a></dd>
                     <dd class="layui-hide-sm layui-show-xs"><a href="#">消息提醒</a></dd>
-                    <dd><a href="javascript:;" onclick="changePwd({:session('userInfo.uid')}, '修改密码', '{:url("user/changePassword")}');">修改密码</a></dd>
-                    <dd><a href="{:url('User/edit')}?uid={:session('userInfo.uid')}">修改资料</a></dd>
+                    <dd><a href="javascript:;" onclick="changePwd({:session('userInfo.user_id')}, '修改密码', '{:url("user/changePassword")}');">修改密码</a></dd>
+                    <dd><a href="{:url('User/edit')}?user_id={:session('userInfo.user_id')}">修改资料</a></dd>
                     <dd><a href="{:url('login/loginOut')}">退出登录</a></dd>
                 </dl>
             </li>
@@ -94,7 +94,7 @@
     <div class="layui-row" style="padding: 15px 10px;margin: 0 auto;text-align: center;">
         <div class="layui-col-md12">
             <form action="" class="layui-form" id="pwdFormCommon">
-                <input type="hidden" name="uid" value="">
+                <input type="hidden" name="user_id" value="">
                 <div class="layui-form-item">
                     <div class="layui-form-label">新密码：</div>
                     <div class="layui-input-inline">
@@ -138,9 +138,9 @@
         //弱密码，弹窗提示修改
         var password_strong = $('#password_strong_common').text();
         if (password_strong === '0') {
-            var uid = {:session('userInfo.uid')};
+            var user_id = {:session('userInfo.user_id')};
             var title= '您的登录密码太简单，请及时修改！';
-            changePwd(uid, title, '{:url("user/changePassword")}');
+            changePwd(user_id, title, '{:url("user/changePassword")}');
         }
     });
 

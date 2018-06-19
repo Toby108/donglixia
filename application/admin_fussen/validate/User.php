@@ -50,7 +50,7 @@ class User extends Validate
     protected function checkPwd($value, $rule, $data)
     {
         //添加用户时，新密码必填
-        if (empty($data['uid']) && empty($data['user_pwd'])) {
+        if (empty($data['user_id']) && empty($data['user_pwd'])) {
             return '密码不能为空';
         }
 
