@@ -1,5 +1,6 @@
 {extend name="common/index"}
 {block name="css"}
+<link rel="stylesheet" href="__ADMIN__/css/formSelects-v4.css">
 {/block}
 
 {block name="content"}
@@ -23,8 +24,14 @@
                         </div>
                     </div>
                 </div>
-                <div id="select-cat-id" class="layui-form-item"></div>
-                <input type="hidden" name="cat_id" id="cat_id" value="{$data.cat_id|default=0}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">产品栏目：</label>
+                    <div class="layui-input-block">
+                        <select name="cat_id" xm-select="formSelect-cat-id" xm-select-radio="" xm-select-search="">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>文章标题：</label>
                     <div class="layui-input-block">
@@ -140,35 +147,20 @@
         });
     });
 
-    //上级菜单，级联选择
-    layui.config({
-        base: '__ADMIN__/js/'
-    }).use('linkSelect', function () {
-        var linkSelect = layui.linkSelect;
-        var inputFrame = $('#select-cat-id').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
-        var selectedArr = {$data.cat_id_multi|default='0'};
-
-        //级联选择，url渲染
-        link = linkSelect.render({
-            elem: '#select-cat-id',
-            url: "{:url('ArticleCat/getCatToLinkSelect')}",
-            selectedArr : selectedArr,		//默认选中数组
-            inputFrame: inputFrame,          //默认排版方式
-            placeholderText : "顶级",	//默认placeholder
-            lableName: '所属栏目：',
-            where: {art_id:$("#art_id").val()},
-            selected: function (item,dom) {
-                var val = link.getValue();
-                var val_last = 0;
-                if (val[val.length-1] != undefined) {
-                    val_last = val[val.length-1].value;
-                }
-                $("#cat_id").val(val_last);
-            }
-        });
-    });
-
     //实例化编辑器*
     UE.getEditor('art-content');
+</script>
+<script src="__ADMIN__/js/formSelects-v4.js"></script>
+<script type="text/javascript">
+    var formSelects = layui.formSelects;
+    //主类目
+    var data = {$catListFormSelect|default='0'};
+    formSelects.data('formSelect-cat-id', 'local', {
+        arr: data,
+        linkage: true,
+        linkageWidth: 130
+    });
+    formSelects.value('formSelect-cat-id', {$data.cat_id|default="0"});//初始值
+
 </script>
 {/block}

@@ -76,7 +76,7 @@ class Menu extends Controller
         $param = $this->request->param();
 
         if (!empty($param['menu_id'])) {
-            $data = $this->currentModel->where('menu_id', $param['menu_id'])->find();
+            $data = $this->currentModel->where('menu_id', $param['menu_id'])->find()->toArray();
             $pid_arr = get_parent_ids($data['pid'], 'basic_menu');
             $data['pid_multi'] = json_encode($pid_arr);
             $this->assign('data', $data);

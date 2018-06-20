@@ -76,8 +76,11 @@ class Goods extends Controller
         $goods_id = !empty($param['goods_id']) ? $param['goods_id'] : '';
         if (!empty($goods_id)) {
             //获取当前产品信息
-            $data = $this->currentModel->where('goods_id', $goods_id)->field(true)->field('public_time as public_date_hh_ii_ss')->find();
-            //获取扩展分类信息
+            $data = $this->currentModel->where('goods_id', $goods_id)->field(true)->field('public_time as public_date_hh_ii_ss')->find()->toArray();
+            //主类目，级联选择格式化：“*/*”
+            $data['cat_id'] = json_encode([implode('/', get_parent_ids($data['cat_id'], 'goods_cat'))]);
+
+            //获取扩展类目，级联选择格式化：“*/*”
             $cat_id_ext_arr = explode(',', $data['cat_id_ext']);
             $cat_id_ext = [];
             foreach ($cat_id_ext_arr as $k => $v) {

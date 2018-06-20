@@ -76,7 +76,7 @@ class User extends Controller
         $user_id = !empty($param['user_id']) ? $param['user_id'] : '';
         if (!empty($user_id)) {
             /*获取当前人员信息*/
-            $data = $this->currentModel->where('user_id', $user_id)->find();
+            $data = $this->currentModel->where('user_id', $user_id)->find()->toArray();
             $this->assign('data', $data);
 
             /*获取下拉列表：市*/

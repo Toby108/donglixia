@@ -175,7 +175,7 @@
         linkage: true,
         linkageWidth: 130
     });
-    formSelects.value('formSelect-cat-id', ['{$data.cat_id|default="0"}']);//初始值
+    formSelects.value('formSelect-cat-id', {$data.cat_id|default="0"});//初始值
 
     //扩展类目
     formSelects.data('formSelect-cat-id-ext', 'local', {

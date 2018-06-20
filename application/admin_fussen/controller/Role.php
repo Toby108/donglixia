@@ -57,7 +57,7 @@ class Role extends Controller
         $param = $this->request->param();
 
         if (!empty($param['role_id'])) {
-            $data = $this->currentModel->where('role_id', $param['role_id'])->field('role_id,role_name,describe,auth')->find();
+            $data = $this->currentModel->where('role_id', $param['role_id'])->field('role_id,role_name,describe,auth')->find()->toArray();
             $this->assign('data', $data);
         }
 

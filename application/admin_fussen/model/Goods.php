@@ -89,6 +89,37 @@ class Goods extends ComGoods
     }
 
     /**
+     * 保存“产品类目”
+     * @param $value
+     * @return mixed
+     */
+    public function setCatIdAttr($value)
+    {
+        if (!empty($value)) {
+            $arr = explode('/', $value);
+        }
+        return !empty($arr) ? end($arr) : 0;
+    }
+
+    /**
+     * 保存“扩展类目”
+     * @param $value
+     * @return mixed
+     */
+    public function setCatIdExtAttr($value)
+    {
+        $res = [];
+        if (!empty($value)) {
+            $arr = explode(',', $value);
+            foreach ($arr as $k=>$v) {
+                $temp = explode('/', $v);
+                $res[$k] = end($temp);
+            }
+        }
+        return implode(',', $res);
+    }
+
+    /**
      * 获取产品类目下拉列表
      */
     public function getCatTree()

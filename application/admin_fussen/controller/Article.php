@@ -77,11 +77,11 @@ class Article extends Controller
         $param = $this->request->param();
         $art_id = !empty($param['art_id']) ? $param['art_id'] : '';
         if (!empty($art_id)) {
-            /*获取当前文章信息*/
-            $data = $this->currentModel->where('art_id', $art_id)->field(true)->field('public_time as public_date_hh_ii_ss')->find();
-            $cat_id_arr = get_parent_ids($data['cat_id'], 'article_cat');
+            //获取当前文章信息
+            $data = $this->currentModel->where('art_id', $art_id)->field(true)->field('public_time as public_date_hh_ii_ss')->find()->toArray();
+            //文章栏目，级联选择格式化：“*/*”
+            $data['cat_id'] = json_encode([implode('/', get_parent_ids($data['cat_id'], 'article_cat'))]);
 
-            $data['cat_id_multi'] = json_encode($cat_id_arr);
             $this->assign('data', $data);
         }
 
@@ -89,6 +89,10 @@ class Article extends Controller
         $BasicInfo = new BasicInfoModel();
         $stateList = $BasicInfo->getBasicList('article', 'AA');
         $this->assign('stateList' ,$stateList);
+
+        //获取产品类目下拉列表，以children分好子数组
+        $catListFormSelect = $this->currentModel->getCatTree();
+        $this->assign('catListFormSelect' ,json_encode($catListFormSelect));
         return $this->fetch();
     }
 

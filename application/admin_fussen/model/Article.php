@@ -69,7 +69,7 @@ class Article extends ComArticle
     }
 
     /**
-     * 保存“产品详情”，html转义
+     * 保存“文章详情”，html转义
      * @param $value
      * @return mixed
      */
@@ -79,7 +79,20 @@ class Article extends ComArticle
     }
 
     /**
-     * 获取“产品详情”，html转义
+     * 保存“文章栏目”
+     * @param $value
+     * @return mixed
+     */
+    public function setCatIdAttr($value)
+    {
+        if (!empty($value)) {
+            $arr = explode('/', $value);
+        }
+        return !empty($arr) ? end($arr) : 0;
+    }
+
+    /**
+     * 获取“文章详情”，html转义
      * @param $value
      * @return mixed
      */
@@ -88,5 +101,13 @@ class Article extends ComArticle
         return !empty($value) ? htmlspecialchars_decode($value) : '';
     }
 
+    /**
+     * 获取文章类目下拉列表
+     */
+    public function getCatTree()
+    {
+        $catList = Db::name('article_cat')->where('state', 1)->field('cat_id as value,pid,cat_name as name')->select();
+        return \Tree::getTree($catList, 'value', 'pid', 'children');
+    }
 
 }
