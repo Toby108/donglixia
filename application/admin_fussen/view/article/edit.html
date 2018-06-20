@@ -14,14 +14,14 @@
                     <div class="layui-input-block">
                         <div class="layui-upload-drag image-url">
                             <div  style="margin: -20px 0px; {notempty name="data.image_url"}display:none;{/notempty}">
-                            <i class="layui-icon layui-icon-upload"></i>
-                            <p>建议尺寸800*800</p>
-                            <p>点击上传，或将文件拖拽到此处</p>
+                                <i class="layui-icon layui-icon-upload"></i>
+                                <p>建议尺寸800*800</p>
+                                <p>点击上传，或将文件拖拽到此处</p>
+                            </div>
+                            <img src="{$data.image_url|default=''}" alt="图片" style="margin: -30px;width: 258px;height: 114px; {empty name="data.image_url"}display: none;{/empty}">
+                            <input type="hidden" name="image_url" value="{$data.image_url|default=''}">
                         </div>
-                        <img src="{$data.image_url|default=''}" alt="图片" style="margin: -30px;width: 258px;height: 114px; {empty name="data.image_url"}display: none;{/empty}">
-                        <input type="hidden" name="image_url" value="{$data.image_url|default=''}">
                     </div>
-                </div>
                 </div>
                 <div id="select-cat-id" class="layui-form-item"></div>
                 <input type="hidden" name="cat_id" id="cat_id" value="{$data.cat_id|default=0}">
@@ -151,7 +151,7 @@
         //级联选择，url渲染
         link = linkSelect.render({
             elem: '#select-cat-id',
-            url: "{:url('getCatList')}",
+            url: "{:url('getCatLinkSelect')}",
             selectedArr : selectedArr,		//默认选中数组
             inputFrame: inputFrame,          //默认排版方式
             placeholderText : "顶级",	//默认placeholder

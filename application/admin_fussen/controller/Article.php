@@ -124,7 +124,7 @@ class Article extends Controller
      * 根据pid 获取下拉列表，级联选择
      * @return array
      */
-    public function getCatList()
+    public function getCatLinkSelect()
     {
         $param = $this->request->param();
         $pid = !empty($param['id']) ? $param['id'] : 0;

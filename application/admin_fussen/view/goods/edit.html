@@ -1,5 +1,6 @@
 {extend name="common/index"}
 {block name="css"}
+<link rel="stylesheet" href="__ADMIN__/css/formSelects-v4.css">
 {/block}
 
 {block name="content"}
@@ -25,6 +26,16 @@
                 </div>
                 <div id="select-cat-id" class="layui-form-item"></div>
                 <input type="hidden" name="cat_id" id="cat_id" value="{$data.cat_id|default=0}">
+
+                <div class="layui-form-item" pane>
+                    <label class="layui-form-label">上级分类</label>
+                    <div class="layui-input-block">
+                        <select name="city" xm-select="select15_2">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="layui-form-item">
                     <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>产品名称：</label>
                     <div class="layui-input-block">
@@ -157,7 +168,7 @@
         //级联选择，url渲染
         link = linkSelect.render({
             elem: '#select-cat-id',
-            url: "{:url('getCatList')}",
+            url: "{:url('getCatLinkSelect')}",
             selectedArr : selectedArr,		//默认选中数组
             inputFrame: inputFrame,          //默认排版方式
             lableName: '所属栏目：',
@@ -175,5 +186,23 @@
 
     //实例化编辑器*
     UE.getEditor('goods-detail');
+</script>
+<script src="__ADMIN__/js/formSelects-v4.js"></script>
+<script type="text/javascript">
+    var formSelects = layui.formSelects;
+
+    formSelects.config('select15_2', {
+        success: function(id, url, val, result){
+            console.log("success回调: " + url);
+        },
+        error: function(id, url, val, err){
+            console.log("err回调: " + url);
+        }
+    });
+    formSelects.data('select15_2', 'server', {
+        url: 'http://yapi.demo.qunar.com/mock/9813/layui/citys',
+        linkage: true,
+        linkageWidth: 110,
+    });
 </script>
 {/block}

@@ -133,7 +133,7 @@ class BasicInfo extends Controller
      * 根据pid 获取下拉列表，级联选择
      * @return array
      */
-    public function getBasicList()
+    public function getBasicLinkSelect()
     {
         $param = $this->request->param();
         $pid = !empty($param['id']) ? $param['id'] : 0;

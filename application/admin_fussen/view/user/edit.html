@@ -1,5 +1,6 @@
 {extend name="common/index"}
 {block name="css"}
+<link rel="stylesheet" href="__ADMIN__/css/formSelects-v4.css">
 {/block}
 {block name="content"}
 <div class="layui-row">
@@ -84,7 +85,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">角色权限：</label>
                             <div class="layui-input-block">
-                                <select name="role_id[]" multiple lay-search>
+                                <select name="role_id" xm-select="select-role-id">
                                     <option value="">请选择</option>
                                     {notempty name="roleList"}
                                     {volist name="roleList" id="vo"}
@@ -94,6 +95,7 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="layui-form-item">
                             <label class="layui-form-label">数据权限：</label>
                             <div class="layui-input-block">
@@ -416,6 +418,7 @@
 {/block}
 
 {block name="script"}
+<script src="__ADMIN__/js/formSelects-v4.js"></script>
 <script type="text/javascript">
     layui.use(['form','laydate', 'upload'], function () {
         var form = layui.form
