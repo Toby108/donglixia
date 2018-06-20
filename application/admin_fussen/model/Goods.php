@@ -26,7 +26,7 @@ class Goods extends ComGoods
     }
 
     /**
-     * 获取分类，对应的中文名称
+     * 获取类目，对应的中文名称
      * @param $value
      * @param $data
      * @return mixed
@@ -86,6 +86,15 @@ class Goods extends ComGoods
     public function getDetailAttr($value)
     {
         return !empty($value) ? htmlspecialchars_decode($value) : '';
+    }
+
+    /**
+     * 获取产品类目下拉列表
+     */
+    public function getCatTree()
+    {
+        $catList = Db::name('goods_cat')->where('state', 1)->field('cat_id as value,pid,cat_name as name')->select();
+        return \Tree::getTree($catList, 'value', 'pid', 'children');
     }
 
 }

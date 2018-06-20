@@ -26,7 +26,7 @@ class Article extends ComArticle
     }
 
     /**
-     * 获取分类，对应的中文名称
+     * 获取栏目，对应的中文名称
      * @param $value
      * @param $data
      * @return mixed

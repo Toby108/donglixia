@@ -129,7 +129,6 @@
 
     });
 
-
     //上级菜单，级联选择
     layui.config({
         base: '__ADMIN__/js/'
@@ -140,7 +139,7 @@
         //级联选择，url渲染
         link = linkSelect.render({
             elem: '#select-cat-id',
-            url: "{:url('getCatLinkSelect')}",
+            url: "{:url('ArticleCat/getCatToLinkSelect')}",
             inputFrame: inputFrame,          //默认排版方式
             lableName: '栏目',
             selected: function (item,dom) {

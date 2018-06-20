@@ -94,7 +94,7 @@
         table.on('tool(catTable)', function(obj){
             var data = obj.data;
             if (obj.event === 'del') {
-                layer.confirm('子分类也将被删除，确定继续吗？', function(index){
+                layer.confirm('子栏目也将被删除，确定继续吗？', function(index){
                     $.post('{:url("delete")}',{id:data.cat_id}, function (result) {
                         layer.close(index);
                         if (result.code) {
@@ -118,7 +118,7 @@
             , content: $('#catModal').html()
             , success: function (element, index) {
                 var ele = $(element).find('form');
-                $.post('{:url("getCatList")}', {}, function (result) {
+                $.post('{:url("getArticleCatList")}', {}, function (result) {
                     var _html = "<option value='0'>顶级</option>";
                     $.each(result, function (key, val) {
                         _html += "<option value='"+val.cat_id+"'>"+val.cat_name+"</option>";

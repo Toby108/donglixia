@@ -4,7 +4,7 @@
     <form id="searchForm" class="layui-form layui-form-pane tpl-form-search" method="post" action="" onkeydown="if(event.keyCode=='13'){reloadTable('#searchForm');return false;}">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">栏目名称</label>
+                <label class="layui-form-label">类目名称</label>
                 <div class="layui-input-inline">
                     <input type="text" name="cat_name" class="layui-input">
                 </div>
@@ -36,7 +36,7 @@
                 <input type="hidden" name="cat_id" value="">
                 <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
                 <div class="layui-form-item">
-                    <div class="layui-form-label">上级栏目：</div>
+                    <div class="layui-form-label">上级类目：</div>
                     <div class="layui-input-inline">
                         <select name="pid">
                             <option value="0">顶级</option>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <div class="layui-form-label">栏目名称：</div>
+                    <div class="layui-form-label">类目名称：</div>
                     <div class="layui-input-inline">
                         <input type="text" name="cat_name" class="layui-input">
                     </div>
@@ -94,7 +94,7 @@
         table.on('tool(catTable)', function(obj){
             var data = obj.data;
             if (obj.event === 'del') {
-                layer.confirm('子分类也将被删除，确定继续吗？', function(index){
+                layer.confirm('子类目也将被删除，确定继续吗？', function(index){
                     $.post('{:url("delete")}',{id:data.cat_id}, function (result) {
                         layer.close(index);
                         if (result.code) {
@@ -118,7 +118,7 @@
             , content: $('#catModal').html()
             , success: function (element, index) {
                 var ele = $(element).find('form');
-                $.post('{:url("getCatList")}', {}, function (result) {
+                $.post('{:url("getGoodsCatList")}', {}, function (result) {
                     var _html = "<option value='0'>顶级</option>";
                     $.each(result, function (key, val) {
                         _html += "<option value='"+val.cat_id+"'>"+val.cat_name+"</option>";

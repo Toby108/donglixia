@@ -90,7 +90,7 @@
             ,limits: table_limits
             ,cols: [[
                 {type:'numbers', title:'序号', width: 45}
-                ,{field:'cat_name', title:'分类', width: '8%'}
+                ,{field:'cat_name', title:'类目', width: '8%'}
                 ,{field:'goods_name', title:'标题', edit: 'text'}
                 ,{field:'state_text', title:'状态', width: '8%', align:'center'}
                 ,{field:'read_num', title:'阅读次数', width: '8%', align:'center'}
@@ -140,9 +140,9 @@
         //级联选择，url渲染
         link = linkSelect.render({
             elem: '#select-cat-id',
-            url: "{:url('getCatLinkSelect')}",
+            url: "{:url('GoodsCat/getListToLinkSelect')}",
             inputFrame: inputFrame,          //默认排版方式
-            lableName: '分类',
+            lableName: '主类目',
             selected: function (item,dom) {
                 var val = link.getValue();
                 var val_last = 0;

@@ -53,7 +53,7 @@ class Article extends Controller
     {
         $param = $this->request->param();
         if (!empty($param['cat_id'])) {
-            $map['cat_id'] = $param['cat_id'];//栏目/分类
+            $map['cat_id'] = $param['cat_id'];//栏目
         }
         if (!empty($param['title'])) {
             $map['title'] = ['like', '%' . $param['title'] . '%'];//标题
@@ -118,25 +118,6 @@ class Article extends Controller
         }
 
         $this->success('保存成功！', 'edit?art_id='.$this->currentModel->art_id);
-    }
-
-    /**
-     * 根据pid 获取下拉列表，级联选择
-     * @return array
-     */
-    public function getCatLinkSelect()
-    {
-        $param = $this->request->param();
-        $pid = !empty($param['id']) ? $param['id'] : 0;
-        $map['pid'] = $pid;
-        $map['state'] = 1;//状态：0禁用，1启用
-
-        if (!empty($param['cat_id'])) {
-            $map['cat_id'] = ['<>', $param['cat_id']];
-        }
-
-        $data =  Db::name('article_cat')->where($map)->field('cat_id as id,cat_name as name')->order('sort_num')->select();
-        $this->success('获取成功', null, $data);
     }
 
 

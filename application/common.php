@@ -129,16 +129,16 @@ if (!function_exists('get_parent_ids')) {
      * @param $id
      * @param $table_name
      * @param bool $merge
+     * @param array $res
      * @return array
      */
-    function get_parent_ids($id, $table_name, $merge = true)
+    function get_parent_ids($id, $table_name, $merge = true, &$res=[])
     {
-        static $res = [];
         $pk = Db::name($table_name)->getPk();//获取当前表主键
         $pid = Db::name($table_name)->where($pk, $id)->value('pid');
         if (!empty($pid)){
             $res[] = $pid;
-            get_parent_ids($pid, $table_name, false);
+            get_parent_ids($pid, $table_name, false, $res);
         }
         if ($merge) array_push($res, $id);
         asort($res);

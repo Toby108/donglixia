@@ -30,7 +30,7 @@ class Goods extends Controller
      */
     public function index()
     {
-        /*获取文章状态*/
+        /*获取产品状态*/
         $BasicInfo = new BasicInfoModel();
         $stateList = $BasicInfo->getBasicList('goods', 'AA');
         $this->assign('stateList' ,$stateList);
@@ -51,7 +51,7 @@ class Goods extends Controller
     {
         $param = $this->request->param();
         if (!empty($param['cat_id'])) {
-            $map['cat_id'] = $param['cat_id'];//栏目/分类
+            $map['cat_id'] = $param['cat_id'];//类目
         }
         if (!empty($param['goods_name'])) {
             $map['goods_name'] = ['like', '%' . $param['goods_name'] . '%'];//产品名称
@@ -75,17 +75,26 @@ class Goods extends Controller
         $param = $this->request->param();
         $goods_id = !empty($param['goods_id']) ? $param['goods_id'] : '';
         if (!empty($goods_id)) {
-            /*获取当前文章信息*/
+            //获取当前产品信息
             $data = $this->currentModel->where('goods_id', $goods_id)->field(true)->field('public_time as public_date_hh_ii_ss')->find();
-            $cat_id_arr = get_parent_ids($data['cat_id'], 'goods_cat');
-            $data['cat_id_multi'] = json_encode($cat_id_arr);
+            //获取扩展分类信息
+            $cat_id_ext_arr = explode(',', $data['cat_id_ext']);
+            $cat_id_ext = [];
+            foreach ($cat_id_ext_arr as $k => $v) {
+                $cat_id_ext[$k] = implode('/', get_parent_ids($v, 'goods_cat'));
+            }
+            $data['cat_id_ext'] = json_encode($cat_id_ext);
             $this->assign('data', $data);
         }
 
-        /*获取文章状态*/
+        //获取产品状态
         $BasicInfo = new BasicInfoModel();
         $stateList = $BasicInfo->getBasicList('goods', 'AA');
         $this->assign('stateList' ,$stateList);
+
+        //获取产品类目下拉列表，以children分好子数组
+        $catListFormSelect = $this->currentModel->getCatTree();
+        $this->assign('catListFormSelect' ,json_encode($catListFormSelect));
         return $this->fetch();
     }
 
@@ -121,25 +130,6 @@ class Goods extends Controller
         }
 
         $this->success('保存成功！', 'edit?goods_id='.$this->currentModel->goods_id);
-    }
-
-    /**
-     * 根据pid 获取下拉列表，级联选择
-     * @return array
-     */
-    public function getCatLinkSelect()
-    {
-        $param = $this->request->param();
-        $pid = !empty($param['id']) ? $param['id'] : 0;
-        $map['pid'] = $pid;
-        $map['state'] = 1;//状态：0禁用，1启用
-
-        if (!empty($param['cat_id'])) {
-            $map['cat_id'] = ['<>', $param['cat_id']];
-        }
-
-        $data =  Db::name('goods_cat')->where($map)->field('cat_id as id,cat_name as name')->order('sort_num')->select();
-        $this->success('获取成功', null, $data);
     }
 
 

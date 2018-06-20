@@ -78,12 +78,30 @@ class GoodsCat extends Controller
     }
 
     /**
-     * 获取栏目列表
+     * 获取类目列表
      */
-    public function getCatList()
+    public function getGoodsCatList()
     {
         $catList = $this->currentModel->field('cat_id,pid,cat_name')->select();
         return \Tree::get_Table_tree($catList, 'cat_name', 'cat_id');
+    }
+
+    /**
+     * 根据pid 获取下拉列表，级联选择
+     */
+    public function getListToLinkSelect()
+    {
+        $param = $this->request->param();
+        $pid = !empty($param['id']) ? $param['id'] : 0;
+        $map['pid'] = $pid;
+        $map['state'] = 1;//状态：0禁用，1启用
+
+        if (!empty($param['cat_id'])) {
+            $map['cat_id'] = ['<>', $param['cat_id']];
+        }
+
+        $data =  Db::name('goods_cat')->where($map)->field('cat_id as id,cat_name as name')->order('sort_num')->select();
+        $this->success('获取成功', null, $data);
     }
 }
 

@@ -24,14 +24,19 @@
                         </div>
                     </div>
                 </div>
-                <div id="select-cat-id" class="layui-form-item"></div>
-                <input type="hidden" name="cat_id" id="cat_id" value="{$data.cat_id|default=0}">
-
-                <div class="layui-form-item" pane>
-                    <label class="layui-form-label">上级分类</label>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">主类目：</label>
                     <div class="layui-input-block">
-                        <select name="city" xm-select="select15_2">
-                            <option value="">请选择</option>
+                        <select name="cat_id" xm-select="formSelect-cat-id" xm-select-radio="" xm-select-search="">
+                            <option value="">单选</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">扩展类目：</label>
+                    <div class="layui-input-block">
+                        <select name="cat_id_ext" xm-select="formSelect-cat-id-ext" xm-select-skin="default">
+                            <option value="">多选</option>
                         </select>
                     </div>
                 </div>
@@ -157,52 +162,28 @@
         });
     });
 
-    //上级菜单，级联选择
-    layui.config({
-        base: '__ADMIN__/js/'
-    }).use('linkSelect', function () {
-        var linkSelect = layui.linkSelect;
-        var inputFrame = $('#select-cat-id').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
-        var selectedArr = {$data.cat_id_multi|default='0'};
-
-        //级联选择，url渲染
-        link = linkSelect.render({
-            elem: '#select-cat-id',
-            url: "{:url('getCatLinkSelect')}",
-            selectedArr : selectedArr,		//默认选中数组
-            inputFrame: inputFrame,          //默认排版方式
-            lableName: '所属栏目：',
-            where: {goods_id:$("#goods_id").val()},
-            selected: function (item,dom) {
-                var val = link.getValue();
-                var val_last = 0;
-                if (val[val.length-1] != undefined) {
-                    val_last = val[val.length-1].value;
-                }
-                $("#cat_id").val(val_last);
-            }
-        });
-    });
-
     //实例化编辑器*
     UE.getEditor('goods-detail');
 </script>
 <script src="__ADMIN__/js/formSelects-v4.js"></script>
 <script type="text/javascript">
     var formSelects = layui.formSelects;
-
-    formSelects.config('select15_2', {
-        success: function(id, url, val, result){
-            console.log("success回调: " + url);
-        },
-        error: function(id, url, val, err){
-            console.log("err回调: " + url);
-        }
-    });
-    formSelects.data('select15_2', 'server', {
-        url: 'http://yapi.demo.qunar.com/mock/9813/layui/citys',
+    //主类目
+    var data = {$catListFormSelect|default='0'};
+    formSelects.data('formSelect-cat-id', 'local', {
+        arr: data,
         linkage: true,
-        linkageWidth: 110,
+        linkageWidth: 130
     });
+    formSelects.value('formSelect-cat-id', ['{$data.cat_id|default="0"}']);//初始值
+
+    //扩展类目
+    formSelects.data('formSelect-cat-id-ext', 'local', {
+        arr: data,
+        linkage: true,
+        linkageWidth: 130
+    });
+    formSelects.value('formSelect-cat-id-ext', {$data.cat_id_ext|default="0"});//初始值
+
 </script>
 {/block}
