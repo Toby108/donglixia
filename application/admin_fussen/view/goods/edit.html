@@ -1,6 +1,6 @@
 {extend name="common/index"}
 {block name="css"}
-<link rel="stylesheet" href="__ADMIN__/css/formSelects-v4.css">
+<link rel="stylesheet" href="__STATIC__/plugins/layui_formSelects/formSelects-v4.css">
 {/block}
 
 {block name="content"}
@@ -37,19 +37,6 @@
                     <div class="layui-input-block">
                         <select name="cat_id_ext" xm-select="formSelect-cat-id-ext" xm-select-skin="default">
                             <option value="">多选</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">扩展类目：</label>
-                    <div class="layui-input-block">
-                        <select name="city" xm-select="example1">
-                            <option value="1">北京</option>
-                            <option value="2">上海</option>
-                            <option value="3">广州</option>
-                            <option value="4">深圳</option>
-                            <option value="5">天津</option>
                         </select>
                     </div>
                 </div>
@@ -178,7 +165,7 @@
     //实例化编辑器*
     UE.getEditor('goods-detail');
 </script>
-<script src="__ADMIN__/js/formSelects-v4.js"></script>
+<script src="__STATIC__/plugins/layui_formSelects/formSelects-v4.js"></script>
 <script type="text/javascript">
     var formSelects = layui.formSelects;
     //主类目
@@ -205,26 +192,7 @@
         //val:          当前select点击的值
         //isAdd:        当前操作选中or取消
         //isDisabled:   当前选项是否是disabled
-        alert("选择了: " + val.name);
-        //如果return false, 那么将取消本次操作
-        if(val.val == 1){
-            return false;
-        }
-    });
-
-//    formSelects.data('example1', 'local', {
-//        arr: data,
-//        linkage: true,
-//        linkageWidth: 130
-//    });
-    //监听select的选中
-    formSelects.on('example1', function(id, vals, val, isAdd, isDisabled){
-        //id:           点击select的id
-        //vals:         当前select已选中的值
-        //val:          当前select点击的值
-        //isAdd:        当前操作选中or取消
-        //isDisabled:   当前选项是否是disabled
-        alert("选择了: " + val.name);
+        console.log("选择了: " + val.name);
         //如果return false, 那么将取消本次操作
         if(val.val == 1){
             return false;
