@@ -64,10 +64,9 @@
             var pid = obj.data.pid;
             $.post('{:url("Menu/getNextIds")}', {id:obj.data.menu_id}, function (result) {
                 $.each(table_data, function (key,val) {
-                    //将当前菜单的上一级和下一级，设置为选中状态
+                    //更改当前菜单的上一级和下一级的选中状态
                     if ((pid == val.menu_id && checkState) || $.inArray(val.menu_id,result) != '-1') {
-                        //遍历当前菜单的子节点，将选中状态 与 当前菜单状态保持一致
-                        table_data[key]["LAY_CHECKED"] = checkState;
+                        table_data[key]["LAY_CHECKED"] = checkState;//与当前操作状态保持一致
                         var index= val.LAY_TABLE_INDEX;
                         $(".layui-table-body").find('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', checkState);
                     }
