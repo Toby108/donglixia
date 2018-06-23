@@ -47,7 +47,7 @@ class Article extends Controller
     public function getDataList()
     {
         $map = $this->getDataListMap();
-        return $this->currentModel->where($map)->order('sort_num asc, art_id desc')->layTable(['cat_name','state_text','public_date']);
+        return $this->currentModel->where($map)->order('sort_num asc, art_id desc')->layTable(['cat_name','level_text','public_date']);
     }
 
     private function getDataListMap()
