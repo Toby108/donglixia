@@ -89,7 +89,7 @@ class ArticleCat extends Controller
     /**
      * 根据pid 获取下拉列表，级联选择
      */
-    public function getCatToLinkSelect()
+    public function getLinkSelect()
     {
         $param = $this->request->param();
         $pid = !empty($param['id']) ? $param['id'] : 0;

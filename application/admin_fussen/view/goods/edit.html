@@ -92,14 +92,14 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">是否发布：</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="state" value="1" title="是" {eq name="data.state|default='0'" value="1"}checked{/eq}>
-                        <input type="radio" name="state" value="0" title="否" {eq name="data.state|default='0'" value="0"}checked{/eq}>
+                        <input type="radio" name="state" value="1" title="是" lay-filter="changeState" {eq name="data.state|default='1'" value="1"}checked{/eq}>
+                        <input type="radio" name="state" value="0" title="否" lay-filter="changeState" {eq name="data.state|default='1'" value="0"}checked{/eq}>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">定时发布：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="public_time" id="public_time" value="{$data.public_date_hh_ii_ss|default=''}" class="layui-input">
+                        <input type="text" name="public_time" id="public_time" value="{$data.public_date_hh_ii_ss|default=''}" class='layui-input {eq name="data.state|default=1" value="1"}layui-bg-gray{/eq}'  {eq name="data.state|default='1'" value="1"} disabled {/eq}>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -152,6 +152,14 @@
                 } else {
                     layer.alert(res.msg);
                 }
+            }
+        });
+
+        form.on('radio(changeState)', function(data){
+            if (data.value == 1) {
+                $('#public_time').prop('disabled', true).addClass('layui-bg-gray');
+            } else {
+                $('#public_time').prop('disabled', false).removeClass('layui-bg-gray');
             }
         });
 

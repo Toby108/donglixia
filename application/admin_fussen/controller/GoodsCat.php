@@ -11,6 +11,7 @@ namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\GoodsCat as GoodsCatModel;
 use app\admin_fussen\parent\Controller;
+use think\Db;
 use think\Request;
 use think\Cookie;
 use think\Session;
@@ -89,7 +90,7 @@ class GoodsCat extends Controller
     /**
      * 根据pid 获取下拉列表，级联选择
      */
-    public function getListToLinkSelect()
+    public function getLinkSelect()
     {
         $param = $this->request->param();
         $pid = !empty($param['id']) ? $param['id'] : 0;
