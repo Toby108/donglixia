@@ -114,7 +114,7 @@ class Article extends Controller
                 throw new \Exception($result);
             }
             //处理缩略图
-            $param['image_url'] = current(imgTempFileMove([$param['image_url']], 'admin_fussen/images/article/'));
+            $param['img_url'] = current(imgTempFileMove([$param['img_url']], 'admin_fussen/images/article/'));
             $this->currentModel->save($param);
         } catch (\Exception $e) {
             $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();

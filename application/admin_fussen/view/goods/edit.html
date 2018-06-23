@@ -13,13 +13,17 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">产品主图：</label>
                     <div class="layui-input-block">
-                        <div class="layui-upload-drag image-url">
-                            <div  style="margin: -20px 0px; {notempty name="data.img_url"}display:none;{/notempty}">
+                        <div class="layui-upload-drag image-url" style="padding: 0px;width: 100%">
+                            {notempty name="data.img_url"}
+                            <div style="display:none;">
                                 <i class="layui-icon layui-icon-upload"></i>
                                 <p>建议尺寸800*800</p>
                                 <p>点击上传，或将文件拖拽到此处</p>
+                                <p>&nbsp;</p>
                             </div>
-                            <img src="{$data.img_url|default=''}" alt="图片" style="margin: -30px;width: 258px;height: 114px; {empty name="data.img_url"}display: none;{/empty}">
+                            {else/}
+                            <img src="{$data.img_url|default=''}" alt="图片" style="height: 110px;">
+                            {/notempty}
                             <input type="hidden" name="img_url" value="{$data.img_url|default=''}">
                         </div>
                     </div>

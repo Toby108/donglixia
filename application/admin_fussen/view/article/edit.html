@@ -13,14 +13,18 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">缩略图：</label>
                     <div class="layui-input-block">
-                        <div class="layui-upload-drag image-url">
-                            <div  style="margin: -20px 0px; {notempty name="data.image_url"}display:none;{/notempty}">
+                        <div class="layui-upload-drag image-url" style="padding: 0px;width: 100%">
+                            {notempty name="data.img_url"}
+                            <div style="display:none;">
                                 <i class="layui-icon layui-icon-upload"></i>
                                 <p>建议尺寸800*800</p>
                                 <p>点击上传，或将文件拖拽到此处</p>
+                                <p>&nbsp;</p>
                             </div>
-                            <img src="{$data.image_url|default=''}" alt="图片" style="margin: -30px;width: 258px;height: 114px; {empty name="data.image_url"}display: none;{/empty}">
-                            <input type="hidden" name="image_url" value="{$data.image_url|default=''}">
+                            {else/}
+                            <img src="{$data.img_url|default=''}" alt="图片" style="height: 110px;">
+                            {/notempty}
+                            <input type="hidden" name="img_url" value="{$data.img_url|default=''}">
                         </div>
                     </div>
                 </div>
@@ -122,7 +126,7 @@
                     var control = this.item;
                     $(control).find('div').css('display','none'); //隐藏文字
                     $(control).find('img').css('display','inline-block').attr('src', res.data); //显示图片，图片链接
-                    $(control).find('input[name="image_url"]').val(res.data); //赋值上传
+                    $(control).find('input[name="img_url"]').val(res.data); //赋值上传
                 } else {
                     layer.alert(res.msg);
                 }
