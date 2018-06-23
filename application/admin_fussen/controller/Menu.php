@@ -113,7 +113,7 @@ class Menu extends Controller
     }
 
     /**
-     * 根据id，获取下一级菜单
+     * 根据id，获取下一级菜单列表
      * @param $id
      * @return mixed
      * @throws \think\exception\DbException
@@ -121,6 +121,17 @@ class Menu extends Controller
     public function getChildInfo($id)
     {
         return $this->currentModel->where('pid', $id)->field('menu_id,pid,menu_name,url')->select();
+    }
+
+    /**
+     * 根据id，获取下一级菜单id
+     * @param $id
+     * @return mixed
+     * @throws \think\exception\DbException
+     */
+    public function getNextIds($id)
+    {
+        return $this->currentModel->where('pid', $id)->column('menu_id');
     }
 
     /**

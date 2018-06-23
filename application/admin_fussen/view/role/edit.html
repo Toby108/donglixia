@@ -3,7 +3,8 @@
 <div class="layui-row">
     <form id="editForm" class="layui-form" action="">
         <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
-        <input type="hidden" name="role_id" value="{$data.role_id|default=''}">
+        <input type="hidden" name="role_id" id="role_id" value="{$data.role_id|default=''}">
+        <input type="hidden" name="auth" id="auth" value="{$data.auth|default=''}">
         <div class="layui-col-xs12 layui-col-sm5">
             <div class="layui-form-item">
                 <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>角色名称：</label>
@@ -34,53 +35,65 @@
 
 {block name="script"}
 <script type="text/javascript">
-    var auth_list = "{$data.auth|default=''}";//当前角色的权限列表
+    var table_data;
     layui.use(['form', 'table'], function () {
-        var form = layui.form
-            ,table = layui.table;
+        var form = layui.form;
+        var table = layui.table;
 
         //表格数据渲染
         table.render({
             elem: '#roleTable'
-            ,url: '{:url("Menu/getDataList")}'
-            ,limit:99999
-            ,cols: [[
-                {type:'numbers', title:'序号', width:80}
-                ,{field:'pid_text', title:'上级菜单', width: 100}
-                ,{field:'menu_name_text', title:'菜单名称', minWidth: 150}
-                ,{field:'url', title:'链接地址', minWidth: 250}
-                ,{field:'description', title:'简介', minWidth: 80}
-                ,{title:'操作', width: 100, align:'center', templet: function (data) {
-                    var _html = "";
-                    if (data.menu_id == 1) {
-                        //“首页” 默认为选中状态
-                        _html = "checked disabled";
-                    } else if ($.inArray(data.menu_id.toString(), auth_list.split(',')) != "-1") {
-                        //将已有的权限，设置为选择状态
-                        _html = "checked";
-                    }
-                    return "<input type='checkbox' name='auth["+data.menu_id+"]' value='"+data.menu_id+"' data-pid='"+data.pid+"' lay-skin='primary' "+_html+" lay-filter='changeAuth'>";
-                }}
+            , url: '{:url("getMenuList")}?role_id=' + $('#role_id').val()
+            , page: false
+            , cols: [[
+                {type: 'numbers', title: '序号', width: 80}
+                , {field: 'pid_text', title: '上级菜单', width: 100}
+                , {field: 'menu_name', title: '菜单名称', minWidth: 150}
+                , {field: 'url', title: '链接地址', minWidth: 250}
+                , {field: 'description', title: '简介', minWidth: 80}
+                , {type: 'checkbox', field: 'pid',width: 100}
             ]]
+            , done: function (res, curr, count) {
+                table_data = res.data;
+            }
         });
 
         //监听选中状态改变情况
-        form.on('checkbox(changeAuth)', function (data) {
-            var pid = $(data.elem).data('pid');
-            $.post('{:url("Menu/getChildInfo")}', {id:data.value}, function (result) {
-                $.each(result, function (key,val) {
-                    //遍历当前菜单的子节点，将选中状态 与 当前菜单状态保持一致
-                    $(".layui-table-main").find('input[type="checkbox"][value="'+val.menu_id+'"]').prop('checked', data.elem.checked);
+        table.on('checkbox(roleTable)', function(obj){
+            var checkState = obj.checked;
+            var pid = obj.data.pid;
+            $.post('{:url("Menu/getNextIds")}', {id:obj.data.menu_id}, function (result) {
+                $.each(table_data, function (key,val) {
+                    //将当前菜单的上一级和下一级，设置为选中状态
+                    if ((pid == val.menu_id && checkState) || $.inArray(val.menu_id,result) != '-1') {
+                        //遍历当前菜单的子节点，将选中状态 与 当前菜单状态保持一致
+                        table_data[key]["LAY_CHECKED"] = checkState;
+                        var index= val.LAY_TABLE_INDEX;
+                        $(".layui-table-body").find('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', checkState);
+                    }
                 });
-                //将当前菜单的父节点，设置为选中状态
-                $(".layui-table-main").find('input[type="checkbox"][value="'+pid+'"]').prop('checked', true);
-                form.render('checkbox');
+                form.render('checkbox');//重新渲染
+                //判断是否全选
+                var checkTable = table.checkStatus('roleTable');
+                if (checkTable.isAll) {
+                    $('.layui-table-header .layui-form-checkbox').addClass('layui-form-checked');
+                }
             }, 'json');
         });
 
         //监听提交
         form.on('submit(formSubmit)', function(data){
-            $('input[type="checkbox"][value="1"]').prop('disabled', false);//将“首页”设置为可上传
+            //获取当前选中的菜单id，逗号隔开
+            var checkList = table.checkStatus('roleTable');
+            var menu_id_list = [];
+            if (checkList.data.length>0) {
+                $.each(checkList.data, function (key, val) {
+                    menu_id_list[key] = val.menu_id;
+                });
+            }
+            menu_id_list = menu_id_list.join(',');
+            $('#auth').val(menu_id_list);
+
             var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
             $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
                 layer.close(index);

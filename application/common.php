@@ -606,3 +606,27 @@ if (!function_exists('delete_dir')) {
         }
     }
 }
+
+if (!function_exists('arraySequence')) {
+    /**
+     * 二维数组根据某个字段进行排序
+     * @param array $array 数组
+     * @param string $field 数组下标
+     * @param string $sort 顺序标志 SORT_DESC 降序；SORT_ASC 升序
+     * @param string $sort
+     * @return mixed
+     */
+    function arraySequence($array = [], $field, $sort = 'SORT_DESC')
+    {
+        if (!empty($array)) {
+            $arrSort = array();
+            foreach ($array as $uniqid => $row) {
+                foreach ($row as $key => $value) {
+                    $arrSort[$key][$uniqid] = $value;
+                }
+            }
+            array_multisort($arrSort[$field], constant($sort), $array);
+        }
+        return $array;
+    }
+}

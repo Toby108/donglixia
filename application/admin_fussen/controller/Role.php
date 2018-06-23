@@ -11,6 +11,7 @@ namespace app\admin_fussen\controller;
 
 use app\admin_fussen\parent\Controller;
 use app\admin_fussen\model\UserRole;
+use think\Db;
 use think\Request;
 
 class Role extends Controller
@@ -45,7 +46,6 @@ class Role extends Controller
         }
 
         return $this->currentModel->where($map)->order('sort_num')->layTable();
-
     }
 
     /**
@@ -62,6 +62,25 @@ class Role extends Controller
         }
 
         return $this->fetch();
+    }
+
+    /**
+     * 获取菜单列表数据
+     * @param $role_id
+     * @return array
+     */
+    public function getMenuList($role_id)
+    {
+        $list = Db::name('basic_menu')->field('menu_id,pid,menu_name,sort_num,url,description')->order('sort_num asc')->select();
+        $auth = Db::name('user_role')->where('role_id', $role_id)->value('auth');
+        $auth_arr = explode(',', $auth);
+        $list = \Tree::get_Table_tree($list, 'menu_name', 'menu_id');
+        foreach ($list as $k=>$v) {
+            $list[$k]['pid_text'] = !empty($v['pid']) ? Db::name('basic_menu')->where('menu_id', $v['pid'])->value('menu_name') : '顶级';
+            $list[$k]['LAY_CHECKED'] = in_array($v['menu_id'], $auth_arr) || $v['menu_id'] == 1 ? true : false;
+            unset($list[$k]['child']);
+        }
+        return ['code'=>0, 'msg'=>'获取成功', 'count'=>0, 'data'=>$list];
     }
 
     /**
