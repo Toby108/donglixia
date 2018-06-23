@@ -253,7 +253,7 @@ class Login extends Controller
         } else {
             //若不绑定，则直接生成新用户
             $data['role_id'] = 2;//角色：游客
-            $data['avatar'] = VIEW_IMAGE_PATH . '/avatar/user' . rand(10, 50) . '.png';//头像
+            $data['avatar'] = VIEW_STATIC_PATH . '/img/avatar/user' . rand(10, 50) . '.png';//头像
             $data['nick_name'] = $tencent['nickname'];
             $user_id = Db::name('user')->insertGetId($data);
         }

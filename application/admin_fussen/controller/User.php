@@ -89,7 +89,7 @@ class User extends Controller
         }
 
         /*随机头像*/
-        $avatar = !empty($data['avatar']) ? $data['avatar'] : VIEW_IMAGE_PATH . '/avatar/user' . rand(10, 50) . '.png';
+        $avatar = !empty($data['avatar']) ? $data['avatar'] : VIEW_STATIC_PATH . '/img/avatar/user' . rand(10, 50) . '.png';
         $this->assign('avatar', $avatar);
 
         /*获取下拉列表：角色权限*/

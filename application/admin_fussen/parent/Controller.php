@@ -168,11 +168,11 @@ class Controller extends CoreController
         if (empty($file)) {
             $this->error('上传数据为空');
         } else {
-            $info = $file->move(IMAGE_PATH . '/temp/', time() . rand(100, 999));
+            $info = $file->move(STATIC_PATH . '/img/temp/', time() . rand(100, 999));
             if ($info == false) {
                 $this->error($file->getError());
             } else {
-                $image = VIEW_IMAGE_PATH . '/temp/' . $info->getSaveName();
+                $image = VIEW_STATIC_PATH . '/img/temp/' . $info->getSaveName();
                 $this->success('上传成功', null, $image);
             }
         }

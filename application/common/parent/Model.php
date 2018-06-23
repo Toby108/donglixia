@@ -156,13 +156,13 @@ abstract class Model extends ModelCore
         {
             if($path)
             {
-                $info = $fileClass->move(IMAGE_PATH.DS.$path,md5_file($fileClass->getInfo('tmp_name')));
-                return VIEW_IMAGE_PATH.DS.$path.DS.$info->getSaveName();
+                $info = $fileClass->move(STATIC_PATH . '/img/' . $path, md5_file($fileClass->getInfo('tmp_name')));
+                return VIEW_STATIC_PATH . '/img/' .$path.DS.$info->getSaveName();
             }
             else
             {
-                $info = $fileClass->move(IMAGE_PATH);
-                return VIEW_IMAGE_PATH.DS.$info->getSaveName();
+                $info = $fileClass->move(STATIC_PATH . '/img');
+                return VIEW_STATIC_PATH . '/img'.$info->getSaveName();
             }
         }
 
