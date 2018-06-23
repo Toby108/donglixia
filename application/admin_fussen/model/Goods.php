@@ -20,9 +20,9 @@ class Goods extends ComGoods
      * @param $data
      * @return mixed
      */
-    public function getStateTextAttr($value, $data)
+    public function getTypeTextAttr($value, $data)
     {
-        return Db::name('basic_info')->where('basic_id', $data['state'])->value('basic_name');
+        return Db::name('basic_info')->where('basic_id', $data['type'])->value('basic_name');
     }
 
     /**

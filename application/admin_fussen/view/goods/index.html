@@ -27,11 +27,11 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">状态</label>
+                <label class="layui-form-label">文章类型</label>
                 <div class="layui-input-inline">
-                    <select name="state">
+                    <select name="type">
                         <option value="">请选择</option>
-                        {volist name="stateList" id="vo"}
+                        {volist name="typeList" id="vo"}
                         <option value="{$vo.basic_id}">{$vo.basic_name}</option>
                         {/volist}
                     </select>
@@ -92,7 +92,7 @@
                 {type:'numbers', title:'序号', width: 45}
                 ,{field:'cat_name', title:'类目', width: '8%'}
                 ,{field:'goods_name', title:'标题', edit: 'text'}
-                ,{field:'state_text', title:'状态', width: '8%', align:'center'}
+                ,{field:'type_text', title:'状态', width: '8%', align:'center'}
                 ,{field:'read_num', title:'阅读次数', width: '8%', align:'center'}
                 ,{title:'更改排序' , width: '8%', align:'center', templet: function (data) {
                     return '<div class="layui-btn-group">' +

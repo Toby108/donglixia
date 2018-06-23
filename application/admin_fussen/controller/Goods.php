@@ -32,8 +32,8 @@ class Goods extends Controller
     {
         /*获取产品状态*/
         $BasicInfo = new BasicInfoModel();
-        $stateList = $BasicInfo->getBasicList('goods', 'AA');
-        $this->assign('stateList' ,$stateList);
+        $typeList = $BasicInfo->getBasicList('goods', 'AA');
+        $this->assign('typeList' ,$typeList);
         return $this->fetch();
     }
 
@@ -44,7 +44,7 @@ class Goods extends Controller
     public function getDataList()
     {
         $map = $this->getDataListMap();
-        return $this->currentModel->where($map)->order('sort_num asc, goods_id desc')->layTable(['cat_name','state_text','public_date']);
+        return $this->currentModel->where($map)->order('sort_num asc, goods_id desc')->layTable(['cat_name','type_text','public_date']);
     }
 
     private function getDataListMap()
@@ -59,8 +59,8 @@ class Goods extends Controller
         if (!empty($param['content'])) {
             $map['content'] = ['like', '%' . $param['content'] . '%'];//内容
         }
-        if (!empty($param['state'])) {
-            $map['state'] = $param['state'];//状态
+        if (!empty($param['type'])) {
+            $map['type'] = $param['type'];//文章类型
         }
         if (!empty($param['public_begin']) && !empty($param['public_end'])) {
             $map['public_time'] = ['between', [strtotime($param['public_begin']),strtotime($param['public_end'])]];//公布时间
@@ -92,8 +92,8 @@ class Goods extends Controller
 
         //获取产品状态
         $BasicInfo = new BasicInfoModel();
-        $stateList = $BasicInfo->getBasicList('goods', 'AA');
-        $this->assign('stateList' ,$stateList);
+        $typeList = $BasicInfo->getBasicList('goods', 'AA');
+        $this->assign('typeList' ,$typeList);
 
         //获取产品类目下拉列表，以children分好子数组
         $catListFormSelect = $this->currentModel->getCatTree();

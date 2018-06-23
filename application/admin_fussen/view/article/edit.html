@@ -61,23 +61,30 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">发布时间：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="public_time" id="public_time" value="{$data.public_date_hh_ii_ss|default=''}" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
                     <label class="layui-form-label" >文章排序：</label>
                     <div class="layui-input-block">
                         <input type="number" name="sort_num" value="{$data.sort_num|default='1'}" placeholder="数字越小，越靠前" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">文章状态：</label>
+                    <label class="layui-form-label">文章类型：</label>
                     <div class="layui-input-block">
-                        {volist name="stateList" id="vo"}
-                        <input type="radio" name="state" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.state|default='169'"}checked{/eq}>
+                        {volist name="typeList" id="vo"}
+                        <input type="radio" name="type" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.type|default='169'"}checked{/eq}>
                         {/volist}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否发布：</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="state" value="1" title="是" {eq name="data.state|default='0'" value="1"}checked{/eq}>
+                        <input type="radio" name="state" value="0" title="否" {eq name="data.state|default='0'" value="0"}checked{/eq}>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">定时发布：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="public_time" id="public_time" value="{$data.public_date_hh_ii_ss|default=''}" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
