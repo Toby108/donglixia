@@ -67,10 +67,10 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">文章类型：</label>
+                    <label class="layui-form-label">重要等级：</label>
                     <div class="layui-input-block">
-                        {volist name="typeList" id="vo"}
-                        <input type="radio" name="type" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.type|default='169'"}checked{/eq}>
+                        {volist name="levelList" id="vo"}
+                        <input type="radio" name="level" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.level|default='169'"}checked{/eq}>
                         {/volist}
                     </div>
                 </div>

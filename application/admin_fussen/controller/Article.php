@@ -32,10 +32,11 @@ class Article extends Controller
      */
     public function index()
     {
-        /*获取文章状态*/
+        /*获取文章重要等级*/
         $BasicInfo = new BasicInfoModel();
-        $stateList = $BasicInfo->getBasicList('article', 'AA');
-        $this->assign('stateList' ,$stateList);
+        $levelList = $BasicInfo->getBasicList('article', 'AA');
+        $this->assign('levelList' ,$levelList);
+        auto_public(); //触发定时发布
         return $this->fetch();
     }
 
@@ -61,8 +62,8 @@ class Article extends Controller
         if (!empty($param['content'])) {
             $map['content'] = ['like', '%' . $param['content'] . '%'];//内容
         }
-        if (!empty($param['state'])) {
-            $map['state'] = $param['state'];//状态
+        if (!empty($param['level'])) {
+            $map['level'] = $param['level'];//重要等级
         }
         if (!empty($param['public_begin']) && !empty($param['public_end'])) {
             $map['public_time'] = ['between', [strtotime($param['public_begin']),strtotime($param['public_end'])]];//公布时间
@@ -85,10 +86,10 @@ class Article extends Controller
             $this->assign('data', $data);
         }
 
-        /*获取文章状态*/
+        /*获取文章重要等级*/
         $BasicInfo = new BasicInfoModel();
-        $stateList = $BasicInfo->getBasicList('article', 'AA');
-        $this->assign('stateList' ,$stateList);
+        $levelList = $BasicInfo->getBasicList('article', 'AA');
+        $this->assign('levelList' ,$levelList);
 
         //获取产品类目下拉列表，以children分好子数组
         $catListFormSelect = $this->currentModel->getCatTree();

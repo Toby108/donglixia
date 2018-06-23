@@ -607,7 +607,7 @@ if (!function_exists('delete_dir')) {
     }
 }
 
-if (!function_exists('arraySequence')) {
+if (!function_exists('array_sequence')) {
     /**
      * 二维数组根据某个字段进行排序
      * @param array $array 数组
@@ -616,7 +616,7 @@ if (!function_exists('arraySequence')) {
      * @param string $sort
      * @return mixed
      */
-    function arraySequence($array = [], $field, $sort = 'SORT_DESC')
+    function array_sequence($array = [], $field, $sort = 'SORT_DESC')
     {
         if (!empty($array)) {
             $arrSort = array();
@@ -628,5 +628,26 @@ if (!function_exists('arraySequence')) {
             array_multisort($arrSort[$field], constant($sort), $array);
         }
         return $array;
+    }
+}
+
+if (!function_exists('auto_public')) {
+    /**
+     * 二维数组根据某个字段进行排序
+     * @return bool
+     */
+    function auto_public()
+    {
+        //文章定时发布
+        $article = Db::name('article')->where('state', 0)->where('public_time', '<=', time())->column('art_id');
+        foreach ($article as $k => $v) {
+            Db::name('article')->where('art_id', $v)->update(['state' => 1]);
+        }
+        //产品定时发布
+        $goods = Db::name('goods')->where('state', 0)->where('public_time', '<=', time())->column('goods_id');
+        foreach ($goods as $k => $v) {
+            Db::name('goods')->where('goods_id', $v)->update(['state' => 1]);
+        }
+        return true;
     }
 }

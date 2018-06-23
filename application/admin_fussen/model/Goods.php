@@ -15,14 +15,14 @@ use think\Db;
 class Goods extends ComGoods
 {
     /**
-     * 获取文章状态，对应的中文名称
+     * 获取重要等级，对应的中文名称
      * @param $value
      * @param $data
      * @return mixed
      */
-    public function getTypeTextAttr($value, $data)
+    public function getLevelTextAttr($value, $data)
     {
-        return Db::name('basic_info')->where('basic_id', $data['type'])->value('basic_name');
+        return Db::name('basic_info')->where('basic_id', $data['level'])->value('basic_name');
     }
 
     /**
