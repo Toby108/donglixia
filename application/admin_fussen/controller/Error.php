@@ -15,7 +15,7 @@ class Error extends Controller
 {
     public function index()
     {
-        $url = url('index/index');
+        $url = url('Login/clearcache?jump_wait=0');
         $this->redirect('/public/static/404.html?url='.$url);
     }
 

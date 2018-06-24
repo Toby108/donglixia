@@ -361,15 +361,19 @@ class Login extends Controller
 
     /**
      * 清除缓存
+     * @param int $jump_wait
      */
-    public function clearCache()
+    public function clearCache($jump_wait = 1)
     {
-        if(function_exists('opcache_reset'))
-        {
+        if (function_exists('opcache_reset')) {
             opcache_reset();
         }
         Cache::clear();
-        array_map('unlink',glob(TEMP_PATH.DS.'*.php'));
-        $this->success('清除缓存成功');
+        array_map('unlink', glob(TEMP_PATH . DS . '*.php'));
+        if ($jump_wait == 1) {
+            $this->success('清除缓存成功');
+        } else {
+            $this->redirect('Index/index');
+        }
     }
 }
