@@ -60,6 +60,13 @@ class User extends Controller
         if (!empty($param['card_no'])) {
             $map['card_no'] = ['like', '%' . $param['card_no'] . '%'];//证件号
         }
+
+        //数据权限
+        if (user_info('login_rank') == 2) {
+            $map['dept_id'] = ['in', get_child_ids(user_info('dept_id'), 'user_dept')];//展示部门数据
+        } elseif (user_info('login_rank') == 3) {
+            $map['user_id'] = user_info('user_id');//仅展示个人数据
+        }
         if (empty($map)) {
             $map[] = ['exp', '1=1'];
         }

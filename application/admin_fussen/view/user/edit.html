@@ -99,13 +99,9 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">数据权限：</label>
                             <div class="layui-input-block">
-                                {notempty name="basicList"}
-                                {volist name="basicList" id="vo"}
-                                {eq name="vo.cat_code" value="AM"}
-                                <input type="radio" name="login_rank" value="{$vo.basic_id}" title="{$vo.basic_name}" {eq name="vo.basic_id" value="$data.login_rank|default='161'"}checked{/eq}>
-                                {/eq}
-                                {/volist}
-                                {/notempty}
+                                <input type="radio" name="login_rank" value="1" title="展示所有数据" {eq name="data.login_rank|default='1'" value="1"}checked{/eq}>
+                                <input type="radio" name="login_rank" value="2" title="展示部门数据" {eq name="data.login_rank|default='1'" value="2"}checked{/eq}>
+                                <input type="radio" name="login_rank" value="3" title="展示个人数据" {eq name="data.login_rank|default='1'" value="3"}checked{/eq}>
                             </div>
                         </div>
                         <div class="layui-form-item">
