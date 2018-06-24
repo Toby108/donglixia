@@ -14,22 +14,19 @@
                     <label class="layui-form-label">缩略图：</label>
                     <div class="layui-input-block">
                         <div class="layui-upload-drag image-url" style="padding: 0px;width: 100%">
-                            {notempty name="data.img_url"}
-                            <div style="display:none;">
+                            <div {notempty name="data.img_url"}style="display:none;"{/notempty}>
                                 <i class="layui-icon layui-icon-upload"></i>
                                 <p>建议尺寸800*800</p>
                                 <p>点击上传，或将文件拖拽到此处</p>
                                 <p>&nbsp;</p>
                             </div>
-                            {else/}
-                            <img src="{$data.img_url|default=''}" alt="图片" style="height: 110px;">
-                            {/notempty}
+                            <img src="{$data.img_url|default=''}" alt="图片" style="height: 110px; {empty name="data.img_url"}display:none;{/empty}'">
                             <input type="hidden" name="img_url" value="{$data.img_url|default=''}">
                         </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">产品栏目：</label>
+                    <label class="layui-form-label">文章栏目：</label>
                     <div class="layui-input-block">
                         <select name="cat_id" xm-select="formSelect-cat-id" xm-select-radio="" xm-select-search="">
                             <option value="">请选择</option>
@@ -77,14 +74,15 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">是否发布：</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="state" value="1" title="是" {eq name="data.state|default='1'" value="1"}checked{/eq}>
-                        <input type="radio" name="state" value="0" title="否" {eq name="data.state|default='1'" value="0"}checked{/eq}>
+                        <input type="radio" name="state" value="1" title="是" lay-filter="changeState" {eq name="data.state|default='1'" value="1"}checked{/eq}>
+                        <input type="radio" name="state" value="0" title="否" lay-filter="changeState" {eq name="data.state|default='1'" value="0"}checked{/eq}>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">定时发布：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="public_time" id="public_time" value="{$data.public_date_hh_ii_ss|default=''}" class="layui-input" disabled>
+                        <input type="text" name="public_time" id="public_time" value="{$data.public_date_hh_ii_ss|default=''}" class='layui-input {eq name="data.state|default=1" value="1"}layui-bg-gray{/eq}'  {eq name="data.state|default='1'" value="1"} disabled {/eq}>
+
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -137,6 +135,15 @@
                 } else {
                     layer.alert(res.msg);
                 }
+            }
+        });
+
+        //发布状态变更
+        form.on('radio(changeState)', function(data){
+            if (data.value == 1) {
+                $('#public_time').prop('disabled', true).addClass('layui-bg-gray');
+            } else {
+                $('#public_time').prop('disabled', false).removeClass('layui-bg-gray');
             }
         });
 

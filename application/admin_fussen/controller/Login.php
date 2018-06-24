@@ -58,12 +58,16 @@ class Login extends Controller
         };
 
         $param['language'] = !empty($param['language']) ? $param['language'] : 1;
-        //记住密码，有效期一个月
+        //记住密码
         if(isset($param['remember']) && $param['remember'] == 1){
             Cookie::set('remember_name', $param['keyword']);
             Cookie::set('remember_pwd', $param['user_pwd']);
             Cookie::set('remember_language', $param['language']);
-        };
+        } else {
+            Cookie::set('remember_name', null);
+            Cookie::set('remember_pwd', null);
+            Cookie::set('remember_language', null);
+        }
 
         //记住登陆前的页面，登录成功后跳转
         Cookie::set('back_url', redirect()->restore()->getData());

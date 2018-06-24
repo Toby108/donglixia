@@ -59,16 +59,6 @@ class Article extends ComArticle
     }
 
     /**
-     * 保存时间戳，发布时间
-     * @param $value
-     * @return mixed
-     */
-    public function setPublicTimeAttr($value)
-    {
-        return !empty($value) ? strtotime($value) : time();
-    }
-
-    /**
      * 保存“文章详情”，html转义
      * @param $value
      * @return mixed
