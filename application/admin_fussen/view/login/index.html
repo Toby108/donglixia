@@ -43,7 +43,7 @@
                     <input type="radio" name="language" value="1" title="中文" {eq name="'remember_language'|cookie" value="1"} checked {/eq}>
                     <input type="radio" name="language" value="2" title="English" {eq name="'remember_language'|cookie" value="2"} checked {/eq}>
                 </div>
-                <input type="checkbox" name="remember" value="1" checked lay-skin="primary" title="记住">
+                <input type="checkbox" name="remember" value="1" lay-skin="primary" title="记住" {eq name="'remember'|cookie" value="1"} checked {/eq}>
                 <!--<a href="{:url('forget')}" class="tpl-user-jump-change tpl-link" style="margin-top: 7px;">忘记密码？</a>-->
             </div>
             <div class="layui-form-item">

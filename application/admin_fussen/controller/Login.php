@@ -60,10 +60,12 @@ class Login extends Controller
         $param['language'] = !empty($param['language']) ? $param['language'] : 1;
         //记住密码
         if(isset($param['remember']) && $param['remember'] == 1){
+            Cookie::set('remember', 1);
             Cookie::set('remember_name', $param['keyword']);
             Cookie::set('remember_pwd', $param['user_pwd']);
             Cookie::set('remember_language', $param['language']);
         } else {
+            Cookie::set('remember', null);
             Cookie::set('remember_name', null);
             Cookie::set('remember_pwd', null);
             Cookie::set('remember_language', null);
