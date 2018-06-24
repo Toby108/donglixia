@@ -32,6 +32,11 @@ class User extends Controller
      */
     public function index()
     {
+        /*获取下拉列表：部门*/
+        $deptList = Db::name('user_dept')->where('state', 1)->field('dept_id as id,pid,dept_name as name')->order('sort_num')->select();
+        $deptList = \Tree::getTree($deptList, 'id', 'pid', 'children');
+        $this->assign('deptList', json_encode($deptList));
+
         return $this->fetch();
     }
 
@@ -59,6 +64,9 @@ class User extends Controller
         }
         if (!empty($param['card_no'])) {
             $map['card_no'] = ['like', '%' . $param['card_no'] . '%'];//证件号
+        }
+        if (!empty($param['dept_id'])) {
+            $map['dept_id'] = $param['dept_id'];//部门
         }
 
         //数据权限

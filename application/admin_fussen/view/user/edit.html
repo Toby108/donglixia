@@ -72,7 +72,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">部门：</label>
                             <div class="layui-input-block">
-                                <select name="dept_id">
+                                <select name="dept_id" lay-search>
                                     <option value="">请选择</option>
                                     {notempty name="deptList"}
                                     {volist name="deptList" id="vo"}

@@ -162,9 +162,9 @@
         base: '__ADMIN__/js/'
     }).use('linkSelect', function () {
         var linkSelect = layui.linkSelect;
-        var inputFrame = $('#selectPid').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
+        var inputFrame = 'layui-input-inline';//内联排版
 
-        //级联选择，url渲染
+        //url渲染
         link = linkSelect.render({
             elem: '#selectPid',
             url: "{:url('getBasicLinkSelect')}",

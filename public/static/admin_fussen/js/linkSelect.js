@@ -106,7 +106,7 @@ layui.define(['layer','form','element','laytpl'], function(exports){
         lableName : "请选择",	//默认lable名
         placeholderText : "请选择",	//默认placeholder
         method:'post',          //默认请求方式
-        inputFrame:'layui-input-block',          //默认排版方式
+        inputFrame:'layui-input-block',          //默认排版方式，内联或块级
         minwidth:"160px",		//默认最小宽度
         replaceId:"id",			//默认id名	用于选择value
         replaceName:"name",		//默认name名

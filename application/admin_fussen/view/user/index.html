@@ -4,6 +4,9 @@
     .layui-table-cell{
         padding: 0 8px;
     }
+    #selectDeptId .layui-input-inline{
+        width: 320px;
+    }
 </style>
 {/block}
 {block name="content"}
@@ -35,6 +38,9 @@
                     <input type="text" name="card_no" placeholder="身份证号/通行证号..." class="layui-input">
                 </div>
             </div>
+
+            <div id="selectDeptId" class="layui-inline"></div>
+            <input type="hidden" name="dept_id" id="dept_id">
             <div class="layui-inline">
                 <label class="layui-form-label">注册日期</label>
                 <div class="layui-input-inline" style="width: 100px;">
@@ -146,6 +152,31 @@
                 });
             } else if (obj.event === 'edit') {
                 window.open('edit?user_id='+data.user_id);
+            }
+        });
+    });
+
+    //部门，级联选择
+    layui.config({
+        base: '__ADMIN__/js/'
+    }).use('linkSelect', function () {
+        var linkSelect = layui.linkSelect;
+        var inputFrame = 'layui-input-inline';//内联排版
+        var deptList = {$deptList|default='0'};
+
+        //本地数据渲染
+        link = linkSelect.render({
+            elem: '#selectDeptId',
+            data: deptList,
+            inputFrame: inputFrame,          //默认排版方式
+            lableName: '部门',
+            selected: function (item,dom) {
+                var val = link.getValue();
+                var val_last = 0;
+                if (val[val.length-1] != undefined) {
+                    val_last = val[val.length-1].value;
+                }
+                $("#dept_id").val(val_last);
             }
         });
     });

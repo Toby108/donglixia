@@ -129,14 +129,14 @@
 
     });
 
-    //上级菜单，级联选择
+    //上级栏目，级联选择
     layui.config({
         base: '__ADMIN__/js/'
     }).use('linkSelect', function () {
         var linkSelect = layui.linkSelect;
-        var inputFrame = $('#select-cat-id').hasClass("layui-inline") ? 'layui-input-inline' : 'layui-input-block';
+        var inputFrame = 'layui-input-inline';//内联排版
 
-        //级联选择，url渲染
+        //url渲染
         link = linkSelect.render({
             elem: '#select-cat-id',
             url: "{:url('ArticleCat/getLinkSelect')}",
