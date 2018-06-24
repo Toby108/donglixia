@@ -54,6 +54,17 @@ class User extends ComUser
     }
 
     /**
+     * 获取部门名称
+     * @param $value
+     * @param $data
+     * @return string
+     */
+    public function getDeptNameAttr($value, $data)
+    {
+        return Db::name('user_dept')->where('dept_id', $data['dept_id'])->value('dept_name');
+    }
+
+    /**
      * 保存密码
      * @param $value
      * @return string
