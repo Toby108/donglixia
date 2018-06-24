@@ -91,7 +91,7 @@ class User extends Controller
         if (!empty($user_id)) {
             /*获取当前人员信息*/
             $data = $this->currentModel->where('user_id', $user_id)->find()->toArray();
-            $dept_arr = get_parent_ids($data['dept_id'], 'basic_info');
+            $dept_arr = get_parent_ids($data['dept_id'], 'user_dept');
             $data['dept_multi'] = json_encode($dept_arr);
             $this->assign('data', $data);
 
