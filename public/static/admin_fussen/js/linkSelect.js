@@ -56,7 +56,7 @@ layui.define(['layer','form','element','laytpl'], function(exports){
     ].join("");
     //下拉模板
     var TPL_DL = [
-        '<dl class="layui-anim layui-anim-upbit" id="linkSelectdl{{ d.sindex }}" style="width:160px;min-width:160px;left:{{ d.left }}px">',
+        '<dl class="layui-anim layui-anim-upbit" id="linkSelectdl{{ d.sindex }}" style="width:{{ d.options.minWidth }};min-width:{{ d.options.minWidth }};left:{{ d.left }}px">',
         '{{# if(d.nodata){  }}',
         '<dd lay-value lay-sindex="{{ d.sindex }}" class="layui-select-tips">{{ d.nodata }}</dd>',
         '{{# }else{ }}',
@@ -353,7 +353,7 @@ layui.define(['layer','form','element','laytpl'], function(exports){
         var dom = $("#linkSelectDiv" + that.index);			//主dom
 
         var conf = {
-            left:160*(that.sindex),
+            left:parseInt(options.minwidth) * (that.sindex),
             options:options,
             sindex:that.sindex,
             index: that.index //索引

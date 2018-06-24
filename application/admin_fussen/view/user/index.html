@@ -4,9 +4,6 @@
     .layui-table-cell{
         padding: 0 8px;
     }
-    #selectDeptId .layui-input-inline{
-        width: 320px;
-    }
 </style>
 {/block}
 {block name="content"}
@@ -169,6 +166,7 @@
             elem: '#selectDeptId',
             data: deptList,
             inputFrame: inputFrame,          //默认排版方式
+            minwidth: '190px',
             lableName: '部门',
             selected: function (item,dom) {
                 var val = link.getValue();

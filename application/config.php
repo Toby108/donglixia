@@ -217,8 +217,8 @@ return [
     'cookie'                 => [
         // cookie 名称前缀
         'prefix'    => '',
-        // cookie 保存时间，有效期
-        'expire'    => 0,
+        // cookie 保存时间，有效期一个月
+        'expire'    => 2592000,
         // cookie 保存路径
         'path'      => '/',
         // cookie 有效域名
