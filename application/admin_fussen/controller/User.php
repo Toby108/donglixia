@@ -33,8 +33,7 @@ class User extends Controller
     public function index()
     {
         /*获取下拉列表：部门*/
-        $deptList = Db::name('user_dept')->where('state', 1)->field('dept_id as id,pid,dept_name as name')->order('sort_num')->select();
-        $deptList = \Tree::getTree($deptList, 'id', 'pid', 'children');
+        $deptList = (new UserDept())->getDeptList();
         $this->assign('deptList', json_encode($deptList));
 
         return $this->fetch();
@@ -92,6 +91,8 @@ class User extends Controller
         if (!empty($user_id)) {
             /*获取当前人员信息*/
             $data = $this->currentModel->where('user_id', $user_id)->find()->toArray();
+            $dept_arr = get_parent_ids($data['dept_id'], 'basic_info');
+            $data['dept_multi'] = json_encode($dept_arr);
             $this->assign('data', $data);
 
             /*获取下拉列表：市*/
@@ -112,9 +113,8 @@ class User extends Controller
         $this->assign('roleList', $roleList);
 
         /*获取下拉列表：部门*/
-        $deptList = (new UserDept())->field('dept_id,pid,dept_name')->order('sort_num')->select();
-        $deptList = \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
-        $this->assign('deptList', $deptList);
+        $deptList = (new UserDept())->getDeptList();
+        $this->assign('deptList', json_encode($deptList));
 
         /*获取下拉列表：推荐人*/
         $parentList = $this->currentModel->getParentList($user_id);

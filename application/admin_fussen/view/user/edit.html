@@ -69,19 +69,9 @@
                                 {/notempty}
                             </div>
                         </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">部门：</label>
-                            <div class="layui-input-block">
-                                <select name="dept_id" lay-search>
-                                    <option value="">请选择</option>
-                                    {notempty name="deptList"}
-                                    {volist name="deptList" id="vo"}
-                                    <option value="{$vo.dept_id}" {eq name="vo.dept_id" value="$data.dept_id|default=''"}selected{/eq}>{$vo.dept_name}</option>
-                                    {/volist}
-                                    {/notempty}
-                                </select>
-                            </div>
-                        </div>
+                        <!--部门下拉列表-->
+                        <div id="selectDeptId" class="layui-form-item"></div>
+                        <input type="hidden" name="dept_id" id="dept_id" value="{$data.dept_id|default='0'}">
                         <div class="layui-form-item">
                             <label class="layui-form-label">角色权限：</label>
                             <div class="layui-input-block">
@@ -458,6 +448,33 @@
                     layer.alert(res.msg);
                 }
             }
+        });
+
+        //部门，级联选择
+        layui.config({
+            base: '__ADMIN__/js/'
+        }).use('linkSelect', function () {
+            var linkSelect = layui.linkSelect;
+            var inputFrame = 'layui-input-block';//块级排版
+            var deptList = {$deptList|default='0'};
+            var selectedArr = {$data.dept_id_multi|default='0'};
+
+            //本地数据渲染
+            link = linkSelect.render({
+                elem: '#selectDeptId',
+                data: deptList,
+                selectedArr : selectedArr,		//默认选中数组
+                inputFrame: inputFrame,          //默认排版方式
+                lableName: '部门',
+                selected: function (item,dom) {
+                    var val = link.getValue();
+                    var val_last = 0;
+                    if (val[val.length-1] != undefined) {
+                        val_last = val[val.length-1].value;
+                    }
+                    $("#dept_id").val(val_last);
+                }
+            });
         });
 
         //监听省市区三级联动
