@@ -385,7 +385,7 @@
                                     登录次数：{$data.login_times|default=''}
                                 </div>
                                 <div class="layui-form-item">
-                                    最后一次登录ip：{$data.last_login_ip|long2ip|default=''}
+                                    最后一次登录ip：{$data.last_login_ip|default=''|long2ip}
                                 </div>
                                 <div class="layui-form-item">
                                     最后一次登录时间：{$data.last_login_time|default=''}
