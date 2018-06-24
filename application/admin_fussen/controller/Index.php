@@ -18,21 +18,27 @@ class Index extends Controller
     public function index()
     {
         //文章数
-        $article_count = Db::name('article')->count();
-        $this->assign('article_count', $article_count);
+        $article = [];
+        $article['count'] = Db::name('article')->count();
+        $article['count_month'] = Db::name('article')->where('create_time', '>=', strtotime(date('Y-m-01')))->count();
+        $this->assign('article', $article);
 
         //产品数
-        $goods_count = Db::name('goods')->count();
-        $this->assign('goods_count', $goods_count);
+        $goods = [];
+        $goods['count'] = Db::name('goods')->count();
+        $goods['count_month'] = Db::name('goods')->where('create_time', '>=', strtotime(date('Y-m-01')))->count();
+        $this->assign('goods', $goods);
 
         //用户数
-        $user_count = Db::name('user')->count();
-        $this->assign('user_count', $user_count);
+        $user = [];
+        $user['count'] = Db::name('user')->count();
+        $user['count_month'] = Db::name('user')->where('create_time', '>=', strtotime(date('Y-m-01')))->count();
+        $this->assign('user', $user);
 
         //阅读数
-        $article_read_num = Db::name('article')->sum('read_num');
-        $goods_read_num = Db::name('goods')->sum('read_num');
-        $this->assign('read_num', $article_read_num + $goods_read_num);
+        $active['read_num'] = Db::name('goods')->sum('read_num') + Db::name('article')->sum('read_num');//阅读数
+        $active['praise_num'] = Db::name('goods')->sum('praise_num') + Db::name('article')->sum('praise_num');//点赞数
+        $this->assign('active', $active);
         return $this->fetch();
     }
 

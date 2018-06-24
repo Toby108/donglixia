@@ -13,13 +13,13 @@
             <div class="layui-card">
                 <div class="layui-card-header">
                     阅读数
-                    <span class="layui-badge layui-bg-blue layuiadmin-badge">月</span>
+                    <span class="layui-badge layui-bg-blue layuiadmin-badge">总</span>
                 </div>
                 <div class="layui-card-body layuiadmin-card-list">
-                    <p class="layuiadmin-big-font">{$read_num}</p>
+                    <p class="layuiadmin-big-font">{$active.read_num}</p>
                     <p>
-                        总计阅读数
-                        <span class="layuiadmin-span-color">*** <i class="layui-inline layui-icon layui-icon-read"></i></span>
+                        点赞数
+                        <span class="layuiadmin-span-color">{$active.praise_num} <i class="layui-inline layui-icon layui-icon-read"></i></span>
                     </p>
                 </div>
             </div>
@@ -31,10 +31,10 @@
                     <span class="layui-badge layui-bg-cyan layuiadmin-badge">总</span>
                 </div>
                 <div class="layui-card-body layuiadmin-card-list">
-                    <p class="layuiadmin-big-font">{$article_count}</p>
+                    <p class="layuiadmin-big-font">{$article.count}</p>
                     <p>
                         本月新增
-                        <span class="layuiadmin-span-color">*** <i class="layui-inline layui-icon layui-icon-form"></i></span>
+                        <span class="layuiadmin-span-color">{$article.count_month} <i class="layui-inline layui-icon layui-icon-form"></i></span>
                     </p>
                 </div>
             </div>
@@ -47,10 +47,10 @@
                 </div>
                 <div class="layui-card-body layuiadmin-card-list">
 
-                    <p class="layuiadmin-big-font">{$goods_count}</p>
+                    <p class="layuiadmin-big-font">{$goods.count}</p>
                     <p>
                         本月新增
-                        <span class="layuiadmin-span-color">*** <i class="layui-inline layui-icon layui-icon-diamond"></i></span>
+                        <span class="layuiadmin-span-color">{$goods.count_month} <i class="layui-inline layui-icon layui-icon-diamond"></i></span>
                     </p>
                 </div>
             </div>
@@ -63,10 +63,10 @@
                 </div>
                 <div class="layui-card-body layuiadmin-card-list">
 
-                    <p class="layuiadmin-big-font">{$user_count}</p>
+                    <p class="layuiadmin-big-font">{$user.count}</p>
                     <p>
-                        最近一个月
-                        <span class="layuiadmin-span-color">*** <i class="layui-inline layui-icon layui-icon-user"></i></span>
+                        本月新增
+                        <span class="layuiadmin-span-color">{$user.count_month} <i class="layui-inline layui-icon layui-icon-user"></i></span>
                     </p>
                 </div>
             </div>
