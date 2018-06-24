@@ -467,12 +467,7 @@
                 inputFrame: inputFrame,          //默认排版方式
                 lableName: '部门',
                 selected: function (item,dom) {
-                    var val = link.getValue();
-                    var val_last = 0;
-                    if (val[val.length-1] != undefined) {
-                        val_last = val[val.length-1].value;
-                    }
-                    $("#dept_id").val(val_last);
+                    $("#dept_id").val(item.value());
                 }
             });
         });
