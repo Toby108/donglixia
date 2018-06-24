@@ -56,7 +56,7 @@ layui.define(['layer','form','element','laytpl'], function(exports){
     ].join("");
     //下拉模板
     var TPL_DL = [
-        '<dl class="layui-anim layui-anim-upbit" id="linkSelectdl{{ d.sindex }}" style="width:{{ d.options.minWidth }};min-width:{{ d.options.minWidth }};left:{{ d.left }}px">',
+        '<dl class="layui-anim layui-anim-upbit" id="linkSelectdl{{ d.sindex }}" style="width:{{ d.minWidth }};min-width:{{ d.minWidth }};left:{{ d.left }}px">',
         '{{# if(d.nodata){  }}',
         '<dd lay-value lay-sindex="{{ d.sindex }}" class="layui-select-tips">{{ d.nodata }}</dd>',
         '{{# }else{ }}',
@@ -107,7 +107,7 @@ layui.define(['layer','form','element','laytpl'], function(exports){
         placeholderText : "请选择",	//默认placeholder
         method:'post',          //默认请求方式
         inputFrame:'layui-input-block',          //默认排版方式，内联或块级
-        minwidth:"160px",		//默认最小宽度
+        minWidth:"190px",		//默认最小宽度
         replaceId:"id",			//默认id名	用于选择value
         replaceName:"name",		//默认name名
         replaceChildren:"children",	//默认children名
@@ -353,7 +353,8 @@ layui.define(['layer','form','element','laytpl'], function(exports){
         var dom = $("#linkSelectDiv" + that.index);			//主dom
 
         var conf = {
-            left:parseInt(options.minwidth) * (that.sindex),
+            minWidth:options.minWidth,
+            left: parseInt(options.minWidth) * (that.sindex),
             options:options,
             sindex:that.sindex,
             index: that.index //索引
