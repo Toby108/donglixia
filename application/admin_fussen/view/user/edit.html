@@ -461,13 +461,19 @@
 
             //本地数据渲染
             link = linkSelect.render({
+                id: 'selectDeptId',
                 elem: '#selectDeptId',
                 data: deptList,
                 selectedArr : selectedArr,		//默认选中数组
                 inputFrame: inputFrame,          //默认排版方式
                 lableName: '部门',
                 selected: function (item,dom) {
-                    $("#dept_id").val(item.value);
+                    var val = linkSelect.getValue("selectDeptId");
+                    var val_last = 0;
+                    if (val[val.length-1] != undefined) {
+                        val_last = val[val.length-1].value;
+                    }
+                    $("#dept_id").val(val_last);
                 }
             });
         });
