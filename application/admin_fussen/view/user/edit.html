@@ -79,7 +79,7 @@
                                     <option value="">请选择</option>
                                     {notempty name="roleList"}
                                     {volist name="roleList" id="vo"}
-                                    <option value="{$vo.role_id}" {in name="vo.role_id" value="$data.role_id|default='2'"}selected{/in}>{$vo.role_name}{notempty name="$vo.describe"} —— （{$vo.describe}）{/notempty}</option>
+                                    <option value="{$vo.role_id}" {in name="vo.role_id" value="$data.role_id|default='2'"}selected{/in}>{$vo.role_name}{notempty name="$vo.describe"}（{$vo.describe}）{/notempty}</option>
                                     {/volist}
                                     {/notempty}
                                 </select>
@@ -354,7 +354,7 @@
                     <div class="layui-main">
                         <div class="layui-form-item">
                             {volist name="imgList" id="vo" key="k"}
-                            <div class="layui-col-xs6 layui-col-sm4 layui-col-md4 layui-col-lg3">
+                            <div class="layui-col-xs12 layui-col-sm6 layui-col-md4 layui-col-lg3">
                                 <input type="hidden" name="img[{$k}][img_id]" value="{$vo.img_id}">
                                 <input type="hidden" name="img[{$k}][user_id]" value="{$vo.user_id}">
                                 <input type="hidden" name="img[{$k}][img_url]" value="{$vo.img_url}" class="img-url">
@@ -379,13 +379,13 @@
                             <div class="layui-col-sm1 layui-col-md1 layui-col-lg1">&nbsp;</div>
                             <div class="layui-col-xs12 layui-col-sm11 layui-col-md11 layui-col-lg11">
                                 <div class="layui-form-item">
-                                    创建时间：{$data.create_time|default=''}
+                                    注册时间：{$data.create_time|default=''}
                                 </div>
                                 <div class="layui-form-item">
                                     登录次数：{$data.login_times|default=''}
                                 </div>
                                 <div class="layui-form-item">
-                                    最后一次登录ip：{$data.last_login_ip|default=''}
+                                    最后一次登录ip：{$data.last_login_ip|long2ip|default=''}
                                 </div>
                                 <div class="layui-form-item">
                                     最后一次登录时间：{$data.last_login_time|default=''}
@@ -466,7 +466,7 @@
                 data: deptList,
                 selectedArr : selectedArr,		//默认选中数组
                 inputFrame: inputFrame,          //默认排版方式
-                lableName: '部门',
+                lableName: '所在部门：',
                 selected: function (item,dom) {
                     var val = linkSelect.getValue("selectDeptId");
                     var val_last = 0;

@@ -65,6 +65,18 @@ class User extends ComUser
     }
 
     /**
+     * 获取最后登录时间
+     * @param $value
+     * @param $data
+     * @return string
+     */
+    public function getLastLoginTimeAttr($value, $data)
+    {
+        return !empty($value) ? date('Y-m-d H:i:s') : '';
+    }
+
+
+    /**
      * 保存密码
      * @param $value
      * @return string

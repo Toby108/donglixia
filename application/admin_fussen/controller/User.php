@@ -46,7 +46,7 @@ class User extends Controller
     public function getDataList()
     {
         $map = $this->getDataListMap();
-        return $this->currentModel->where($map)->layTable(['dept_name']);
+        return $this->currentModel->where($map)->order('user_id desc')->layTable(['dept_name']);
     }
 
     private function getDataListMap()
