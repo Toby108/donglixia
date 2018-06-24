@@ -39,6 +39,11 @@ class Index extends Controller
         $active['read_num'] = Db::name('goods')->sum('read_num') + Db::name('article')->sum('read_num');//阅读数
         $active['praise_num'] = Db::name('goods')->sum('praise_num') + Db::name('article')->sum('praise_num');//点赞数
         $this->assign('active', $active);
+
+        //定时任务非阻塞模式
+        $url = $this->request->domain() . '/' . $this->request->module() . '/Period/test.html';
+        sock_open($url);
+
         return $this->fetch();
     }
 
