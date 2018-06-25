@@ -38,7 +38,11 @@
                 <div>
                     <h4>可能原因：</h4>
                     <ol>
-                        <li>网络出错</li>
+                        <?php if (!empty($message)){ ?>
+                        <li style="word-break: break-all;">
+                            <?php echo nl2br(htmlentities($message)); ?>
+                        </li>
+                        <?php } ?>
                         <li>找不到请求的页面</li>
                         <li>输入的网址不正确</li>
                     </ol>
@@ -59,6 +63,7 @@
         document.getElementById("url").href = getUrlParam('url');
     }
 
+    //获取当前链接参数
     function getUrlParam(name){
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);

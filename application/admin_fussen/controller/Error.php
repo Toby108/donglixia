@@ -16,7 +16,11 @@ class Error extends Controller
     public function index()
     {
         $url = url('Login/clearcache?jump_wait=0');
-        $this->redirect('/public/static/404.html?url='.$url);
+        $this->assign('url', $url);
+
+        $path = $this->request->module() . '/' . $this->request->controller() . '/' . $this->request->action();
+        $this->assign('message', '控制器不存在：' . $path);
+        return $this->fetch('../../../public/static/404');
     }
 
 
