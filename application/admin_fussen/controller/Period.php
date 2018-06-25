@@ -19,7 +19,7 @@ class Period extends Controller
      */
     public function test()
     {
-        Db::name('user_account_log')->insert(['user_id'=>3, 'remark1'=>'测试定时任务']);
+        Db::name('user_account_log')->insert(['user_id'=>3, 'remark'=>'测试定时任务']);
     }
 
     /**
