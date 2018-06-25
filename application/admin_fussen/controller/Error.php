@@ -15,7 +15,7 @@ class Error extends Controller
 {
     public function index()
     {
-        $url = url('Login/clearcache?jump_wait=0');
+        $url = $this->request->domain() . '/' . $this->request->module() . '/Login/clearcache?jump_wait=0';
         $this->assign('url', $url);
 
         $path = $this->request->module() . '/' . $this->request->controller() . '/' . $this->request->action();
