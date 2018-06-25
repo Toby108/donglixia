@@ -580,25 +580,29 @@ if (!function_exists('has_field')) {
     }
 }
 
-if (!function_exists('delete_dir')) {
+if (!function_exists('delete_file_by_time')) {
     /**
      * 递归删除目录下，某一个时间点之前的文件
      * @param $dir string 目录路径
      * @param $time int 小时 72h=3天
      */
-    function delete_dir($dir, $time = 72)
+    function delete_file_by_time($dir, $time = 72)
     {
+        //判断是否目录是否存在
         if (is_dir($dir)) {
-            $dh = opendir($dir);// 打开目录，然后读取其内容
-            while ($file = readdir($dh) !== false) {
-                if ($file != "." && $file != "..") {
-                    $fullpath = $dir . "/" . $file;
-                    if (!is_dir($fullpath)) {
-                        if ((time() - filemtime($fullpath)) / 3600 > $time) {
-                            unlink($fullpath);
+            // 打开目录，然后读取其内容
+            if ($dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false) {
+                    //file 为目录下其中一个文件的文件名
+                    if ($file != "." && $file != "..") {
+                        $fullpath = $dir . "/" . $file;
+                        if (!is_dir($fullpath)) {
+                            if ((time() - filemtime($fullpath)) / 3600 > $time) {
+                                unlink($fullpath);
+                            }
+                        } else {
+                            delete_file_by_time($fullpath, $time);
                         }
-                    } else {
-                        delete_dir($fullpath, $time);
                     }
                 }
             }
@@ -628,27 +632,6 @@ if (!function_exists('array_sequence')) {
             array_multisort($arrSort[$field], constant($sort), $array);
         }
         return $array;
-    }
-}
-
-if (!function_exists('auto_public')) {
-    /**
-     * 二维数组根据某个字段进行排序
-     * @return bool
-     */
-    function auto_public()
-    {
-        //文章定时发布
-        $article = Db::name('article')->where('state', 0)->where('public_time', '<=', time())->column('art_id');
-        foreach ($article as $k => $v) {
-            Db::name('article')->where('art_id', $v)->update(['state' => 1]);
-        }
-        //产品定时发布
-        $goods = Db::name('goods')->where('state', 0)->where('public_time', '<=', time())->column('goods_id');
-        foreach ($goods as $k => $v) {
-            Db::name('goods')->where('goods_id', $v)->update(['state' => 1]);
-        }
-        return true;
     }
 }
 

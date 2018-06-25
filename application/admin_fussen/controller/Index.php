@@ -41,7 +41,7 @@ class Index extends Controller
         $this->assign('active', $active);
 
         //定时任务非阻塞模式
-        $url = $this->request->domain() . '/' . $this->request->module() . '/Period/test.html';
+        $url = $this->request->domain() . '/' . $this->request->module() . '/Period/all.html';
         sock_open($url);
 
         return $this->fetch();

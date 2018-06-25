@@ -34,7 +34,6 @@ class Goods extends Controller
         $BasicInfo = new BasicInfoModel();
         $levelList = $BasicInfo->getBasicList('goods', 'AA');
         $this->assign('levelList' ,$levelList);
-        auto_public(); //触发定时发布
         return $this->fetch();
     }
 
