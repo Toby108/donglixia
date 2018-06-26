@@ -19,7 +19,7 @@ class DailyTask extends Controller
      * @param int $time 默认每隔3600秒执行一次（一个小时）
      * @return bool
      */
-    public function all($time = 10)
+    public function all($time = 3600)
     {
         $file = STATIC_PATH. '/logs/daily_task/' . date("Ymd", time()) . '.log';
         $logs = log_read($file);

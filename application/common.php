@@ -716,7 +716,7 @@ function log_write($type = "info", $content = "")
 function log_read($file)
 {
     $logs = [];
-    $file = !empty($file) ? $file : STATIC_PATH . '/logs/daily_task/'. date("Ymd", time()) . '.log';
+    $file = !empty($file) ? $file : STATIC_PATH . '/logs/info/'. date("Ymd", time()) . '.log';
     if (file_exists($file)) {
         $logs = include $file;
         if ($logs && !is_array($logs)) {
