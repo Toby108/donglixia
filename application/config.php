@@ -150,7 +150,7 @@ return [
     // +----------------------------------------------------------------------
 
     // 异常页面的模板文件
-    'exception_tmpl'         => STATIC_PATH . DS . '404.html',
+    'exception_tmpl'         => '/public/static/404.html',
 //    'exception_tmpl'         => THINK_PATH . 'tpl' . DS . 'think_exception.tpl',
 
     // 错误显示信息,非调试模式有效
@@ -170,7 +170,7 @@ return [
         // 日志保存目录
         'path'  => LOG_PATH,
         // 日志记录级别
-        'level' => ['sql','error', 'notice', 'debug'],
+        'level' => ['error', 'notice', 'debug'],
     ],
 
     // +----------------------------------------------------------------------
