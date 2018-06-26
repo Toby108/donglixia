@@ -16,11 +16,26 @@ class Period extends Controller
 {
     /**
      * 执行全部
+     * @param int $times 每天执行的次数上限，0表示无限次
      */
-    public function all()
+    public function all($times = 10)
     {
-        $this->articleGoodsPublic();//文章、产品定时发布
-        $this->deleteTempFile();//删除三天前的临时图片
+        $filename = STATIC_PATH. '/logs/period/' . date("Ymd", time()) . '.log';
+        $logs_period = include $filename;
+        if (!empty($times) && count($logs_period) <= $times) {
+            $this->test();//测试
+            $this->articleGoodsPublic();//文章、产品定时发布
+            $this->deleteTempFile();//删除三天前的临时图片
+            log_write('period','执行成功！');
+        }
+    }
+
+    /**
+     * 测试
+     */
+    public function test()
+    {
+        Db::name('user_account_log')->insert(['user_id'=>3, 'remark'=>'测试定时任务']);
     }
 
     /**
@@ -28,8 +43,6 @@ class Period extends Controller
      */
     public function articleGoodsPublic()
     {
-        log_write('info','测试');
-
         //文章定时发布
         $article = Db::name('article')->where('state', 0)->where('public_time', '<=', time())->column('art_id');
         foreach ($article as $k => $v) {
