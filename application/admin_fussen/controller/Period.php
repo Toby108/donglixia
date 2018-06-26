@@ -19,17 +19,8 @@ class Period extends Controller
      */
     public function all()
     {
-        $this->test();//测试
         $this->articleGoodsPublic();//文章、产品定时发布
         $this->deleteTempFile();//删除三天前的临时图片
-    }
-
-    /**
-     * 测试
-     */
-    public function test()
-    {
-        Db::name('user_account_log')->insert(['user_id'=>3, 'remark'=>'测试定时任务']);
     }
 
     /**
@@ -37,6 +28,8 @@ class Period extends Controller
      */
     public function articleGoodsPublic()
     {
+        log_write('info','测试');
+
         //文章定时发布
         $article = Db::name('article')->where('state', 0)->where('public_time', '<=', time())->column('art_id');
         foreach ($article as $k => $v) {
@@ -55,6 +48,7 @@ class Period extends Controller
     public function deleteTempFile()
     {
         delete_file_by_time(STATIC_PATH.'/img/temp', 72);//删除三天前的临时图片
+        delete_file_by_time(STATIC_PATH.'/img/temp', 168);//删除七天前的static/logs日志文件
     }
 
 

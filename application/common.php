@@ -685,7 +685,7 @@ function log_write($type = "info", $content = "")
     }
     $dir = STATIC_PATH . DS . 'logs' . DS . $type;
     if (!is_dir($dir)) {
-        if (!create_dir($dir)) {
+        if (!mkdir($dir, 0777, true)) {
             return false;
         }
     }
@@ -706,17 +706,4 @@ function log_write($type = "info", $content = "")
     if (!fwrite($fp, $str)) return false;
     fclose($fp);
     return true;
-}
-
-/**
- * 循环创建目录
- * @param $dir
- * @param int $mode
- * @return bool
- */
-function create_dir($dir, $mode = 0755)
-{
-    if (is_dir($dir) || @mkdir($dir,$mode)) return true;
-    if (!create_dir(dirname($dir),$mode)) return false;
-    return @mkdir($dir,$mode);
 }
