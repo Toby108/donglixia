@@ -15,14 +15,6 @@ use think\Db;
 class Period extends Controller
 {
     /**
-     * 测试
-     */
-    public function test()
-    {
-        Db::name('user_account_log')->insert(['user_id'=>3, 'remark'=>'测试定时任务']);
-    }
-
-    /**
      * 执行全部
      */
     public function all()
@@ -30,6 +22,14 @@ class Period extends Controller
         $this->test();//测试
         $this->articleGoodsPublic();//文章、产品定时发布
         $this->deleteTempFile();//删除三天前的临时图片
+    }
+
+    /**
+     * 测试
+     */
+    public function test()
+    {
+        Db::name('user_account_log')->insert(['user_id'=>3, 'remark'=>'测试定时任务']);
     }
 
     /**

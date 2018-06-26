@@ -21,6 +21,8 @@ class Period
         //定时任务非阻塞模式，admin_fussen模块
         $request = Request::instance();
         $url = $request->domain() . '/admin_fussen/Period/all.html';
+        log_write('info','测试');
+
         sock_open($url);
 
     }
