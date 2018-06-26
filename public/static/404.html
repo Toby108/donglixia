@@ -38,11 +38,7 @@
                 <div>
                     <h4>可能原因：</h4>
                     <ol>
-                        <?php if (!empty($message)){ ?>
-                        <li style="word-break: break-all;">
-                            <?php echo nl2br(htmlentities($message)); ?>
-                        </li>
-                        <?php } ?>
+                        <li>网络出错</li>
                         <li>找不到请求的页面</li>
                         <li>输入的网址不正确</li>
                     </ol>
@@ -50,11 +46,7 @@
                 <div>
                     <h4>可以尝试：</h4>
                     <ul>
-                        <?php if (!empty($url)){ ?>
-                        <li><a href="<?php echo $url; ?>">返回首页</a></li>
-                        <?php } else { ?>
-                        <li><a href="http://www.donglixia.net" id="url">返回首页</a></li>
-                        <?php } ?>
+                        <li><a href="http://www.donglixia.net/admin_fussen/Login/clearcache?jump_wait=0" id="url">返回首页</a></li>
                     </ul>
                 </div>
             </div>

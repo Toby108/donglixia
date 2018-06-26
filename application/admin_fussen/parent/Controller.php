@@ -23,7 +23,6 @@ class Controller extends CoreController
 
     public function _initialize()
     {
-
         $param = $this->request->param();//获取参数
         if (substr_count($_SERVER['HTTP_HOST'], '.') === 1) {
             header('Location: http://www.'.$_SERVER['HTTP_HOST']);
@@ -61,6 +60,8 @@ class Controller extends CoreController
             Cookie::forever('table_limit', $param['limit']);
         }
         $this->assign('table_limit', Cookie::get('table_limit'));
+
+        \think\Hook::listen('module_controller');//添加行为标签位，触发自动执行
     }
 
     /**
