@@ -25,6 +25,6 @@ return [
     'log_write'    => [],
     // 应用结束
     'app_end'      => [],
-    // 经过模块父类的controller时，自动触发
-    'module_controller'     => ['app\\common\\behavior\\TaskData']
+    // controller初始化，位置：common/parent/controller
+    'controller_init'     => ['app\\common\\behavior\\TaskData']
 ];
