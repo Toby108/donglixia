@@ -24,14 +24,5 @@ class TaskData
 //        header('Location: '.$url);//测试
     }
 
-    /**
-     * 定时任务
-     */
-    public function test()
-    {
-        die('1');
-//        header('Location: '.$url);//测试
-    }
-
 }
 
