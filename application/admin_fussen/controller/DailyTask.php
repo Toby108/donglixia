@@ -25,9 +25,9 @@ class DailyTask extends Controller
         $logs = log_read($file);
         $time_log = end($logs)['time'];
         if (empty($logs) || (time() - strtotime($time_log) >= $time)) {
-//            $this->test();//测试
+            $this->test();//测试
             $this->articleGoodsPublic();//文章、产品定时发布
-            $this->deleteTempFile();//删除三天前的临时图片
+            $this->deleteTempFile();//删除临时文件
             log_write('daily_task','执行成功！');
         }
         die('success');

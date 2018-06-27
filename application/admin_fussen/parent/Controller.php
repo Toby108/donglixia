@@ -24,9 +24,6 @@ class Controller extends CoreController
     public function _initialize()
     {
         $param = $this->request->param();//获取参数
-        if (substr_count($_SERVER['HTTP_HOST'], '.') === 1) {
-            header('Location: http://www.'.$_SERVER['HTTP_HOST']);
-        }
 
         /*游客体验，直接进入后台*/
         if (isset($param['user_id']) && isset($param['visitor']) && $param['user_id'] == '2' && $param['visitor'] =='1') {
