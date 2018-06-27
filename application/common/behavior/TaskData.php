@@ -19,7 +19,7 @@ class TaskData
     public function run()
     {
         $request = Request::instance();
-        $url = $request->domain() . '/admin_fussen/daily_task/all.html';
+        $url = $request->domain() . '/index/daily_task/all.html';
         sock_open($url);//定时任务非阻塞模式
 //        header('Location: '.$url);//测试
     }

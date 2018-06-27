@@ -7,7 +7,7 @@
 // | DateTime: 2018-02-09 16:17
 // +----------------------------------------------------------------------
 
-namespace app\admin_fussen\controller;
+namespace app\index\controller;
 
 use think\Controller;
 use think\Db;
