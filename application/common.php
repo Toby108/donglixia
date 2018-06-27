@@ -671,78 +671,84 @@ if (!function_exists('sock_open')) {
     }
 }
 
-/**
- *日志记录，按照"Ymd.log"生成当天日志文件
- * 日志路径为：入口文件所在目录/logs/$type/当天日期.log.php，例如 /logs/error/20120105.log.php
- * @param string $type 日志类型，对应logs目录下的子文件夹名
- * @param string $content 日志内容
- * @return bool true/false 写入成功则返回true
- */
-function log_write($type = "info", $content = "")
-{
-    if (!$content || !$type) {
-        return FALSE;
-    }
-    $dir = STATIC_PATH . DS . 'logs' . DS . $type;
-    if (!is_dir($dir)) {
-        if (!mkdir($dir, 0777, true)) {
+if (!function_exists('log_write')) {
+    /**
+     *日志记录，按照"Ymd.log"生成当天日志文件
+     * 日志路径为：入口文件所在目录/logs/$type/当天日期.log.php，例如 /logs/error/20120105.log.php
+     * @param string $type 日志类型，对应logs目录下的子文件夹名
+     * @param string $content 日志内容
+     * @return bool true/false 写入成功则返回true
+     */
+    function log_write($type = "info", $content = "")
+    {
+        if (!$content || !$type) {
+            return FALSE;
+        }
+        $dir = STATIC_PATH . DS . 'logs' . DS . $type;
+        if (!is_dir($dir)) {
+            if (!mkdir($dir, 0777, true)) {
+                return false;
+            }
+        }
+        $filename = $dir . DS . date("Ymd", time()) . '.log';
+        if (file_exists($filename)) {
+            $logs = include $filename;
+            if ($logs && !is_array($logs)) {
+                unlink($filename);
+                $logs = [];
+            }
+        }
+
+        $logs[] = array("time" => date("Y-m-d H:i:s"), "content" => $content);
+        $str = "<?php \r\n return " . var_export($logs, true) . ";";
+        if (!$fp = @fopen($filename, "wb")) {
             return false;
         }
+        if (!fwrite($fp, $str)) return false;
+        fclose($fp);
+        return true;
     }
-    $filename = $dir . DS . date("Ymd", time()) . '.log';
-    if (file_exists($filename)) {
-        $logs = include $filename;
-        if ($logs && !is_array($logs)) {
-            unlink($filename);
-            $logs = [];
+}
+
+if (!function_exists('log_read')) {
+    /**
+     * 获取日志内容
+     * @param string  $file 文件名路径
+     * @return array
+     */
+    function log_read($file)
+    {
+        $file = !empty($file) ? $file : STATIC_PATH . '/logs/info/'. date("Ymd", time()) . '.log';
+        if (file_exists($file)) {
+            $logs = include $file;
+            if ($logs && !is_array($logs)) {
+                unlink($file);
+            }
+        }
+        return !empty($logs) && is_array($logs) ? $logs : [];
+    }
+}
+
+if (!function_exists('save_error_log')) {
+    /**
+     * 保存错误信息
+     * @param $content
+     */
+    function save_error_log($content)
+    {
+        $request = \think\Request::instance();
+        $data['user_id'] = user_info('user_id') ? user_info('user_id') : 0;
+        $data['url'] =  $request->url(true);
+        $data['method'] = $request->method();
+        $data['content'] = $content;
+        $data['create_time'] = date('Y-m-d H:i:s');
+        try{
+            Db::name('error_log')->insert($data);
+        }
+        catch (\Exception $e) {
+            Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);
         }
     }
-
-    $logs[] = array("time" => date("Y-m-d H:i:s"), "content" => $content);
-    $str = "<?php \r\n return " . var_export($logs, true) . ";";
-    if (!$fp = @fopen($filename, "wb")) {
-        return false;
-    }
-    if (!fwrite($fp, $str)) return false;
-    fclose($fp);
-    return true;
 }
 
-/**
- * 获取日志内容
- * @param string  $file 文件名路径
- * @return array
- */
-function log_read($file)
-{
-    $file = !empty($file) ? $file : STATIC_PATH . '/logs/info/'. date("Ymd", time()) . '.log';
-    if (file_exists($file)) {
-        $logs = include $file;
-        if ($logs && !is_array($logs)) {
-            unlink($file);
-        }
-    }
-    return !empty($logs) && is_array($logs) ? $logs : [];
-}
 
-/**
- * 保存错误信息
- * @param $content
- */
-function save_error_log($content)
-{
-    $request = \think\Request::instance();
-    $data['user_id'] = user_info('user_id') ? user_info('user_id') : 0;
-    $data['url'] =  $request->url(true);
-    $data['method'] = $request->method();
-    $data['content'] = $content;
-    $data['is_mobile'] = $request->isMobile();
-    $data['ip'] = !empty($request->ip(1)) ? $request->ip(1) : 0;
-    $data['create_time'] = time();
-    try{
-        Db::name('error_log')->insert($data);
-    }
-    catch (\Exception $e) {
-        Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);
-    }
-}
