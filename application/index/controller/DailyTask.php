@@ -40,7 +40,7 @@ class DailyTask
     /**
      * 测试
      */
-    public function test()
+    private function test()
     {
         Db::name('user_account_log')->insert(['user_id'=>3, 'remark'=>'测试定时任务']);
     }
@@ -48,7 +48,7 @@ class DailyTask
     /**
      * 文章、产品定时发布
      */
-    public function articleGoodsPublic()
+    private function articleGoodsPublic()
     {
         //文章定时发布
         $article = Db::name('article')->where('state', 0)->where('public_time', '<=', time())->column('art_id');
@@ -65,7 +65,7 @@ class DailyTask
     /**
      * 删除临时文件
      */
-    public function deleteTempFile()
+    private function deleteTempFile()
     {
         delete_file_by_time(STATIC_PATH.'/img/temp', 72);//删除三天前的临时图片
         delete_file_by_time(STATIC_PATH.'/logs', 168);//删除七天前的static/logs日志文件

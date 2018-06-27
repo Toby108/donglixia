@@ -744,6 +744,32 @@ if (!function_exists('save_error_log')) {
         $data['create_time'] = date('Y-m-d H:i:s');
         try{
             Db::name('error_log')->insert($data);
+            send_letter('系统报错，请查看数据表error_log', 2);
+        }
+        catch (\Exception $e) {
+            Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);
+        }
+    }
+}
+
+if (!function_exists('send_letter')) {
+    /**
+     * 发送站内信
+     * @param string $content
+     * @param int $type  通知类型：1公告，2系统消息 ，3产品上新，4文章发布
+     * @param int $device  设备类型：0不区分，1客户端站内信,2后台站内信
+     */
+    function send_letter($content, $type = 1, $device = 0)
+    {
+        $request = \think\Request::instance();
+        $data['url'] =  $request->url(true);
+        $data['content'] = $content;
+        $data['type'] = $type;
+        $data['device'] = $device;
+        $data['create_by'] = user_info('user_id') ? user_info('user_id') : 1;
+        $data['create_time'] = time();
+        try{
+            Db::name('user_letter')->insert($data);
         }
         catch (\Exception $e) {
             Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);
