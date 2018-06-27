@@ -16,10 +16,10 @@ class DailyTask extends Controller
 {
     /**
      * 执行全部
-     * @param int $time 默认每隔3600秒执行一次（一个小时）
+     * @param int $time 默认每隔600秒执行一次（十分钟）
      * @return bool
      */
-    public function all($time = 10)
+    public function all($time = 600)
     {
         try {
             $file = STATIC_PATH. '/logs/daily_task/' . date("Ymd", time()) . '.log';
@@ -69,7 +69,7 @@ class DailyTask extends Controller
     public function deleteTempFile()
     {
         delete_file_by_time(STATIC_PATH.'/img/temp', 72);//删除三天前的临时图片
-        delete_file_by_time(STATIC_PATH.'/img/temp', 168);//删除七天前的static/logs日志文件
+        delete_file_by_time(STATIC_PATH.'/logs', 168);//删除七天前的static/logs日志文件
     }
 
 
