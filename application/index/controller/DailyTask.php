@@ -19,16 +19,21 @@ class DailyTask extends Controller
      * @param int $time 默认每隔3600秒执行一次（一个小时）
      * @return bool
      */
-    public function all($time = 3600)
+    public function all($time = 10)
     {
-        $file = STATIC_PATH. '/logs/daily_task/' . date("Ymd", time()) . '.log';
-        $logs = log_read($file);
-        $time_log = end($logs)['time'];
-        if (empty($logs) || (time() - strtotime($time_log) >= $time)) {
-            $this->test();//测试
-            $this->articleGoodsPublic();//文章、产品定时发布
-            $this->deleteTempFile();//删除临时文件
-            log_write('daily_task','执行成功！');
+        try {
+            $file = STATIC_PATH. '/logs/daily_task/' . date("Ymd", time()) . '.log';
+            $logs = log_read($file);
+            $time_log = end($logs)['time'];
+            if (empty($logs) || (time() - strtotime($time_log) >= $time)) {
+                $this->test();//测试
+                $this->articleGoodsPublic();//文章、产品定时发布
+                $this->deleteTempFile();//删除临时文件
+                log_write('daily_task','执行成功！');
+            }
+        } catch (\Exception $e) {
+            save_error_log($e->getMessage().' ['.$e->getFile().':'.$e->getLine().']');
+            die($e->getMessage());
         }
         die('success');
     }

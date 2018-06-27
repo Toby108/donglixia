@@ -715,7 +715,6 @@ function log_write($type = "info", $content = "")
  */
 function log_read($file)
 {
-    $logs = [];
     $file = !empty($file) ? $file : STATIC_PATH . '/logs/info/'. date("Ymd", time()) . '.log';
     if (file_exists($file)) {
         $logs = include $file;
@@ -723,5 +722,27 @@ function log_read($file)
             unlink($file);
         }
     }
-    return $logs;
+    return !empty($logs) && is_array($logs) ? $logs : [];
+}
+
+/**
+ * 保存错误信息
+ * @param $content
+ */
+function save_error_log($content)
+{
+    $request = \think\Request::instance();
+    $data['user_id'] = user_info('user_id') ? user_info('user_id') : 0;
+    $data['url'] =  $request->url(true);
+    $data['method'] = $request->method();
+    $data['content'] = $content;
+    $data['is_mobile'] = $request->isMobile();
+    $data['ip'] = !empty($request->ip(1)) ? $request->ip(1) : 0;
+    $data['create_time'] = time();
+    try{
+        Db::name('error_log')->insert($data);
+    }
+    catch (\Exception $e) {
+        Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);
+    }
 }
