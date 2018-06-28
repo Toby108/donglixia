@@ -747,7 +747,7 @@ if (!function_exists('save_error_log')) {
             send_letter('系统新错误，请查看数据表error_log', 2);
         }
         catch (\Exception $e) {
-            Db::name('error_log')->insert(['content' => '本表保存失败：'.$e->getMessage().'; '.json_encode($data)]);
+            Db::name('error_log')->insert(['content' => '本表信息保存失败：'.$e->getMessage().'; '.json_encode($data)]);
         }
     }
 }
