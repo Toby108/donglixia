@@ -1,13 +1,38 @@
 {extend name="common/index"}
 {block name="css"}
-<style>
-    .layui-table-cell{
-        padding: 0 8px;
-    }
-</style>
 {/block}
 {block name="content"}
-测试
+<div class="layui-row">
+    <form id="msgForm" class="layui-form" action="" >
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">公告</li>
+                <li>系统消息</li>
+                <li>文章发布</li>
+                <li>产品上新</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+
+                </div>
+                <div class="layui-tab-item">
+
+                </div>
+                <div class="layui-tab-item">
+
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-main">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tpl-form-action">
+            <button class="layui-btn layui-btn-radius layui-btn-lg" lay-submit lay-filter="formSubmit">保存</button>
+        </div>
+    </form>
+</div>
 {/block}
 
 {block name="script"}
