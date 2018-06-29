@@ -8,33 +8,89 @@
             <ul class="layui-tab-title">
                 <li class="layui-this">公告</li>
                 <li>系统消息</li>
-                <li>文章发布</li>
-                <li>产品上新1</li>
+                <li>新发布</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
-
+                    <div class="layui-row">
+                        <div class="layui-col-xs12">
+                            <table id="noticeTable"  lay-filter="noticeTable"></table>
+                        </div>
+                    </div>
                 </div>
                 <div class="layui-tab-item">
-
+                    <div class="layui-row">
+                        <div class="layui-col-xs12">
+                            <table id="systemMsgTable"  lay-filter="systemMsgTable"></table>
+                        </div>
+                    </div>
                 </div>
                 <div class="layui-tab-item">
-
-                </div>
-                <div class="layui-tab-item">
-                    <div class="layui-main">
-
+                    <div class="layui-row">
+                        <div class="layui-col-xs12">
+                            <table id="newPublicTable"  lay-filter="newPublicTable"></table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="tpl-form-action">
-            <button class="layui-btn layui-btn-radius layui-btn-lg" lay-submit lay-filter="formSubmit">保存</button>
         </div>
     </form>
 </div>
 {/block}
 
 {block name="script"}
+<script type="text/javascript">
+    var table_data;
+    layui.use(['form', 'table'], function () {
+        var form = layui.form;
+        var table = layui.table;
 
+        //表格数据渲染：公告
+        table.render({
+            elem: '#noticeTable'
+            , url: '{:url("getDataList")}?type=1'
+            , page: true
+            ,limit: table_limit
+            ,limits: table_limits
+            , cols: [[
+                {type: 'numbers', title: '序号', width: 80}
+                , {field: 'content', title: '内容', width: '50%'}
+                , {field: 'create_by', title: '发送人', minWidth: 100}
+                , {field: 'create_time', title: '发送时间', minWidth: 100}
+            ]]
+        });
+
+        //表格数据渲染：系统消息
+        table.render({
+            elem: '#systemMsgTable'
+            , url: '{:url("getDataList")}?type=2'
+            , page: true
+            ,limit: table_limit
+            ,limits: table_limits
+            , cols: [[
+                {type: 'numbers', title: '序号', width: 80}
+                , {field: 'content', title: '内容'}
+                , {field: 'create_by', title: '发送人', minWidth: 100}
+                , {field: 'create_time', title: '发送时间', minWidth: 100}
+            ]]
+        });
+
+        //表格数据渲染：新发布
+        table.render({
+            elem: '#newPublicTable'
+            , url: '{:url("getDataList")}?type=3'
+            , page: true
+            ,limit: table_limit
+            ,limits: table_limits
+            , cols: [[
+                {type: 'numbers', title: '序号', width: 80}
+                , {field: 'content', title: '内容', width: '50%'}
+                , {field: 'create_by', title: '发送人', minWidth: 100}
+                , {field: 'create_time', title: '发送时间', minWidth: 100}
+            ]]
+        });
+
+    });
+
+</script>
 {/block}

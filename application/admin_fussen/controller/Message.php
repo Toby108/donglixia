@@ -31,6 +31,23 @@ class Message extends Controller
         return $this->fetch();
     }
 
+    /**
+     * 获取数据
+     * @return mixed
+     */
+    public function getDataList()
+    {
+
+        $param = $this->request->param();
+        $map = [];
+        if (!empty($param['type'])) {
+            $map['type'] = $param['type'];//通知类型：1公告，2系统消息 ，3产品上新，4文章发布
+        }
+        if (empty($map)) {
+            $map[] = ['exp', '1=1'];
+        }
+        return $this->currentModel->where($map)->order('id desc')->layTable();
+    }
 
 
 }
