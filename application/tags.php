@@ -25,6 +25,6 @@ return [
     'log_write'    => [],
     // 应用结束
     'app_end'      => [],
-    // controller初始化，位置：common/parent/controller
+    // controller初始化，位置：common/controller/Base
     'controller_init'     => ['app\\common\\behavior\\TaskData']
 ];

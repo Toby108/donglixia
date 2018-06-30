@@ -756,7 +756,7 @@ if (!function_exists('send_letter')) {
     /**
      * 发送站内信
      * @param string $content
-     * @param int $type  通知类型：1公告，2系统消息 ，3产品上新，4文章发布
+     * @param int $type  通知类型：1系统消息 ，2系统公告，3新发布
      * @param int $device  设备类型：0不区分，1客户端站内信,2后台站内信
      */
     function send_letter($content, $type = 1, $device = 0)
