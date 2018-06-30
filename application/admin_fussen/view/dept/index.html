@@ -36,7 +36,7 @@
                 <input type="hidden" name="dept_id" value="">
                 <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
                 <div class="layui-form-item">
-                    <div class="layui-form-label">上级部门：</div>
+                    <label class="layui-form-label">上级部门：</label>
                     <div class="layui-input-inline">
                         <select name="pid">
                             <option value="0">顶级</option>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <div class="layui-form-label">部门名称：</div>
+                    <label class="layui-form-label">部门名称：</label>
                     <div class="layui-input-inline">
                         <input type="text" name="dept_name" class="layui-input">
                     </div>
@@ -85,7 +85,7 @@
                         '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.dept_id+',\'desc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangxia1"></i></a>' +
                         '</div>';
                 }}
-                ,{fixed: 'right', title:'操作', toolbar: '#operating', align:'center', width: '15%'}
+                ,{title:'操作', toolbar: '#operating', align:'center', width: '15%'}
             ]]
             ,where: getFormJson('#searchForm')
         });

@@ -1,20 +1,20 @@
 <?php
 // +----------------------------------------------------------------------
-// | Copyright (c) 2018-2018 http://www.donglixia.net All rights reserved.
+// | Copyright (c) 2018-{2018} http://www.donglixia.net All rights reserved.
 // +----------------------------------------------------------------------
 // | Author: 十万马 <962863675@qq.com>
 // +----------------------------------------------------------------------
-// | DateTime: 2018-02-09 16:17
+// | DateTime: 2018/6/30 10:25
 // +----------------------------------------------------------------------
 
 namespace app\admin_fussen\controller;
 
+use app\common\controller\Base as CoreBase;
 use app\admin_fussen\model\BasicMenu;
 use app\admin_fussen\model\User;
-use app\common\controller\Base as CoreBase;
+use think\Session;
 use think\Cookie;
 use think\Db;
-use think\Session;
 use think\Request;
 
 abstract class Base extends CoreBase

@@ -10,8 +10,68 @@
 namespace app\admin_fussen\model;
 
 use app\common\model\Base;
+use think\Db;
 
 class UserLetter extends Base
 {
+    //类型列表
+    public $typeList = ['1'=>'系统消息', '2'=>'系统公告', '3'=>'新发布'];
 
+    public function formatData($data = [])
+    {
+        $data = !empty($data) && is_array($data) ? $data : [];
+        foreach ($data as $k=>$v) {
+            $data[$k]['create_by'] = !empty($v['create_by']) ? Db::name('user')->where('user_id', $v['create_by'])->value('nick_name') : '';
+            $data[$k]['create_time'] = !empty($v['create_time']) ? date('Y-m-d H:i',$v['create_time']) : '';
+            $data[$k]['type_text'] = !empty($v['type']) ? $this->typeList[$v['type']] : '系统消息';
+        }
+        return $data;
+    }
+
+    /**
+     * 获取列表页数据
+     * @param $param
+     * @return array
+     */
+    public function getIndexDataList($param)
+    {
+        $map = [];
+        if (isset($param['is_read']) && $param['is_read'] !== "") {
+            $map['li.is_read'] = $param['is_read'];//是否已读
+        }
+        if (!empty($param['create_by'])) {
+            $map['le.create_by'] = $param['create_by'];//发送人id
+        }
+        if (!empty($param['type'])) {
+            $map['le.type'] = $param['type'];//通知类型：1公告，2系统消息 ，3新发布
+        }
+        $count = $this->getIndexDataSql($map)->count();
+        $list = $this->getIndexDataSql($map)
+            ->field('li.id,li.user_id,li.is_read,le.title,le.content,le.url,le.type,le.device,le.create_by,le.create_time')
+            ->page($param['page'], $param['limit'])
+            ->order('li.is_read asc,li.id desc')
+            ->select();
+        return ['count'=>$count, 'list'=>$list];
+    }
+
+    /**
+     * 根据条件建立sql语句
+     * @param array $map
+     * @return $this
+     */
+    public function getIndexDataSql($map = [])
+    {
+        $map['li.user_id'] = user_info('user_id');
+        return Db::name('user_letter_list')->alias('li')
+            ->join('UserLetter le', 'li.letter_id=le.id')
+            ->where($map);
+    }
+    /**
+     * 获取人员列表
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function getUserList()
+    {
+        return Db::name('user')->field('user_id,nick_name,real_name')->select();
+    }
 }

@@ -10,9 +10,9 @@
 namespace app\admin_fussen\model;
 
 use app\common\model\Base;
-use think\Db;
 
-class Message extends Base
+class UserLetterList extends Base
 {
+
 
 }

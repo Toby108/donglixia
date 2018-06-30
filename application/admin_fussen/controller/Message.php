@@ -10,7 +10,8 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\UserLetter;
-
+use app\admin_fussen\model\UserLetterList;
+use think\Db;
 use think\Request;
 
 class Message extends Base
@@ -27,6 +28,11 @@ class Message extends Base
      */
     public function index()
     {
+        //获取人员下拉列表
+        $userList = $this->currentModel->getUserList();
+        $this->assign('userList', $userList);
+        //获取类型下拉列表
+        $this->assign('typeList', $this->currentModel->typeList);
         return $this->fetch();
     }
 
@@ -36,18 +42,33 @@ class Message extends Base
      */
     public function getDataList()
     {
-
+        //接收参数
         $param = $this->request->param();
-        $map = [];
-        if (!empty($param['type'])) {
-            $map['type'] = $param['type'];//通知类型：1公告，2系统消息 ，3产品上新，4文章发布
-        }
-        if (empty($map)) {
-            $map[] = ['exp', '1=1'];
-        }
-        return $this->currentModel->where($map)->order('id desc')->layTable();
+        //获取数据
+        $res = $this->currentModel->getIndexDataList($param);
+        //格式化数据
+        $list = $this->currentModel->formatData($res['list']);
+        return ['code'=>0, 'msg'=>'获取成功', 'count'=>$res['count'], 'data'=>$list];
     }
 
+    /**
+     * 更新某个字段
+     */
+    public function updateField()
+    {
+        $param = $this->request->param();
+        if (empty($param['id'])) {
+            $this->error('id不能为空');
+        }
+
+        $UserLetterList = new UserLetterList();
+        try {
+            $UserLetterList->isUpdate(true)->save($param);
+        } catch (\Exception $e) {
+            $this->error($UserLetterList->getError() ? $UserLetterList->getError() : $e->getMessage());
+        }
+        $this->success('更新成功!');
+    }
 
 }
 

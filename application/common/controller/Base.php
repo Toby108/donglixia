@@ -9,9 +9,9 @@
 
 namespace app\common\controller;
 
-use think\Controller as CoreController;
+use think\Controller;
 
-abstract class Base extends CoreController
+abstract class Base extends Controller
 {
     protected $result = array();
 
