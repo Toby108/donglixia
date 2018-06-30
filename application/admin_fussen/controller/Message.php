@@ -9,17 +9,17 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\parent\Controller;
-use app\admin_fussen\model\UserLetter as UserLetterModel;
+use app\admin_fussen\parent\Base;
+use app\admin_fussen\model\UserLetter;
 
 use think\Request;
 
-class Message extends Controller
+class Message extends Base
 {
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
-        $this->currentModel = new UserLetterModel();//实例化当前模型
+        $this->currentModel = new UserLetter();//实例化当前模型
     }
 
     /**

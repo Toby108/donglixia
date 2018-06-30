@@ -10,12 +10,12 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\ArticleCat as ArticleCatModel;
-use app\admin_fussen\parent\Controller;
+use app\admin_fussen\parent\Base;
 use think\Db;
 use think\Request;
 use think\Session;
 
-class ArticleCat extends Controller
+class ArticleCat extends Base
 {
     public function __construct(Request $request = null)
     {

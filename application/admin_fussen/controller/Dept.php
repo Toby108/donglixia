@@ -10,10 +10,10 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\UserDept;
-use app\admin_fussen\parent\Controller;
+use app\admin_fussen\parent\Base;
 use think\Request;
 
-class Dept extends Controller
+class Dept extends Base
 {
     public function __construct(Request $request = null)
     {

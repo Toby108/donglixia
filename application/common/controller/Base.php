@@ -7,11 +7,11 @@
 // | DateTime: 2018-02-09 16:17
 // +----------------------------------------------------------------------
 
-namespace app\common\parent;
+namespace app\common\controller;
 
 use think\Controller as CoreController;
 
-class Controller extends CoreController
+abstract class Base extends CoreController
 {
     protected $result = array();
 

@@ -11,13 +11,13 @@ namespace app\admin_fussen\parent;
 
 use app\admin_fussen\model\BasicMenu;
 use app\admin_fussen\model\User;
-use app\common\parent\Controller as CoreController;
+use app\common\controller\Base as CoreBase;
 use think\Cookie;
 use think\Db;
 use think\Session;
 use think\Request;
 
-class Controller extends CoreController
+abstract class Base extends CoreBase
 {
     protected $currentModel;
 

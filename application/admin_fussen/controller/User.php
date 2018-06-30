@@ -13,12 +13,12 @@ use app\admin_fussen\model\UserDept;
 use app\admin_fussen\model\UserRole;
 use app\admin_fussen\model\User as UserModel;
 use app\admin_fussen\model\BasicInfo as BasicInfoModel;
-use app\admin_fussen\parent\Controller;
+use app\admin_fussen\parent\Base;
 use think\Db;
 use think\Session;
 use think\Request;
 
-class User extends Controller
+class User extends Base
 {
     public function __construct(Request $request = null)
     {
