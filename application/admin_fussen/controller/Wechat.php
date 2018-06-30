@@ -1,10 +1,10 @@
 <?php
 namespace app\admin_fussen\controller;
 
-use think\Controller as CoreController;
+use think\Controller;
 use think\Loader;
 
-class Wechat extends CoreController
+class Wechat extends Controller
 {
     /**
      * 用户授权获取微信code
