@@ -10,7 +10,6 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\ArticleCat as ArticleCatModel;
-use app\admin_fussen\parent\Base;
 use think\Db;
 use think\Request;
 use think\Session;

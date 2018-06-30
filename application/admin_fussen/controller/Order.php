@@ -9,7 +9,6 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\parent\Base;
 
 class Order extends Base
 {

@@ -7,7 +7,7 @@
 // | DateTime: 2018-02-09 16:17
 // +----------------------------------------------------------------------
 
-namespace app\admin_fussen\parent;
+namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\BasicMenu;
 use app\admin_fussen\model\User;

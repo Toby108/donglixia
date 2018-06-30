@@ -9,8 +9,6 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\parent\Base;
-
 class Error extends Base
 {
     public function index()

@@ -9,10 +9,8 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\parent\Base;
 use app\admin_fussen\model\Goods as GoodsModel;
 use app\admin_fussen\model\BasicInfo as BasicInfoModel;
-use think\Db;
 use think\Request;
 use think\Session;
 
