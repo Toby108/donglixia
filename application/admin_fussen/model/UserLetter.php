@@ -45,10 +45,13 @@ class UserLetter extends Base
         if (!empty($param['type'])) {
             $map['le.type'] = $param['type'];//通知类型：1公告，2系统消息 ，3新发布
         }
+
+        $page = !empty($param['page']) ? $param['page'] : 1;//页码
+        $limit = !empty($param['limit']) && $param['limit']<=200 ? $param['limit'] : 1;//每页显示数量，最大200条
         $count = $this->getIndexDataSql($map)->count();
         $list = $this->getIndexDataSql($map)
             ->field('li.id,li.user_id,li.is_read,le.title,le.content,le.url,le.type,le.device,le.create_by,le.create_time')
-            ->page($param['page'], $param['limit'])
+            ->page($page, $limit)
             ->order('li.is_read asc,li.id desc')
             ->select();
         return ['count'=>$count, 'list'=>$list];
