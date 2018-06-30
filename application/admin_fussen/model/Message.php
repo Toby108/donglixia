@@ -7,12 +7,12 @@
 // | DateTime: 2018-02-09 16:17
 // +----------------------------------------------------------------------
 
-namespace app\common\model;
+namespace app\admin_fussen\model;
 
-use app\common\parent\Model;
+use app\common\model\Base;
+use think\Db;
 
-class UserLetter extends Model
+class Message extends Base
 {
-
 
 }

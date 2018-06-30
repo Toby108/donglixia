@@ -9,10 +9,10 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\model\UserDept as ComUserDept;
+use app\common\model\Base;
 use think\Db;
 
-class UserDept extends ComUserDept
+class UserDept extends Base
 {
     /**
      * 获取部门下拉列表，子部门以[children]分组

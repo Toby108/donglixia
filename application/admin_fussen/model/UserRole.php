@@ -9,9 +9,9 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\model\UserRole as ComUserRole;
+use app\common\model\Base;
 
-class UserRole extends ComUserRole
+class UserRole extends Base
 {
     /**
      * 保存字段“权限明细”

@@ -9,9 +9,9 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\model\UserLetter as ComUserLetter;
+use app\common\model\Base;
 
-class UserLetter extends ComUserLetter
+class UserLetter extends Base
 {
 
 }

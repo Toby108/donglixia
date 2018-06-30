@@ -9,9 +9,9 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\parent\Model;
+use app\common\model\Base;
 
-class GoodsCat extends Model
+class GoodsCat extends Base
 {
 
 }
