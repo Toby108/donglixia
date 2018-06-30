@@ -744,7 +744,8 @@ if (!function_exists('save_error_log')) {
         $data['create_time'] = date('Y-m-d H:i:s');
         try{
             Db::name('error_log')->insert($data);
-            send_letter(['title'=>'系统新错误，请查看数据表error_log', 'type'=>2, 'role_id'=>1]);
+            //给超级管理员发送站内信
+            send_letter(['title'=>'系统新错误，请查看错误日志', 'type'=>2, 'role_id'=>1]);
         }
         catch (\Exception $e) {
             Db::name('error_log')->insert(['content' => '本表信息保存失败：'.$e->getMessage().'; '.json_encode($data)]);
