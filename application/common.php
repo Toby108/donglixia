@@ -744,7 +744,7 @@ if (!function_exists('save_error_log')) {
         $data['create_time'] = date('Y-m-d H:i:s');
         try{
             Db::name('error_log')->insert($data);
-            send_letter('系统新错误，请查看数据表error_log', 2);
+            send_letter(['title'=>'系统新错误，请查看数据表error_log', 'type'=>2, 'role_id'=>1]);
         }
         catch (\Exception $e) {
             Db::name('error_log')->insert(['content' => '本表信息保存失败：'.$e->getMessage().'; '.json_encode($data)]);
@@ -755,25 +755,51 @@ if (!function_exists('save_error_log')) {
 if (!function_exists('send_letter')) {
     /**
      * 发送站内信
-     * @param string $content
-     * @param int $type  通知类型：1系统消息 ，2系统公告，3新发布
-     * @param int $device  设备类型：0不区分，1客户端站内信,2后台站内信
+     * @param array $data
+     * @return array|bool
      */
-    function send_letter($content, $type = 1, $device = 0)
+    function send_letter($data = [])
     {
-        $request = \think\Request::instance();
-        $data['url'] =  $request->url(true);
-        $data['content'] = $content;
-        $data['type'] = $type;
-        $data['device'] = $device;
-        $data['create_by'] = user_info('user_id') ? user_info('user_id') : 1;
-        $data['create_time'] = time();
+        if (empty($data['receive_id']) && empty($data['role_id']) && empty($data['dept_id'])) {
+            return ['status'=>false, 'msg'=>'请指定接收者'];
+        }
         try{
-            Db::name('user_letter')->insert($data);
+            $map = [];
+            if (!empty($data['receive_id'])) {
+                $map['user_id'] = $data['receive_id'];
+            }
+            if (!empty($data['role_id'])) {
+                $map['role_id'] = $data['role_id'];
+            }
+            if (!empty($data['dept_id'])) {
+                $map['dept_id'] = $data['dept_id'];
+            }
+            $user_ids = Db::name('user')->where($map)->column('user_id');//获取接收者id
+
+            if (empty($user_ids)) {
+                return ['status'=>false, 'msg'=>'接收者不明确'];
+            }
+            $request = \think\Request::instance();
+            $saveData['url'] =  $request->url(true);
+            $saveData['title'] = !empty($data['title']) ? $data['title'] : '';
+            $saveData['content'] = !empty($data['content']) ? $data['content'] : '';
+            $saveData['type'] = !empty($data['type']) ? $data['type'] : 1;//通知类型：1系统消息 ，2系统公告，3新发布
+            $saveData['device'] = !empty($data['device']) ? $data['device'] : 0;//设备类型：0不区分，1客户端站内信,2后台站内信
+            $saveData['create_by'] = user_info('user_id') ? user_info('user_id') : 1;
+            $saveData['create_time'] = time();
+
+            $id = Db::name('user_letter')->insertGetId($saveData);
+            $saveList = [];
+            foreach ($user_ids as $k=>$v) {
+                $saveList[$k]['user_id'] = $v;
+                $saveList[$k]['letter_id'] = $id;
+            }
+            Db::name('user_letter_list')->insertAll($saveList);//
         }
         catch (\Exception $e) {
             Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);
         }
+        return true;
     }
 }
 
