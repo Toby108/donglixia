@@ -729,9 +729,33 @@ if (!function_exists('log_read')) {
     }
 }
 
+if (!function_exists('save_task_log')) {
+    /**
+     * 保存定时任务日志
+     * @param $remark string 备注
+     * @param $is_success int 是否成功
+     * @param $method string 备注
+     */
+    function save_task_log($remark, $is_success = 1, $method = '')
+    {
+        $request = \think\Request::instance();
+        $data['url'] =  $request->url(true);
+        $data['method'] = !empty($method) ? $method : $request->method();
+        $data['remark'] = $remark;
+        $data['remark'] = $is_success;
+        $data['create_time'] = date('Y-m-d H:i:s');
+        try{
+            Db::name('task_log')->insert($data);
+        }
+        catch (\Exception $e) {
+            save_error_log($e->getMessage());
+        }
+    }
+}
+
 if (!function_exists('save_error_log')) {
     /**
-     * 保存错误信息
+     * 保存错误日志
      * @param $content
      */
     function save_error_log($content)

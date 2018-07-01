@@ -11,7 +11,6 @@ namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\UserLetter;
 use app\admin_fussen\model\UserLetterList;
-use think\Db;
 use think\Request;
 
 class Message extends Base
