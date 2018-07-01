@@ -37,8 +37,11 @@ abstract class Base extends Model
         } else {
             $this->updateTime = false;
         }
-        if (in_array('create_by',$db->getTableInfo('', 'fields')) && in_array('modify_by', $db->getTableInfo('', 'fields'))) {
-            array_push($this->insert,'create_by','modify_by');
+        if (in_array('create_by',$db->getTableInfo('', 'fields'))) {
+            array_push($this->insert,'create_by');
+        }
+        if (in_array('modify_by', $db->getTableInfo('', 'fields'))) {
+            array_push($this->insert,'modify_by');
         }
         if (in_array('modify_by',$db->getTableInfo('', 'fields'))) {
             array_push($this->update,'modify_by');

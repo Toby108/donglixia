@@ -17,13 +17,31 @@ class UserLetter extends Base
     //类型列表
     public $typeList = ['1'=>'系统消息', '2'=>'系统公告', '3'=>'新发布'];
 
+    /**
+     * 获取“类型”名称
+     * @param $value
+     * @param $data
+     * @return mixed|string
+     */
+    public function getTypeTextAttr($value, $data)
+    {
+        $item = $this->typeList;
+        return !empty($data['type']) ? $item[$data['type']] : '';
+    }
+
+    /**
+     * 格式化数据
+     * @param array $data
+     * @return array
+     */
     public function formatData($data = [])
     {
         $data = !empty($data) && is_array($data) ? $data : [];
         foreach ($data as $k=>$v) {
-            $data[$k]['create_by'] = !empty($v['create_by']) ? Db::name('user')->where('user_id', $v['create_by'])->value('nick_name') : '';
+            $data[$k]['create_by'] = $v['create_by'];
+            $data[$k]['create_by_name'] = !empty($v['create_by']) ? Db::name('user')->where('user_id', $v['create_by'])->value('nick_name') : '';
             $data[$k]['create_time'] = !empty($v['create_time']) ? date('Y-m-d H:i',$v['create_time']) : '';
-            $data[$k]['type_text'] = !empty($v['type']) ? $this->typeList[$v['type']] : '系统消息';
+            $data[$k]['type_text'] = !empty($v['type']) ? $this->typeList[$v['type']] : '';
         }
         return $data;
     }
@@ -50,7 +68,7 @@ class UserLetter extends Base
         $limit = !empty($param['limit']) && $param['limit']<=200 ? $param['limit'] : 1;//每页显示数量，最大200条
         $count = $this->getIndexDataSql($map)->count();
         $list = $this->getIndexDataSql($map)
-            ->field('li.id,li.user_id,li.is_read,le.title,le.content,le.url,le.type,le.device,le.create_by,le.create_time')
+            ->field('li.id as list_id,li.letter_id,li.user_id,li.is_read,le.title,le.content,le.url,le.type,le.device,le.create_by,le.create_time')
             ->page($page, $limit)
             ->order('li.is_read asc,li.id desc')
             ->select();
@@ -69,6 +87,5 @@ class UserLetter extends Base
             ->join('UserLetter le', 'li.letter_id=le.id')
             ->where($map);
     }
-
 
 }

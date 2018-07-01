@@ -55,6 +55,34 @@ class Message extends Base
     }
 
     /**
+     * 已发送页面
+     * @return mixed
+     */
+    public function sent()
+    {
+        //获取类型下拉列表
+        $this->assign('typeList', $this->currentModel->typeList);
+        return $this->fetch();
+    }
+
+    /**
+     * 获取已发送数据
+     * @return mixed
+     */
+    public function getSentDataList()
+    {
+        //接收参数
+        $param = $this->request->param();
+        //组装查询条件
+        $map = [];
+        if (!empty($param['type'])) {
+            $map['type'] = $param['type'];
+        }
+        $map['create_by'] = user_info('user_id');
+        return $this->currentModel->where($map)->layTable(['type_text']);
+    }
+
+    /**
      * 编辑
      * @param int $id
      * @return mixed
@@ -63,11 +91,17 @@ class Message extends Base
     {
         if (!empty($id)) {
             $data = $this->currentModel->where('id', $id)->find()->toArray();
+            $receive_dept_id_arr = explode(',', $data['receive_dept_id']);
+            $receive_dept_id = [];
+            foreach ($receive_dept_id_arr as $k => $v) {
+                $receive_dept_id[$k] = implode('/', get_parent_ids($v, 'goods_cat'));
+            }
+            $data['receive_dept_id'] = json_encode($receive_dept_id);
             $this->assign('data', $data);
         }
         /*获取下拉列表：部门*/
         $deptList = (new UserDept())->getDeptTree();
-        $this->assign('deptList', json_encode($deptList));
+        $this->assign('deptTree', json_encode($deptList));
 
         /*获取下拉列表：角色权限*/
         $roleList = (new UserRole())->getRoleList();
@@ -85,7 +119,7 @@ class Message extends Base
     /**
      * 更新某个字段
      */
-    public function updateField()
+    public function updateLetterListField()
     {
         $param = $this->request->param();
         if (empty($param['id'])) {
@@ -115,7 +149,6 @@ class Message extends Base
         }
         try{
             $user_ids = Db::name('user')->where(function ($query) use($param){
-                $query->where('', 'exp','1=1');
                 if (!empty($param['receive_all'])) {
                     $query->whereOr('', 'exp','1=1');
                 }
@@ -126,27 +159,34 @@ class Message extends Base
                     $query->whereOr('role_id',$param['receive_role_id']);
                 }
                 if (!empty($param['receive_user_id'])) {
-                    $query->whereOr('user_id',$param['receive_user_id']);
+                    $query->whereOr('user_id', 'in', $param['receive_user_id']);
                 }
             })->column('user_id');//获取接收者id
 
             if (empty($user_ids)) {
                 $this->error('未找到信息接收者');
             }
-            $saveData['title'] = !empty($param['title']) ? $param['title'] : '';
-            $saveData['content'] = !empty($param['content']) ? $param['content'] : '';
-            $saveData['type'] = !empty($param['type']) ? $param['type'] : 1;//通知类型：1系统消息 ，2系统公告，3新发布
-            $saveData['device'] = !empty($param['device']) ? $param['device'] : 0;//设备类型：0不区分，1客户端站内信,2后台站内信
-            $saveData['create_by'] = user_info('user_id') ? user_info('user_id') : 1;
-            $saveData['create_time'] = time();
 
-            $this->currentModel->save($saveData);//保存消息主表
-            $saveList = [];
-            foreach ($user_ids as $k=>$v) {
-                $saveList[$k]['user_id'] = $v;
-                $saveList[$k]['letter_id'] = $this->currentModel->id;
+            $this->currentModel->save($param);//保存消息主表
+
+            $UserLetterList = new UserLetterList();
+            //若当前为编辑，则更新接收者列表
+            if (!empty($param['id'])) {
+                //根据letter_id，删除不在当前user_ids中的数据
+                $UserLetterList->where('letter_id', $param['id'])->where('user_id', 'not in', $user_ids)->delete();
+                //根据letter_id获取，已发送的user_id集合
+                $user_id_exist = $UserLetterList->where('letter_id', $param['id'])->column('user_id');
+                //取数组差集，剔除掉已发送的user_id
+                $user_ids = array_diff($user_ids, $user_id_exist);
             }
-            (new UserLetterList())->saveAll($saveList);//保存发送列表
+            if (!empty($user_ids)) {
+                $saveList = [];
+                foreach ($user_ids as $k=>$v) {
+                    $saveList[$k]['user_id'] = $v;
+                    $saveList[$k]['letter_id'] = $this->currentModel->id;
+                }
+                $UserLetterList->saveAll($saveList);//保存发送列表
+            }
         }
         catch (\Exception $e) {
             $this->error($e->getMessage());

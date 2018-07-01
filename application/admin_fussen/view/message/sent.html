@@ -22,18 +22,7 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">发送人</label>
-                <div class="layui-input-inline">
-                    <select name="create_by" lay-search="">
-                        <option value="">请选择</option>
-                        {volist name="userList" id="vo"}
-                        <option value="{$vo.user_id}">{$vo.nick_name}</option>
-                        {/volist}
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">是否已读</label>
+                <label class="layui-form-label">发送时间</label>
                 <div class="layui-input-inline">
                     <select name="is_read">
                         <option value="">请选择</option>
@@ -56,39 +45,11 @@
 
 <script type="text/html" id="operating">
     <div class="layui-btn-group">
-        <a class="layui-btn layui-btn-xs" lay-event="show">查看详情</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
     </div>
 </script>
 
-<div id="msgModal" style="display: none;">
-    <div class="layui-row" style="padding: 15px 10px;margin: 0 auto;">
-        <div class="layui-col-md12">
-            <form id="editForm" action="" class="layui-form">
-                <input type="hidden" name="id" value="">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">标题：</label>
-                    <div class="layui-input-block modal-title">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">发送人：</label>
-                    <div class="layui-input-block modal-user">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">发送时间：</label>
-                    <div class="layui-input-block modal-time">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">详细内容：</label>
-                    <div class="layui-input-block modal-content">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 {/block}
 
 {block name="script"}
@@ -103,7 +64,7 @@
         //表格数据渲染：公告
         tableIns = table.render({
             elem: '#msgTable'
-            , url: '{:url("getDataList")}'
+            , url: '{:url("getSentDataList")}'
             , page: true
             ,limit: table_limit
             ,limits: table_limits
@@ -112,11 +73,6 @@
                 , {field: 'type_text', title: '类型', width: 100}
                 , {field: 'title', title: '标题', width: '30%'}
                 , {field: 'content', title: '详细内容', width: '15%'}
-                , {title:'是否已读', width: 90, align:'center', templet: function (data) {
-                    var check_state = data.is_read == 1 ? 'checked' : '';
-                    return '<input type="checkbox" name="is_read" value="'+data.is_read+'" data-id="'+data.list_id+'" lay-skin="switch"  lay-text="是|否" lay-filter="statusEvent" '+check_state+'>';
-                }}
-                , {field: 'create_by_name', title: '发送人', width: 90}
                 , {field: 'create_time', title: '发送时间', minWidth: 150}
                 ,{title:'操作', toolbar: '#operating', align:'center', width: 100}
             ]]
@@ -126,22 +82,20 @@
         //监听工具条
         table.on('tool(msgTable)', function(obj){
             var data = obj.data;
-            if (obj.event === 'show') {
-                $('.modal-title').text(data.title);
-                $('.modal-user').text(data.create_by);
-                $('.modal-time').text(data.create_time);
-                $('.modal-content').text(data.content);
-                modal = layer.open({
-                    type: 5
-                    , title: '信息详情'
-                    , btn: ['已读']
-                    , area: '500px'
-                    , offset: '20%'
-                    , content: $('#msgModal').html()
-                    , yes: function (index, element) {
-                        setRead(data.list_id);
-                    }
+            if (obj.event === 'del') {
+                layer.confirm('接收者消息也将被删除，确定继续吗？', function(index){
+                    $.post('{:url("delete")}',{id:data.id}, function (result) {
+                        layer.close(index);
+                        if (result.code) {
+                            layer.msg(result.msg);
+                            reloadTable('#searchForm');
+                        } else {
+                            layer.alert(result.msg, {icon:2});
+                        }
+                    }, 'json');
                 });
+            } else if (obj.event === 'edit') {
+                window.open('edit?id='+data.id);
             }
         });
 
@@ -173,16 +127,5 @@
         });
     });
 
-    function setRead(id) {
-        $.post('{:url("updateLetterListField")}', {id:id, is_read:1}, function (result) {
-            if (result.code) {
-                layer.close(modal);
-                reloadTable('#searchForm');//重新加载数据表格
-                layer.msg(result.msg, {time: 1000});
-            } else {
-                layer.alert(result.msg, {icon: 2});
-            }
-        }, 'json');
-    }
 </script>
 {/block}

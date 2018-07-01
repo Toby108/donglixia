@@ -41,7 +41,7 @@ class DailyTask
     private function articleGoodsPublic()
     {
         //文章定时发布
-        $article = Db::name('article')->where('state', 0)->where('public_time1', '<=', time())->column('art_id');
+        $article = Db::name('article')->where('state', 0)->where('public_time', '<=', time())->column('art_id');
         foreach ($article as $k => $v) {
             Db::name('article')->where('art_id', $v)->update(['state' => 1]);
         }

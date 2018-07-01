@@ -1,16 +1,17 @@
 {extend name="common/index"}
 {block name="css"}
+<link rel="stylesheet" href="__STATIC__/plugins/layui_formSelects/formSelects-v4.css">
 {/block}
 
 {block name="content"}
 <div class="layui-row">
     <form id="editForm" class="layui-form tpl-form-label-long" action="">
-        <input type="hidden" name="id" id="id" value="{$data.id|default=''}">
+        <input type="hidden" name="id" value="{$data.id|default=''}">
         <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
         <div class="layui-field-box">
             <div class="layui-main">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">给全部人发送：</label>
+                    <label class="layui-form-label">全部人发送：</label>
                     <div class="layui-input-block">
                         <input type="radio" name="receive_all" value="1" title="是" {eq name="$data.receive_all|default=0" value="1"}checked{/eq}>
                         <input type="radio" name="receive_all" value="0" title="否" {eq name="$data.receive_all|default=0" value="0"}checked{/eq}>
@@ -19,18 +20,15 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">按部门发送：</label>
                     <div class="layui-input-block">
-                        <select name="receive_dept_id" >
-                            <option value="">请选择</option>
-                            {volist name="deptList" id="vo"}
-                            <option value="{$vo.id}" {eq name="vo.id" value="$data.receive_dept_id|default=''"} selected {/eq}>{$vo.dept_name}</option>
-                            {/volist}
+                        <select name="receive_dept_id"  xm-select="select-dept-id">
+                            <option value="">可多选</option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">按角色发送：</label>
                     <div class="layui-input-block">
-                        <select name="receive_role_id" >
+                        <select name="receive_role_id"  xm-select="select-role-id">
                             <option value="">请选择</option>
                             {volist name="roleList" id="vo"}
                             <option value="{$vo.role_id}" {eq name="vo.role_id" value="$data.receive_role_id|default=''"} selected {/eq}>{$vo.role_name}</option>
@@ -41,10 +39,10 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">按用户发送：</label>
                     <div class="layui-input-block">
-                        <select name="receive_user_id" >
+                        <select name="receive_user_id"  xm-select="select-user-id" xm-select-search="">
                             <option value="">请选择</option>
                             {volist name="userList" id="vo"}
-                            <option value="{$vo.user_id}" {eq name="vo.user_id" value="$data.receive_user_id|default=''"} selected {/eq}>{$vo.nick_name}</option>
+                            <option value="{$vo.user_id}" {in name="vo.user_id" value="$data.receive_user_id|default=''"} selected {/in}>{$vo.nick_name}</option>
                             {/volist}
                         </select>
                     </div>
@@ -82,6 +80,7 @@
 {/block}
 
 {block name="script"}
+<script src="__STATIC__/plugins/layui_formSelects/formSelects-v4.js"></script>
 <script type="text/javascript">
     layui.use(['form'], function () {
         var form = layui.form;
@@ -104,5 +103,15 @@
         });
     });
 
+    //部门
+    var formSelects = layui.formSelects;
+    var deptTree = {$deptTree|default='0'};
+    formSelects.data('select-dept-id', 'local', {
+        arr: deptTree,
+        keyVal: 'id',            //自定义返回数据中value的key, 默认 value
+        linkage: true,
+        linkageWidth: 190
+    });
+    formSelects.value('select-dept-id', {$data.receive_dept_id|default="0"});//初始值
 </script>
 {/block}
