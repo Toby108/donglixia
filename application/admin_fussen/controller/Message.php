@@ -193,5 +193,20 @@ class Message extends Base
         }
         $this->success('发送成功！', 'edit?id='.$this->currentModel->id);
     }
+
+    /**
+     * 删除
+     * @param $id
+     */
+    public function delete($id)
+    {
+        try {
+            Db::name('user_letter')->where('id', $id)->delete();
+            Db::name('user_letter_list')->where('letter_id', $id)->delete();
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+        }
+        $this->success('删除成功!');
+    }
 }
 

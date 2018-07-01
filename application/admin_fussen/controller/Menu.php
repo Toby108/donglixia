@@ -135,7 +135,6 @@ class Menu extends Base
 
     /**
      * 根据pid 获取下拉列表，级联选择
-     * @return array
      */
     public function getMenuLinkSelect()
     {
