@@ -145,7 +145,7 @@ class Message extends Base
             $this->error('未获取到需要保存的数据');
         }
         if (empty($param['receive_all']) && empty($param['receive_role_id']) && empty($param['receive_dept_id']) && empty($param['receive_user_id'])) {
-            $this->error('请指定信息接收者');
+            $this->error('请选择发送对象！');
         }
         try{
             $user_ids = Db::name('user')->where(function ($query) use($param){
@@ -164,7 +164,7 @@ class Message extends Base
             })->column('user_id');//获取接收者id
 
             if (empty($user_ids)) {
-                $this->error('未找到信息接收者');
+                $this->error('未找到发送对象！');
             }
 
             $this->currentModel->save($param);//保存消息主表

@@ -15,7 +15,7 @@ use think\Db;
 class UserLetter extends Base
 {
     //类型列表
-    public $typeList = ['1'=>'系统消息', '2'=>'系统公告', '3'=>'新发布'];
+    public $typeList = ['1'=>'系统消息', '2'=>'系统公告', '3'=>'文章发布', '4'=>'产品上新'];
 
     /**
      * 获取“类型”名称

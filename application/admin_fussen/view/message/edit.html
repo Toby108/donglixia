@@ -48,9 +48,9 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">消息类型：</label>
+                    <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>消息类型：</label>
                     <div class="layui-input-block">
-                        <select name="type" >
+                        <select name="type" lay-verify="required" >
                             <option value="">请选择</option>
                             {volist name="typeList" id="vo"}
                             <option value="{$key}" {eq name="vo" value="$data.type|default=''"} selected {/eq}>{$vo}</option>
