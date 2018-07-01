@@ -79,12 +79,11 @@ class Dept extends Base
     }
 
     /**
-     * 获取部门列表
+     * 获取部门列表，树状Table_tree
      */
     public function getDeptList()
     {
-        $deptList = $this->currentModel->field('dept_id,pid,dept_name')->select();
-        return \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
+        return $this->currentModel->getDeptTableTree();
     }
 }
 

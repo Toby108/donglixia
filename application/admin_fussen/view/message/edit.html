@@ -1,0 +1,108 @@
+{extend name="common/index"}
+{block name="css"}
+{/block}
+
+{block name="content"}
+<div class="layui-row">
+    <form id="editForm" class="layui-form tpl-form-label-long" action="">
+        <input type="hidden" name="id" id="id" value="{$data.id|default=''}">
+        <input type="hidden" name="__token__" id="token" value="{$Request.token}" />
+        <div class="layui-field-box">
+            <div class="layui-main">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">给全部人发送：</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="receive_all" value="1" title="是" {eq name="$data.receive_all|default=0" value="1"}checked{/eq}>
+                        <input type="radio" name="receive_all" value="0" title="否" {eq name="$data.receive_all|default=0" value="0"}checked{/eq}>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">按部门发送：</label>
+                    <div class="layui-input-block">
+                        <select name="receive_dept_id" >
+                            <option value="">请选择</option>
+                            {volist name="deptList" id="vo"}
+                            <option value="{$vo.id}" {eq name="vo.id" value="$data.receive_dept_id|default=''"} selected {/eq}>{$vo.dept_name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">按角色发送：</label>
+                    <div class="layui-input-block">
+                        <select name="receive_role_id" >
+                            <option value="">请选择</option>
+                            {volist name="roleList" id="vo"}
+                            <option value="{$vo.role_id}" {eq name="vo.role_id" value="$data.receive_role_id|default=''"} selected {/eq}>{$vo.role_name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">按用户发送：</label>
+                    <div class="layui-input-block">
+                        <select name="receive_user_id" >
+                            <option value="">请选择</option>
+                            {volist name="userList" id="vo"}
+                            <option value="{$vo.user_id}" {eq name="vo.user_id" value="$data.receive_user_id|default=''"} selected {/eq}>{$vo.nick_name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">消息类型：</label>
+                    <div class="layui-input-block">
+                        <select name="type" >
+                            <option value="">请选择</option>
+                            {volist name="typeList" id="vo"}
+                            <option value="{$key}" {eq name="vo" value="$data.type|default=''"} selected {/eq}>{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color: red;">*&nbsp;</span>标题：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="{$data.title|default=''}" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">详细内容：</label>
+                    <div class="layui-input-block">
+                        <textarea name="content" class="layui-textarea" rows="8" placeholder="选填">{$data.content|default=''}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="tpl-form-action">
+                <button class="layui-btn layui-btn-radius layui-btn-lg" lay-submit lay-filter="formSubmit">发送</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+    layui.use(['form'], function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formSubmit)', function(data){
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+            $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
+                layer.close(index);
+                if (result.code) {
+                    layer.msg(result.msg, {shade:[0.5,'#000'],time:1000}, function () {
+                        window.location.href = result.url;
+                    });
+                } else {
+                    $('#token').val(result.data.token);
+                    layer.alert(result.msg, {icon:2});
+                }
+            }, 'json');
+            return false;
+        });
+    });
+
+</script>
+{/block}

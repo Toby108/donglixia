@@ -172,6 +172,19 @@ class User extends Base
     }
 
     /**
+     * 获取人员列表
+     * @param $map
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function getUserList($map = [])
+    {
+        if (empty($map)) {
+            $map[] = ['exp', '1=1'];
+        }
+        return Db::name('user')->where($map)->field('user_id,nick_name,real_name')->select();
+    }
+
+    /**
      * 保存字段“角色权限”
      * @param $value
      * @return string

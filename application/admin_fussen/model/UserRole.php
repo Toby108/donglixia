@@ -24,4 +24,17 @@ class UserRole extends Base
         }
         return $value;
     }
+
+    /**
+     * 获取角色权限列表
+     * @param $map
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function getRoleList($map = [])
+    {
+        if (empty($map)) {
+            $map[] = ['exp', '1=1'];
+        }
+        return $this->where($map)->field('role_id,role_name,describe')->order('sort_num')->select();
+    }
 }

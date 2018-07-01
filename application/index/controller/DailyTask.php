@@ -18,7 +18,7 @@ class DailyTask
      * @param int $time 默认每隔600秒执行一次（十分钟）
      * @return bool
      */
-    public function all($time = 60)
+    public function all($time = 600)
     {
         try {
             $create_time = Db::name('task_log')->where('task_name', 'DailyTask')->order('id desc')->value('create_time');

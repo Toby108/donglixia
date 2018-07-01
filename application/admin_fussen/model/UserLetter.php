@@ -69,12 +69,6 @@ class UserLetter extends Base
             ->join('UserLetter le', 'li.letter_id=le.id')
             ->where($map);
     }
-    /**
-     * 获取人员列表
-     * @return false|\PDOStatement|string|\think\Collection
-     */
-    public function getUserList()
-    {
-        return Db::name('user')->field('user_id,nick_name,real_name')->select();
-    }
+
+
 }

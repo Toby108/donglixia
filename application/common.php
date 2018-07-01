@@ -813,13 +813,13 @@ if (!function_exists('send_letter')) {
             $saveData['create_by'] = user_info('user_id') ? user_info('user_id') : 1;
             $saveData['create_time'] = time();
 
-            $id = Db::name('user_letter')->insertGetId($saveData);
+            $id = Db::name('user_letter')->insertGetId($saveData);//插入消息主表
             $saveList = [];
             foreach ($user_ids as $k=>$v) {
                 $saveList[$k]['user_id'] = $v;
                 $saveList[$k]['letter_id'] = $id;
             }
-            Db::name('user_letter_list')->insertAll($saveList);//
+            Db::name('user_letter_list')->insertAll($saveList);//插入发送列表
         }
         catch (\Exception $e) {
             Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);
