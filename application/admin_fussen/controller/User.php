@@ -129,14 +129,12 @@ class User extends Base
 
         /*获取相关图片列表*/
         $imgList = $BasicInfo->getBasicList('person', 'AJ');
-        if (!empty($user_id)) {
-            foreach ($imgList as $k => $v) {
-                $img = Db::name('user_image')->where('user_id', $user_id)->where('type', $v['basic_id'])->field('img_id,user_id,type,img_url')->find();
-                $imgList[$k]['user_id'] = $user_id;
-                $imgList[$k]['type'] = $v['basic_id'];
-                $imgList[$k]['img_id'] = !empty($img['img_id']) ? $img['img_id'] : '';
-                $imgList[$k]['img_url'] = !empty($img['img_url']) ? $img['img_url'] : '';
-            }
+        foreach ($imgList as $k => $v) {
+            $img = !empty($user_id) ? Db::name('user_image')->where('user_id', $user_id)->where('type', $v['basic_id'])->field('img_id,user_id,type,img_url')->find() : [];
+            $imgList[$k]['user_id'] = $user_id;
+            $imgList[$k]['type'] = $v['basic_id'];
+            $imgList[$k]['img_id'] = !empty($img['img_id']) ? $img['img_id'] : '';
+            $imgList[$k]['img_url'] = !empty($img['img_url']) ? $img['img_url'] : '';
         }
         $this->assign('imgList', $imgList);
 
