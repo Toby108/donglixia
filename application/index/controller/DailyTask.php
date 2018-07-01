@@ -18,10 +18,10 @@ class DailyTask
      * @param int $time 默认每隔600秒执行一次（十分钟）
      * @return bool
      */
-    public function all($time = 600)
+    public function all($time = 60)
     {
         try {
-            $create_time = Db::name('task_log')->where('method', 'DailyTask')->order('id desc')->value('create_time');
+            $create_time = Db::name('task_log')->where('task_name', 'DailyTask')->order('id desc')->value('create_time');
             if (empty($create_time) || (time() - strtotime($create_time) >= $time)) {
                 $this->articleGoodsPublic();//文章、产品定时发布
                 $this->deleteTempFile();//删除临时文件
@@ -41,7 +41,7 @@ class DailyTask
     private function articleGoodsPublic()
     {
         //文章定时发布
-        $article = Db::name('article')->where('state', 0)->where('public_time', '<=', time())->column('art_id');
+        $article = Db::name('article')->where('state', 0)->where('public_time1', '<=', time())->column('art_id');
         foreach ($article as $k => $v) {
             Db::name('article')->where('art_id', $v)->update(['state' => 1]);
         }

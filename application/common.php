@@ -734,15 +734,15 @@ if (!function_exists('save_task_log')) {
      * 保存定时任务日志
      * @param $remark string 备注
      * @param $is_success int 是否成功
-     * @param $method string 备注
+     * @param $task_name string 任务名|方法名
      */
-    function save_task_log($remark, $is_success = 1, $method = '')
+    function save_task_log($remark, $is_success = 1, $task_name = '')
     {
         $request = \think\Request::instance();
         $data['url'] =  $request->url(true);
-        $data['method'] = !empty($method) ? $method : $request->method();
+        $data['task_name'] = $task_name;
         $data['remark'] = $remark;
-        $data['remark'] = $is_success;
+        $data['is_success'] = $is_success;
         $data['create_time'] = date('Y-m-d H:i:s');
         try{
             Db::name('task_log')->insert($data);
