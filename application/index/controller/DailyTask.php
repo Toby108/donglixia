@@ -25,6 +25,7 @@ class DailyTask
             if (empty($create_time) || (time() - strtotime($create_time) >= $time)) {
                 $this->articleGoodsPublic();//文章、产品定时发布
                 $this->deleteTempFile();//删除临时文件
+                $this->checkAuthData();//检查角色权限默认值
                 save_task_log('每日任务执行成功！', 1, 'DailyTask');
             }
         } catch (\Exception $e) {
@@ -61,6 +62,24 @@ class DailyTask
         delete_file_by_time(STATIC_PATH.'/logs', 168);//删除七天前的static/logs日志文件
     }
 
+    /**
+     * 数据校对：角色权限需包含“首页”、“消息列表”
+     */
+    private function checkAuthData()
+    {
+        $res = Db::name('user_role')
+            ->where('', 'exp', 'find_in_set(1,auth)=0')//不包含首页
+            ->whereOr('', 'exp', 'find_in_set(79,auth)=0')//不包含消息列表
+            ->count();
+        if ($res > 0) {
+            $sql = Db::name('user_role')
+                ->where('', 'exp', 'find_in_set(1,auth)=0')//不包含首页
+                ->whereOr('', 'exp', 'find_in_set(79,auth)=0')//不包含消息列表
+                ->fetchSql(true)
+                ->select();
+            send_letter(['title' => '角色权限默认值不正确', 'content' => $sql, 'role_id' => 1]);
+        }
+    }
 
 }
 
