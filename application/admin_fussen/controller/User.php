@@ -205,9 +205,10 @@ class User extends Base
             $this->error($result);
         }
 
-        $res = $this->currentModel->isUpdate(true)->save($param);
-        if ($res === false) {
-            $this->error($this->currentModel->getError());
+        try {
+            $this->currentModel->save($param);
+        } catch (\Exception $e) {
+            $this->error($this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage());
         }
         $this->success('更新成功!');
     }

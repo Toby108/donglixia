@@ -120,46 +120,5 @@ class Article extends Base
         $this->success('保存成功！', 'edit?art_id='.$this->currentModel->art_id);
     }
 
-    /**
-     * 更新某个字段
-     */
-    public function updateField()
-    {
-        $param = $this->request->param();
-        if (empty($param['art_id'])) {
-            $this->error('id不能为空');
-        }
-
-        try {
-            $this->currentModel->save($param);
-        } catch (\Exception $e) {
-            $this->error($this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage());
-        }
-        $this->success('更新成功!');
-    }
-
-    /**
-     * 更新选中数据的状态
-     */
-    public function updateSelectedState()
-    {
-        $param = $this->request->param();
-        if (empty($param['id']) || !is_array($param['id'])) {
-            $this->error('参数不正确');
-        }
-
-        $data = [];
-        foreach ($param['id'] as $k=>$v) {
-            $data[$k]['art_id'] = $v;
-            $data[$k]['state'] = $param['state'];
-        }
-
-        try {
-            $this->currentModel->saveAll($data);
-        } catch (\Exception $e) {
-            $this->error($this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage());
-        }
-        $this->success('更新成功!');
-    }
 }
 

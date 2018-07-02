@@ -51,7 +51,18 @@
         </div>
     </form>
 </div>
-
+<!--数据列表-->
+<div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="ajaxDelete(getSelectedIdList(), '{:url("MessageList/delete")}');">
+    <i class="layui-icon layui-icon-delete"></i>删除选中
+    </button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 1, 'is_read', '{:url("updateSelectedState")}');">
+    <i class="layui-icon layui-icon-play"></i>标记已读
+    </button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 0, 'is_read', '{:url("updateSelectedState")}');">
+    <i class="layui-icon layui-icon-pause"></i>标记未读
+    </button>
+</div>
 <table id="msgTable" lay-filter="msgTable"></table>
 
 <div id="msgModal" style="display: none;">
@@ -101,7 +112,7 @@
             ,limit: table_limit
             ,limits: table_limits
             , cols: [[
-                {type: 'numbers', title: '序号', width: 50}
+                {type: 'checkbox', width: 50}
                 , {field: 'type_text', title: '类型', width: 100}
                 , {field: 'title', title: '标题', width: '20%'}
                 , {field: 'content', title: '详细内容', width: '20%'}
@@ -167,7 +178,7 @@
             data['id'] = $(obj.elem).data('id');
 
             $.ajax({
-                url: '{:url("updateLetterListField")}',
+                url: '{:url("MessageList/updateField")}',
                 type: 'POST',
                 data: data,
                 dataType: 'json',
@@ -187,7 +198,7 @@
     });
 
     function setRead(id) {
-        $.post('{:url("updateLetterListField")}', {id:id, is_read:1}, function (result) {
+        $.post('{:url("MessageList/updateField")}', {id:id, is_read:1}, function (result) {
             if (result.code) {
                 layer.close(modal);
                 reloadTable('#searchForm');//重新加载数据表格

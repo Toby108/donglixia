@@ -190,4 +190,48 @@ abstract class Base extends CoreBase
         }
     }
 
+    /**
+     * 更新选中数据的状态
+     */
+    public function updateSelectedState()
+    {
+        $param = $this->request->param();
+        if (empty($param['id']) || !is_array($param['id'])) {
+            $this->error('参数不正确');
+        }
+
+        $data = [];
+        $pk = $this->currentModel->getPk();
+        foreach ($param['id'] as $k=>$v) {
+            $data[$k][$pk] = $v;
+            $data[$k]['state'] = $param['state'];
+        }
+
+        try {
+            $this->currentModel->saveAll($data);
+        } catch (\Exception $e) {
+            $this->error($this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage());
+        }
+        $this->success('更新成功!');
+    }
+
+    /**
+     * 更新某个字段
+     */
+    public function updateField()
+    {
+        $param = $this->request->param();
+        $pk = $this->currentModel->getPk();
+        if (empty($param[$pk])) {
+            $this->error('参数错误');
+        }
+
+        try {
+            $this->currentModel->save($param);
+        } catch (\Exception $e) {
+            $this->error($this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage());
+        }
+        $this->success('更新成功!');
+    }
+
 }

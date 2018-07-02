@@ -51,14 +51,23 @@
                 <div class="layui-btn-group">
                     <a class="layui-btn layui-btn-normal" onclick="reloadTable('#searchForm');">搜索</a>
                     <a class="layui-btn"  href="{:url('edit')}" target="_blank">新增</a>
-                    <a class="layui-btn layui-btn-danger">删除</a>
-                    <a class="layui-btn layui-btn-warm" href="javascript:;" onclick="exportData()">导出数据</a>
                 </div>
             </div>
         </div>
     </form>
 </div>
 <!--数据列表-->
+<div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="ajaxDelete(getSelectedIdList(), '{:url("delete")}');">
+        <i class="layui-icon layui-icon-delete"></i>删除选中
+    </button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 1, 'state', '{:url("updateSelectedState")}');">
+        <i class="layui-icon layui-icon-play"></i>设为发布
+    </button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 0, 'state', '{:url("updateSelectedState")}');">
+        <i class="layui-icon layui-icon-pause"></i>设为不发布
+    </button>
+</div>
 <table id="goodsTable" lay-filter="goodsTable"></table>
 <!--操作列-->
 <script type="text/html" id="operating">
@@ -71,10 +80,11 @@
 
 {block name="script"}
 <script type="text/javascript">
+    var table;
     layui.use(['form','laydate', 'table', 'layer'], function () {
         var form = layui.form;
         var laydate = layui.laydate;
-        var table = layui.table;
+        table = layui.table;//全局变量，方便调用删除方法
         var layer = layui.layer;
 
         /*注册日期，执行一个laydate实例*/
@@ -89,7 +99,7 @@
             ,limit: table_limit
             ,limits: table_limits
             ,cols: [[
-                {type:'numbers', title:'序号', width: 45}
+                {type:'checkbox', width: 45}
                 ,{field:'cat_name', title:'类目', width: '8%'}
                 ,{field:'goods_name', title:'标题', edit: 'text'}
                 ,{field:'author', title:'作者', width: '8%'}
@@ -101,8 +111,11 @@
                         '<a class="layui-btn layui-btn-primary layui-btn-xs" onclick="changeSort('+data.goods_id+',\'desc\', \'{:url("changeSort")}\');"><i class="iconfont icon-xiangxia1"></i></a>' +
                         '</div>';
                 }}
-                ,{field:'public_date', title:'发布时间', width: '13%'}
-                ,{field:'modify_by', title:'修改人', width: '10%'}
+                , {title:'是否发布', width: 90, align:'center', templet: function (data) {
+                    var check_state = data.state == 1 ? 'checked' : '';
+                    return '<input type="checkbox" name="state" value="'+data.state+'" data-id="'+data.goods_id+'" lay-skin="switch"  lay-text="是|否" lay-filter="statusEvent" '+check_state+'>';
+                }}
+                ,{field:'modify_by', title:'操作者', width: '10%'}
                 ,{title:'操作', toolbar: '#operating', width: 135, align:'center'}
             ]]
             ,where: getFormJson('#searchForm')
@@ -113,18 +126,38 @@
             var data = obj.data;
             if (obj.event === 'del') {
                 layer.confirm('数据删除后无法恢复，确定继续吗？', function(index){
-                    $.post('{:url("delete")}',{id:data.goods_id}, function (result) {
-                        layer.close(index);
-                        if (result.code) {
-                            layer.msg(result.msg);
-                            obj.del();
-                        } else {
-                            layer.alert(result.msg, {icon:2});
-                        }
-                    }, 'json');
+                    ajaxDelete(data.goods_id, '{:url("delete")}');
                 });
             } else if (obj.event === 'edit') {
                 window.open('edit?goods_id='+data.goods_id);
+            }
+        });
+
+        //监听状态操作
+        form.on('switch(statusEvent)', function(obj){
+            var data = {};
+            var res = {};
+            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
+            data['state'] = obj.elem.checked == true ? 1 : 0;
+            data['goods_id'] = $(obj.elem).data('id');
+
+            $.ajax({
+                url: '{:url("updateField")}',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    layer.close(index);
+                    res = result;
+                }
+            });
+
+            //如果更新失败
+            if (!res.code) {
+                $(this).prop('checked', !obj.elem.checked);
+                form.render('checkbox');// 重新渲染开关
+                layer.alert(res.msg, {icon:2});
             }
         });
 
@@ -153,6 +186,18 @@
             }
         });
     });
+
+    //获取当前选中的id，数组
+    function getSelectedIdList() {
+        var checkList = table.checkStatus('goodsTable');
+        var id_list = [];
+        if (checkList.data.length>0) {
+            $.each(checkList.data, function (key, val) {
+                id_list[key] = val.goods_id;
+            });
+        }
+        return id_list;
+    }
 
 </script>
 {/block}

@@ -54,9 +54,7 @@
 
 {block name="script"}
 <script type="text/javascript">
-    var modal = null;
     layui.use(['form', 'table'], function () {
-        var form = layui.form;
         var table = layui.table;
         var user_id = {:session('userInfo.user_id')};
 
@@ -95,33 +93,6 @@
                 });
             } else if (obj.event === 'edit') {
                 window.open('edit?id='+data.id);
-            }
-        });
-
-        //监听状态操作
-        form.on('switch(statusEvent)', function(obj){
-            var data = {};
-            var res = {};
-            var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
-            data['is_read'] = obj.elem.checked == true ? 1 : 0;
-            data['id'] = $(obj.elem).data('id');
-
-            $.ajax({
-                url: '{:url("updateLetterListField")}',
-                type: 'POST',
-                data: data,
-                dataType: 'json',
-                async: false,
-                success: function (result) {
-                    layer.close(index);
-                    res = result;
-                }
-            });
-
-            if (!res.code) {
-                $(this).prop('checked', !obj.elem.checked);
-                form.render('checkbox');// 重新渲染开关
-                layer.alert(res.msg, {icon:2});
             }
         });
     });

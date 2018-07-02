@@ -122,15 +122,12 @@ class Role extends Base
             $this->error($result);
         }
 
-        //保存数据
-        $row = $this->currentModel->isUpdate(true)->save($param);
-
-        //返回错误
-        if ($row === false) {
-            $this->error($this->currentModel->getError());
+        try {
+            $this->currentModel->save($param);
+        } catch (\Exception $e) {
+            $this->error($this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage());
         }
-
-        $this->success('保存成功！', 'index');
+        $this->success('更新成功!', 'index');
     }
 
 }

@@ -108,29 +108,7 @@ class BasicInfo extends Base
     }
 
     /**
-     * 编辑字段
-     */
-    public function updateField()
-    {
-        $param = $this->request->param();
-        if (empty($param['basic_id'])) {
-            $this->error('资料id不能为空');
-        }
-
-        //保存数据
-        $row = $this->currentModel->isUpdate(true)->save($param);
-
-        //返回错误
-        if ($row === false) {
-            $this->error($this->currentModel->getError());
-        }
-
-        $this->success('保存成功！', 'index');
-    }
-
-    /**
      * 根据pid 获取下拉列表，级联选择
-     * @return array
      */
     public function getBasicLinkSelect()
     {

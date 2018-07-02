@@ -117,25 +117,6 @@ class Message extends Base
     }
 
     /**
-     * 更新某个字段
-     */
-    public function updateLetterListField()
-    {
-        $param = $this->request->param();
-        if (empty($param['id'])) {
-            $this->error('id不能为空');
-        }
-
-        $UserLetterList = new UserLetterList();
-        try {
-            $UserLetterList->isUpdate(true)->save($param);
-        } catch (\Exception $e) {
-            $this->error($UserLetterList->getError() ? $UserLetterList->getError() : $e->getMessage());
-        }
-        $this->success('更新成功!');
-    }
-
-    /**
      * 保存
      */
     public function save()

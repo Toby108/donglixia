@@ -142,3 +142,19 @@ function ajaxDelete(id, url) {
         }, 'json');
     });
 }
+
+//选中数据，更改状态
+function setState(ids, state, field_name, url) {
+    if (!field_name) {field_name = 'state';}//状态字段名
+
+    layer.confirm('确定更新状态吗？', function (index) {
+        $.post(url, {id:ids, state:state, field_name:field_name}, function (result) {
+            if (result.code) {
+                reloadTable('#searchForm');//重新加载数据表格
+                layer.msg(result.msg, {time: 1000});
+            } else {
+                layer.alert(result.msg, {icon: 2});
+            }
+        }, 'json');
+    });
+}

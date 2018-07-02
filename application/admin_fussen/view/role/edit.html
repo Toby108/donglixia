@@ -85,14 +85,14 @@
         form.on('submit(formSubmit)', function(data){
             //获取当前选中的菜单id，逗号隔开
             var checkList = table.checkStatus('roleTable');
-            var menu_id_list = [];
+            var id_list = [];
             if (checkList.data.length>0) {
                 $.each(checkList.data, function (key, val) {
-                    menu_id_list[key] = val.menu_id;
+                    id_list[key] = val.menu_id;
                 });
             }
-            menu_id_list = menu_id_list.join(',');
-            $('#auth').val(menu_id_list);
+            id_list = id_list.join(',');
+            $('#auth').val(id_list);
 
             var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
             $.post('{:url("save")}', $('#editForm').serialize(), function (result) {
