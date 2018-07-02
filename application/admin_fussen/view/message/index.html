@@ -208,5 +208,17 @@
             }
         }, 'json');
     }
+
+    //获取当前选中的id，数组
+    function getSelectedIdList() {
+        var checkList = table.checkStatus('msgTable');
+        var id_list = [];
+        if (checkList.data.length>0) {
+            $.each(checkList.data, function (key, val) {
+                id_list[key] = val.id;
+            });
+        }
+        return id_list;
+    }
 </script>
 {/block}
