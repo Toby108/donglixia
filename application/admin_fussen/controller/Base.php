@@ -196,7 +196,7 @@ abstract class Base extends CoreBase
     public function updateSelectedState()
     {
         $param = $this->request->param();
-        if (empty($param['id']) || !is_array($param['id'])) {
+        if (empty($param['id']) || !is_array($param['id']) || empty($param['field_name']) || !isset($param['state'])) {
             $this->error('参数不正确');
         }
 
@@ -204,7 +204,7 @@ abstract class Base extends CoreBase
         $pk = $this->currentModel->getPk();
         foreach ($param['id'] as $k=>$v) {
             $data[$k][$pk] = $v;
-            $data[$k]['state'] = $param['state'];
+            $data[$k][$param['field_name']] = $param['state'];
         }
 
         try {

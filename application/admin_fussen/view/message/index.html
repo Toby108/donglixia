@@ -56,10 +56,10 @@
     <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="ajaxDelete(getSelectedIdList(), '{:url("MessageList/delete")}');">
     <i class="layui-icon layui-icon-delete"></i>删除选中
     </button>
-    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 1, 'is_read', '{:url("updateSelectedState")}');">
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 1, 'is_read', '{:url("MessageList/updateSelectedState")}');">
     <i class="layui-icon layui-icon-play"></i>标记已读
     </button>
-    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 0, 'is_read', '{:url("updateSelectedState")}');">
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 0, 'is_read', '{:url("MessageList/updateSelectedState")}');">
     <i class="layui-icon layui-icon-pause"></i>标记未读
     </button>
 </div>
@@ -98,10 +98,11 @@
 
 {block name="script"}
 <script type="text/javascript">
-    var modal = null;
+    var table;
+    var modal;
     layui.use(['form', 'table'], function () {
         var form = layui.form;
-        var table = layui.table;
+        table = layui.table;
         var user_id = {:session('userInfo.user_id')};
 
         //表格数据渲染：公告
@@ -212,10 +213,11 @@
     //获取当前选中的id，数组
     function getSelectedIdList() {
         var checkList = table.checkStatus('msgTable');
+        console.log(checkList);
         var id_list = [];
         if (checkList.data.length>0) {
             $.each(checkList.data, function (key, val) {
-                id_list[key] = val.id;
+                id_list[key] = val.list_id;
             });
         }
         return id_list;
