@@ -164,8 +164,9 @@ abstract class Base extends CoreBase
             $list = reset_sort($param['id'], $table_name, $param['type']);//格式化，获取重新排序的数据
             $this->currentModel->saveAll($list);//保存数据
         } catch (\Exception $e) {
-            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
-            $this->error($msg);
+            $mag = $this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage();
+            save_error_log($mag);
+            $this->error($mag);
         }
 
         $this->success('操作成功');
@@ -210,7 +211,9 @@ abstract class Base extends CoreBase
         try {
             $this->currentModel->saveAll($data);
         } catch (\Exception $e) {
-            $this->error($this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage());
+            $mag = $this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage();
+            save_error_log($mag);
+            $this->error($mag);
         }
         $this->success('更新成功!');
     }
@@ -229,7 +232,9 @@ abstract class Base extends CoreBase
         try {
             $this->currentModel->save($param);
         } catch (\Exception $e) {
-            $this->error($this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage());
+            $mag = $this->currentModel->getError() ? $this->currentModel->getError() : $e->getMessage();
+            save_error_log($mag);
+            $this->error($mag);
         }
         $this->success('更新成功!');
     }
