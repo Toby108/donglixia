@@ -55,7 +55,7 @@ class Message extends Base
     }
 
     /**
-     * 已发送页面
+     * 已发送页面1
      * @return mixed
      */
     public function sent()
