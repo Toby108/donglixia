@@ -13,12 +13,11 @@ use app\admin_fussen\model\UserDept;
 use app\admin_fussen\model\UserRole;
 use app\admin_fussen\model\User as UserModel;
 use app\admin_fussen\model\BasicInfo as BasicInfoModel;
-use app\admin_fussen\parent\Controller;
 use think\Db;
 use think\Session;
 use think\Request;
 
-class User extends Controller
+class User extends Base
 {
     public function __construct(Request $request = null)
     {
@@ -33,7 +32,7 @@ class User extends Controller
     public function index()
     {
         /*获取下拉列表：部门*/
-        $deptList = (new UserDept())->getDeptList();
+        $deptList = (new UserDept())->getDeptTree();
         $this->assign('deptList', json_encode($deptList));
 
         return $this->fetch();
@@ -82,12 +81,11 @@ class User extends Controller
 
     /**
      * 编辑
+     * @param int $user_id
      * @return mixed
      */
-    public function edit()
+    public function edit($user_id = 0)
     {
-        $param = $this->request->param();
-        $user_id = !empty($param['user_id']) ? $param['user_id'] : '';
         if (!empty($user_id)) {
             /*获取当前人员信息*/
             $data = $this->currentModel->where('user_id', $user_id)->find()->toArray();
@@ -109,11 +107,11 @@ class User extends Controller
         $this->assign('avatar', $avatar);
 
         /*获取下拉列表：角色权限*/
-        $roleList = (new UserRole())->field('role_id,role_name,describe')->order('sort_num')->select();
+        $roleList = (new UserRole())->getRoleList();
         $this->assign('roleList', $roleList);
 
         /*获取下拉列表：部门*/
-        $deptList = (new UserDept())->getDeptList();
+        $deptList = (new UserDept())->getDeptTree();
         $this->assign('deptList', json_encode($deptList));
 
         /*获取下拉列表：推荐人*/
@@ -132,7 +130,7 @@ class User extends Controller
         /*获取相关图片列表*/
         $imgList = $BasicInfo->getBasicList('person', 'AJ');
         foreach ($imgList as $k => $v) {
-            $img = Db::name('user_image')->where('user_id', $user_id)->where('type', $v['basic_id'])->field('img_id,user_id,type,img_url')->find();
+            $img = !empty($user_id) ? Db::name('user_image')->where('user_id', $user_id)->where('type', $v['basic_id'])->field('img_id,user_id,type,img_url')->find() : [];
             $imgList[$k]['user_id'] = $user_id;
             $imgList[$k]['type'] = $v['basic_id'];
             $imgList[$k]['img_id'] = !empty($img['img_id']) ? $img['img_id'] : '';

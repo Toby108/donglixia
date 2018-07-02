@@ -10,10 +10,9 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\UserDept;
-use app\admin_fussen\parent\Controller;
 use think\Request;
 
-class Dept extends Controller
+class Dept extends Base
 {
     public function __construct(Request $request = null)
     {
@@ -80,12 +79,11 @@ class Dept extends Controller
     }
 
     /**
-     * 获取部门列表
+     * 获取部门列表，树状Table_tree
      */
     public function getDeptList()
     {
-        $deptList = $this->currentModel->field('dept_id,pid,dept_name')->select();
-        return \Tree::get_Table_tree($deptList, 'dept_name', 'dept_id');
+        return $this->currentModel->getDeptTableTree();
     }
 }
 

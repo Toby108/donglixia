@@ -10,10 +10,9 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\SystemConfig;
-use app\admin_fussen\parent\Controller;
 use think\Db;
 
-class System extends Controller
+class System extends Base
 {
     public function index()
     {

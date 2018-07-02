@@ -10,11 +10,10 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\DataChangeLog;
-use app\admin_fussen\parent\Controller;
 use think\Db;
 use think\Request;
 
-class Trash extends Controller
+class Trash extends Base
 {
     public function __construct(Request $request = null)
     {

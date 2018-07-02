@@ -21,28 +21,19 @@ class DailyTask
     public function all($time = 600)
     {
         try {
-            $file = STATIC_PATH. '/logs/daily_task/' . date("Ymd", time()) . '.log';
-            $logs = log_read($file);
-            $time_log = end($logs)['time'];
-            if (empty($logs) || (time() - strtotime($time_log) >= $time)) {
-                $this->test();//测试
+            $create_time = Db::name('task_log')->where('task_name', 'DailyTask')->order('id desc')->value('create_time');
+            if (empty($create_time) || (time() - strtotime($create_time) >= $time)) {
                 $this->articleGoodsPublic();//文章、产品定时发布
                 $this->deleteTempFile();//删除临时文件
-                log_write('daily_task','执行成功！');
+                $this->checkAuthData();//检查角色权限默认值
+                save_task_log('每日任务执行成功！', 1, 'DailyTask');
             }
         } catch (\Exception $e) {
+            save_task_log('每日任务执行失败！', 0, 'DailyTask');
             save_error_log($e->getMessage().' ['.$e->getFile().':'.$e->getLine().']');
             die($e->getMessage());
         }
         die('success');
-    }
-
-    /**
-     * 测试
-     */
-    private function test()
-    {
-        Db::name('user_account_log')->insert(['user_id'=>3, 'remark'=>'测试定时任务']);
     }
 
     /**
@@ -71,6 +62,24 @@ class DailyTask
         delete_file_by_time(STATIC_PATH.'/logs', 168);//删除七天前的static/logs日志文件
     }
 
+    /**
+     * 数据校对：角色权限需包含“首页”、“消息列表”
+     */
+    private function checkAuthData()
+    {
+        $res = Db::name('user_role')
+            ->where('', 'exp', 'find_in_set(1,auth)=0')//不包含首页
+            ->whereOr('', 'exp', 'find_in_set(79,auth)=0')//不包含消息列表
+            ->count();
+        if ($res > 0) {
+            $sql = Db::name('user_role')
+                ->where('', 'exp', 'find_in_set(1,auth)=0')//不包含首页
+                ->whereOr('', 'exp', 'find_in_set(79,auth)=0')//不包含消息列表
+                ->fetchSql(true)
+                ->select();
+            send_letter(['title' => '角色权限默认值不正确', 'content' => $sql, 'role_id' => 1]);
+        }
+    }
 
 }
 

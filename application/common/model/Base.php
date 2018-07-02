@@ -7,14 +7,14 @@
 // | DateTime: 2018-02-09 16:17
 // +----------------------------------------------------------------------
 
-namespace app\common\parent;
+namespace app\common\model;
 
-use think\Model as ModelCore;
+use think\Model;
 use think\Db;
 use think\Session;
 use think\Request;
 
-abstract class Model extends ModelCore
+abstract class Base extends Model
 {
     protected $autoWriteTimestamp = true;
     protected $apiMode = false;
@@ -37,8 +37,11 @@ abstract class Model extends ModelCore
         } else {
             $this->updateTime = false;
         }
-        if (in_array('create_by',$db->getTableInfo('', 'fields')) && in_array('modify_by', $db->getTableInfo('', 'fields'))) {
-            array_push($this->insert,'create_by','modify_by');
+        if (in_array('create_by',$db->getTableInfo('', 'fields'))) {
+            array_push($this->insert,'create_by');
+        }
+        if (in_array('modify_by', $db->getTableInfo('', 'fields'))) {
+            array_push($this->insert,'modify_by');
         }
         if (in_array('modify_by',$db->getTableInfo('', 'fields'))) {
             array_push($this->update,'modify_by');

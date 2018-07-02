@@ -10,10 +10,9 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\BasicMenu;
-use app\admin_fussen\parent\Controller;
 use think\Request;
 
-class Menu extends Controller
+class Menu extends Base
 {
     public function __construct(Request $request = null)
     {
@@ -136,7 +135,6 @@ class Menu extends Controller
 
     /**
      * 根据pid 获取下拉列表，级联选择
-     * @return array
      */
     public function getMenuLinkSelect()
     {

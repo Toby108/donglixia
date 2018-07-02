@@ -9,9 +9,9 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\model\UserRole as ComUserRole;
+use app\common\model\Base;
 
-class UserRole extends ComUserRole
+class UserRole extends Base
 {
     /**
      * 保存字段“权限明细”
@@ -23,5 +23,18 @@ class UserRole extends ComUserRole
             $value = implode(',',$value);
         }
         return $value;
+    }
+
+    /**
+     * 获取角色权限列表
+     * @param $map
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function getRoleList($map = [])
+    {
+        if (empty($map)) {
+            $map[] = ['exp', '1=1'];
+        }
+        return $this->where($map)->field('role_id,role_name,describe')->order('sort_num')->select();
     }
 }

@@ -8,10 +8,10 @@
 // +----------------------------------------------------------------------
 
 namespace app\admin_fussen\model;
-use app\common\parent\Model;
+use app\common\model\Base;
 use think\Db;
 
-class SystemConfig extends Model
+class SystemConfig extends Base
 {
     /**
      * 解析取值范围

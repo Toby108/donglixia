@@ -8,11 +8,11 @@
 // +----------------------------------------------------------------------
 
 namespace app\admin_fussen\model;
-use app\common\model\BasicMenu as ComBasicMenu;
+use app\common\model\Base;
 use think\Db;
 use think\Request;
 
-class BasicMenu extends ComBasicMenu
+class BasicMenu extends Base
 {
     /**
      * 获取“显示”字段，中文名称

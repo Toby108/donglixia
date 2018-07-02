@@ -9,10 +9,10 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\model\BasicInfo as ComBasicInfo;
+use app\common\model\Base;
 use think\Db;
 
-class BasicInfo extends ComBasicInfo
+class BasicInfo extends Base
 {
     /**
      * 获取“是否启用”字段，中文名称

@@ -45,6 +45,7 @@
             elem: '#roleTable'
             , url: '{:url("getMenuList")}?role_id=' + $('#role_id').val()
             , page: false
+            ,limit: table_limit
             , cols: [[
                 {type: 'numbers', title: '序号', width: 80}
                 , {field: 'pid_text', title: '上级菜单', width: 100}

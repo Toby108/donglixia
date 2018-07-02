@@ -10,13 +10,11 @@
 namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\GoodsCat as GoodsCatModel;
-use app\admin_fussen\parent\Controller;
 use think\Db;
 use think\Request;
-use think\Cookie;
 use think\Session;
 
-class GoodsCat extends Controller
+class GoodsCat extends Base
 {
     public function __construct(Request $request = null)
     {

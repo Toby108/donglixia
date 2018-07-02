@@ -1,23 +1,24 @@
 <?php
 // +----------------------------------------------------------------------
-// | Copyright (c) 2018-2018 http://www.donglixia.net All rights reserved.
+// | Copyright (c) 2018-{2018} http://www.donglixia.net All rights reserved.
 // +----------------------------------------------------------------------
 // | Author: 十万马 <962863675@qq.com>
 // +----------------------------------------------------------------------
-// | DateTime: 2018-02-09 16:17
+// | DateTime: 2018/6/30 10:25
 // +----------------------------------------------------------------------
 
-namespace app\admin_fussen\parent;
+namespace app\admin_fussen\controller;
 
+use app\admin_fussen\model\UserLetter;
+use app\common\controller\Base as CoreBase;
 use app\admin_fussen\model\BasicMenu;
 use app\admin_fussen\model\User;
-use app\common\parent\Controller as CoreController;
+use think\Session;
 use think\Cookie;
 use think\Db;
-use think\Session;
 use think\Request;
 
-class Controller extends CoreController
+abstract class Base extends CoreBase
 {
     protected $currentModel;
 
@@ -57,6 +58,13 @@ class Controller extends CoreController
             Cookie::forever('table_limit', $param['limit']);
         }
         $this->assign('table_limit', Cookie::get('table_limit'));
+
+        //消息提醒
+        $map = [];
+        $map['limit'] = 10;//最多显示10条
+        $map['is_read'] = 0;//未读
+        $news = (new UserLetter())->getIndexDataList($map);
+        $this->assign('commonNewsList', $news);
     }
 
     /**

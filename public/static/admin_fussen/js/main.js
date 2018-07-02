@@ -95,9 +95,9 @@ $('.nav-display').on('click', function () {
 });
 
 /*弹窗显示修改密码*/
-function changePwd(uid, title, url) {
+function changePwd(id, title, url) {
     layui.use('layer', function () {
-        $('#pwdFormCommon').find('input[name="uid"]').val(uid);
+        $('#pwdFormCommon').find('input[name="user_id"]').val(id);
         var modal = layer.open({
             type: 1
             , title: title

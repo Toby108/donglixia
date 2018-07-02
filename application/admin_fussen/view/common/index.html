@@ -29,7 +29,7 @@
         <ul class="layui-nav layui-layout-right">
             <!--<li class="layui-nav-item layui-hide-xs"><a >当前身份：{:session('userInfo.role_name')}</a></li>-->
             <li class="layui-nav-item layui-hide-xs">
-                <a href="javascript:;" >消息<span class="layui-badge">0</span></a>
+                <a href="{:url('Message/index')}" >消息{notempty name="commonNewsList.count"}<span class="layui-badge">{$commonNewsList.count}</span>{/notempty}</a>
             </li>
             <li class="layui-nav-item layui-hide-xs"><a href="{:url('login/clearCache')}" class="clearCached">清除缓存</a></li>
             <li class="layui-nav-item">

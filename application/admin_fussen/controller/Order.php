@@ -9,9 +9,8 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\parent\Controller;
 
-class Order extends Controller
+class Order extends Base
 {
     public function index()
     {

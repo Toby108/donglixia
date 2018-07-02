@@ -7,12 +7,16 @@
 // | DateTime: 2018-02-09 16:17
 // +----------------------------------------------------------------------
 
-namespace app\common\model;
+namespace app\common\controller;
 
-use app\common\parent\Model;
+use think\Controller;
 
-class UserLetter extends Model
+abstract class Base extends Controller
 {
+    protected $result = array();
 
-
+    protected function _initialize()
+    {
+        \think\Hook::listen('controller_init');//添加行为标签位，触发自动执行
+    }
 }

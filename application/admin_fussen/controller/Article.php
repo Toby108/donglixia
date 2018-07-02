@@ -9,16 +9,12 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\parent\Controller;
 use app\admin_fussen\model\Article as ArticleModel;
-use app\admin_fussen\model\ArticleCat as ArticleCatModel;
 use app\admin_fussen\model\BasicInfo as BasicInfoModel;
-use think\Db;
 use think\Request;
-use think\Cookie;
 use think\Session;
 
-class Article extends Controller
+class Article extends Base
 {
     public function __construct(Request $request = null)
     {

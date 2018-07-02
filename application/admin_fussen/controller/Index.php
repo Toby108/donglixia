@@ -9,11 +9,10 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\parent\Controller;
 use think\Session;
 use think\Db;
 
-class Index extends Controller
+class Index extends Base
 {
     public function index()
     {

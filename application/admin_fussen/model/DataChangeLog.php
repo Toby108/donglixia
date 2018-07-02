@@ -9,9 +9,9 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\parent\Model;
+use app\common\model\Base;
 
-class DataChangeLog extends Model
+class DataChangeLog extends Base
 {
     public function formatData($data = [])
     {

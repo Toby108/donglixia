@@ -9,10 +9,10 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\model\Article as ComArticle;
+use app\common\model\Base;
 use think\Db;
 
-class Article extends ComArticle
+class Article extends Base
 {
     /**
      * 获取文章重要等级，对应的中文名称

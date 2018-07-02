@@ -9,10 +9,10 @@
 
 namespace app\admin_fussen\model;
 
-use app\common\model\Goods as ComGoods;
+use app\common\model\Base;
 use think\Db;
 
-class Goods extends ComGoods
+class Goods extends Base
 {
     /**
      * 获取重要等级，对应的中文名称

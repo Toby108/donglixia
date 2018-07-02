@@ -9,12 +9,11 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\parent\Controller;
 use app\admin_fussen\model\UserRole;
 use think\Db;
 use think\Request;
 
-class Role extends Controller
+class Role extends Base
 {
     public function __construct(Request $request = null)
     {
