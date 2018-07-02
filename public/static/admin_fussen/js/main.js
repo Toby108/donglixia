@@ -128,3 +128,17 @@ function changeSort(id, type, url) {
     }, 'json');
 }
 
+//ajax删除
+function ajaxDelete(id, url) {
+    layer.confirm('数据删除后无法恢复，确定继续吗？', function (index) {
+        $.post(url, {id: id}, function (result) {
+            layer.close(index);
+            if (result.code) {
+                reloadTable('#searchForm');
+                layer.msg(result.msg);
+            } else {
+                layer.alert(result.msg, {icon: 2});
+            }
+        }, 'json');
+    });
+}

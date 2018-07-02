@@ -116,6 +116,7 @@ abstract class Base extends CoreBase
      */
     public function delete($id)
     {
+        Db::startTrans();
         try{
             //若存在pid字段，则先删除子部门资料
             $table_name = $this->currentModel->getTableName();
@@ -131,13 +132,20 @@ abstract class Base extends CoreBase
 
             //删除当前资料，并记录删除日志
             $pk = $this->currentModel->getPk();
-            $data = Db::name($table_name)->where($pk, $id)->find();
-            $this->currentModel->dataChangelog($data, 3);//记录删除日志
+            $data = Db::name($table_name)->whereIn($pk, $id)->select();
+            if (empty($data)) {
+                throw new \Exception('查找不到需要删除的数据');
+            }
+            foreach ($data as $k => $v) {
+                $this->currentModel->dataChangelog($v, 3);//记录删除日志
+            }
             $this->currentModel->whereIn($pk, $id)->delete();//删除当前资料
         } catch (\Exception $e) {
+            Db::rollback();
             $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
             $this->error($msg);
         }
+        Db::commit();
         $this->success('删除成功!');
     }
 

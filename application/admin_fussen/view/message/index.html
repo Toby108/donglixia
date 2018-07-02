@@ -87,7 +87,6 @@
 
 {block name="script"}
 <script type="text/javascript">
-    var tableIns = null;
     var modal = null;
     layui.use(['form', 'table'], function () {
         var form = layui.form;
@@ -104,8 +103,8 @@
             , cols: [[
                 {type: 'numbers', title: '序号', width: 50}
                 , {field: 'type_text', title: '类型', width: 100}
-                , {field: 'title', title: '标题', width: '30%'}
-                , {field: 'content', title: '详细内容', width: '15%'}
+                , {field: 'title', title: '标题', width: '20%'}
+                , {field: 'content', title: '详细内容', width: '20%'}
                 , {title:'是否已读', width: 90, align:'center', templet: function (data) {
                     var check_state = data.is_read == 1 ? 'checked' : '';
                     return '<input type="checkbox" name="is_read" value="'+data.is_read+'" data-id="'+data.list_id+'" lay-skin="switch"  lay-text="是|否" lay-filter="statusEvent" '+check_state+'>';
