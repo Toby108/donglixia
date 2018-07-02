@@ -113,7 +113,7 @@
             var data = {};
             var res = {};
             var index = layer.load(2, {shade:[0.5,'#000'],time: 10*1000});
-            data['basic_name'] = obj.elem.checked == true ? 1 : 0;
+            data['state'] = obj.elem.checked == true ? 1 : 0;
             data['basic_id'] = $(obj.elem).data('id');
 
             $.ajax({
