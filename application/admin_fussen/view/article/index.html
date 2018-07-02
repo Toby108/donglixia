@@ -205,14 +205,16 @@
     //选中数据，设置为“发布”、“不发布”
     function setState(state) {
         var ids = getSelectedIdList();
-        $.post('{:url("updateSelectedState")}', {id:ids, state:state}, function (result) {
-            if (result.code) {
-                reloadTable('#searchForm');//重新加载数据表格
-                layer.msg(result.msg, {time: 1000});
-            } else {
-                layer.alert(result.msg, {icon: 2});
-            }
-        }, 'json');
+        layer.confirm('确定更新状态吗？', function (index) {
+            $.post('{:url("updateSelectedState")}', {id:ids, state:state}, function (result) {
+                if (result.code) {
+                    reloadTable('#searchForm');//重新加载数据表格
+                    layer.msg(result.msg, {time: 1000});
+                } else {
+                    layer.alert(result.msg, {icon: 2});
+                }
+            }, 'json');
+        });
     }
 </script>
 {/block}
