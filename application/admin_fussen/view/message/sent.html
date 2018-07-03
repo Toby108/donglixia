@@ -40,7 +40,18 @@
         </div>
     </form>
 </div>
-
+<!--数据列表-->
+<div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="ajaxDelete(getSelectedIdList(), '{:url("Message/delete")}');">
+    <i class="layui-icon layui-icon-delete"></i>删除选中
+    </button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 1, 'is_read', '{:url("Message/updateSelectedState")}');">
+    <i class="layui-icon layui-icon-play"></i>标记已读
+    </button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="setState(getSelectedIdList(), 0, 'is_read', '{:url("Message/updateSelectedState")}');">
+    <i class="layui-icon layui-icon-pause"></i>标记未读
+    </button>
+</div>
 <table id="msgTable" lay-filter="msgTable"></table>
 
 <script type="text/html" id="operating">
@@ -66,7 +77,7 @@
             ,limit: table_limit
             ,limits: table_limits
             , cols: [[
-                {type: 'numbers', title: '序号', width: 50}
+                {type: 'checkbox', width: 50}
                 , {field: 'type_text', title: '类型', width: 100}
                 , {field: 'title', title: '标题', width: '30%'}
                 , {field: 'content', title: '详细内容', width: '15%'}
@@ -97,5 +108,17 @@
         });
     });
 
+    //获取当前选中的id，数组
+    function getSelectedIdList() {
+        var checkList = table.checkStatus('msgTable');
+        console.log(checkList);
+        var id_list = [];
+        if (checkList.data.length>0) {
+            $.each(checkList.data, function (key, val) {
+                id_list[key] = val.list_id;
+            });
+        }
+        return id_list;
+    }
 </script>
 {/block}
