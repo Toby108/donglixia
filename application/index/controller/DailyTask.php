@@ -9,6 +9,7 @@
 
 namespace app\index\controller;
 
+use think\Cookie;
 use think\Db;
 
 class DailyTask
@@ -21,6 +22,10 @@ class DailyTask
     public function all($time = 60)
     {
         try {
+            if (Cookie::get('task_runtime')) {
+                return '执行时间没到';
+            }
+            Cookie::set('task_runtime', time(), $time*60);
             $create_time = Db::name('task_log')->where('task_name', 'DailyTask')->order('id desc')->value('create_time');
             if (empty($create_time) || (time() - strtotime($create_time) >= $time)) {
                 $this->articleGoodsPublic();//文章、产品定时发布
@@ -31,9 +36,9 @@ class DailyTask
         } catch (\Exception $e) {
             save_task_log('任务执行失败！', 0, 'DailyTask');
             save_error_log($e->getMessage().' ['.$e->getFile().':'.$e->getLine().']');
-            die($e->getMessage());
+            return $e->getMessage();
         }
-        die('success');
+        return 'success';
     }
 
     /**
