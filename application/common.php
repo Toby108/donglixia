@@ -870,7 +870,7 @@ if (!function_exists('send_message')) {
             $saveData['create_by'] = user_info('user_id') ? user_info('user_id') : 1;
             $saveData['create_time'] = time();
 
-            $id = Db::name('user_letter')->insertGetId($saveData);//插入消息主表
+            $id = Db::name('user_message')->insertGetId($saveData);//插入消息主表
             $saveList = [];
             foreach ($user_ids as $k=>$v) {
                 $saveList[$k]['user_id'] = $v;
