@@ -182,8 +182,8 @@ class Message extends Base
     public function delete($id)
     {
         try {
-            Db::name('user_message')->where('id', $id)->delete();
-            Db::name('user_message_list')->where('msg_id', $id)->delete();
+            Db::name('user_message')->whereIn('id', $id)->delete();
+            Db::name('user_message_list')->whereIn('msg_id', $id)->delete();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
