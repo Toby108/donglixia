@@ -9,7 +9,7 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\model\UserLetter;
+use app\admin_fussen\model\UserMessage;
 use app\common\controller\Base as CoreBase;
 use app\admin_fussen\model\BasicMenu;
 use app\admin_fussen\model\User;
@@ -63,7 +63,7 @@ abstract class Base extends CoreBase
         $map = [];
         $map['limit'] = 10;//最多显示10条
         $map['is_read'] = 0;//未读
-        $news = (new UserLetter())->getIndexDataList($map);
+        $news = (new UserMessage())->getIndexDataList($map);
         $this->assign('commonNewsList', $news);
     }
 
