@@ -825,7 +825,7 @@ if (!function_exists('save_error_log')) {
         try{
             Db::name('error_log')->insert($data);
             //给超级管理员发送站内信
-            send_letter(['title'=>'系统新错误，请查看错误日志', 'type'=>2, 'role_id'=>1]);
+            send_message(['title'=>'系统新错误，请查看错误日志', 'type'=>2, 'role_id'=>1]);
             send_mail('962863675@qq.com');//发送邮件通知
         }
         catch (\Exception $e) {
@@ -834,13 +834,13 @@ if (!function_exists('save_error_log')) {
     }
 }
 
-if (!function_exists('send_letter')) {
+if (!function_exists('send_message')) {
     /**
      * 发送站内信
      * @param array $data
      * @return array|bool
      */
-    function send_letter($data = [])
+    function send_message($data = [])
     {
         if (empty($data['receive_id']) && empty($data['role_id']) && empty($data['dept_id'])) {
             return ['status'=>false, 'msg'=>'请指定接收者'];
@@ -874,9 +874,9 @@ if (!function_exists('send_letter')) {
             $saveList = [];
             foreach ($user_ids as $k=>$v) {
                 $saveList[$k]['user_id'] = $v;
-                $saveList[$k]['letter_id'] = $id;
+                $saveList[$k]['msg_id'] = $id;
             }
-            Db::name('user_letter_list')->insertAll($saveList);//插入发送列表
+            Db::name('user_message_list')->insertAll($saveList);//插入发送列表
         }
         catch (\Exception $e) {
             Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);

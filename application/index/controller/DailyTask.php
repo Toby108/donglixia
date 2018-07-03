@@ -18,7 +18,7 @@ class DailyTask
      * @param int $time 默认每隔600秒执行一次（十分钟）
      * @return bool
      */
-    public function all($time = 600)
+    public function all($time = 60)
     {
         try {
             $create_time = Db::name('task_log')->where('task_name', 'DailyTask')->order('id desc')->value('create_time');
@@ -74,7 +74,7 @@ class DailyTask
             ->count();
         if ($res > 0) {
             $sql = Db::name('user_role')->getLastSql();
-            send_letter(['title' => '角色权限默认值不正确', 'content' => $sql, 'role_id' => 1]);
+            send_message(['title' => '角色权限默认值不正确', 'content' => $sql, 'role_id' => 1]);
             send_mail('962863675@qq.com', '角色权限默认值不正确', '数据库语句：'.$sql);//发送邮件通知
         }
     }

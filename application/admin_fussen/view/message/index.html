@@ -141,7 +141,7 @@
             var data = obj.data;
             if (obj.event === 'del') {
                 layer.confirm('接收者消息也将被删除，确定继续吗？', function(index){
-                    $.post('{:url("delete")}',{id:data.letter_id}, function (result) {
+                    $.post('{:url("delete")}',{id:data.msg_id}, function (result) {
                         layer.close(index);
                         if (result.code) {
                             layer.msg(result.msg);
