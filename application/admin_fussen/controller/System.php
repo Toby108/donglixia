@@ -27,6 +27,11 @@ class System extends Base
         $system_config_html = $this->contentHtml($system_config_list);
         $this->assign('system_config_html', $system_config_html);
 
+        //获取系统设置信息
+        $email_list = $SystemConfig->getEmailList();
+        $email_html = $this->contentHtml($email_list);
+        $this->assign('email_html', $email_html);
+
         return $this->fetch();
     }
 

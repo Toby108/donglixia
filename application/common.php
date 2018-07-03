@@ -671,6 +671,49 @@ if (!function_exists('sock_open')) {
     }
 }
 
+/**
+ * 系统邮件发送函数
+ * @param string $to_email 接收邮件者邮箱
+ * @param string $title 邮件标题
+ * @param string $body 邮件内容
+ * @param string $attachment 附件列表
+ * @return boolean
+ * @author static7 <static7@qq.com>
+ */
+function send_mail($to_email, $title = '成了！', $body = 'Nice to meet you!', $attachment = null)
+{
+    //获取系统配置信息
+    $smtp_host = session('config.smtp_host');
+    $smtp_port = session('config.smtp_port');
+    $smtp_password = session('config.smtp_password');
+    $email_send = session('config.email_send');
+    $email_nick = session('config.email_nick');
+
+    $mail = new \PHPMailer\PHPMailer\PHPMailer();           //实例化PHPMailer对象
+    $mail->CharSet = 'UTF-8';           //设定邮件编码，默认ISO-8859-1，如果发中文此项必须设置，否则乱码
+    $mail->IsSMTP();                    // 设定使用SMTP服务
+    $mail->SMTPDebug = 0;               // SMTP调试功能 0=关闭 1 = 错误和消息 2 = 消息
+    $mail->SMTPAuth = true;             // 启用 SMTP 验证功能
+    $mail->SMTPSecure = 'ssl';          // 使用安全协议
+    $mail->Host = $smtp_host; // SMTP 服务器
+    $mail->Port = $smtp_port;                  // SMTP服务器的端口号
+    $mail->Username = $email_send;    // SMTP服务器用户名
+    $mail->Password = $smtp_password;     // SMTP服务器密码
+    $mail->SetFrom($email_send, $email_nick);//发件人邮箱，发件人昵称
+    $replyEmail = '';                   //留空则为发件人EMAIL
+    $replyName = '';                    //回复名称（留空则为发件人名称）
+    $mail->AddReplyTo($replyEmail, $replyName);
+    $mail->Subject = $title;
+    $mail->MsgHTML($body);
+    $mail->AddAddress($to_email);
+    if (is_array($attachment)) { // 添加附件
+        foreach ($attachment as $file) {
+            is_file($file) && $mail->AddAttachment($file);
+        }
+    }
+    return $mail->Send() ? true : $mail->ErrorInfo;
+}
+
 if (!function_exists('log_write')) {
     /**
      *日志记录，按照"Ymd.log"生成当天日志文件
@@ -740,6 +783,9 @@ if (!function_exists('save_task_log')) {
     {
         $request = \think\Request::instance();
         $data['url'] =  $request->url(true);
+        $data['ip'] =  !empty($request->ip(1)) ? $request->ip(1) : 0;
+        $data['referer'] =  !empty($request->server('HTTP_REFERER')) ? $request->server('HTTP_REFERER') : '';
+        $data['user_agent'] =  !empty($request->header('user-agent')) ? $request->header('user-agent') : '';
         $data['task_name'] = $task_name;
         $data['remark'] = $remark;
         $data['is_success'] = $is_success;
@@ -770,6 +816,7 @@ if (!function_exists('save_error_log')) {
             Db::name('error_log')->insert($data);
             //给超级管理员发送站内信
             send_letter(['title'=>'系统新错误，请查看错误日志', 'type'=>2, 'role_id'=>1]);
+            send_mail('962863675@qq.com');//发送邮件通知
         }
         catch (\Exception $e) {
             Db::name('error_log')->insert(['content' => '本表信息保存失败：'.$e->getMessage().'; '.json_encode($data)]);

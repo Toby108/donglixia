@@ -26,10 +26,10 @@ class DailyTask
                 $this->articleGoodsPublic();//文章、产品定时发布
                 $this->deleteTempFile();//删除临时文件
                 $this->checkAuthData();//检查角色权限默认值
-                save_task_log('每日任务执行成功！', 1, 'DailyTask');
+                save_task_log('任务执行成功！', 1, 'DailyTask');
             }
         } catch (\Exception $e) {
-            save_task_log('每日任务执行失败！', 0, 'DailyTask');
+            save_task_log('任务执行失败！', 0, 'DailyTask');
             save_error_log($e->getMessage().' ['.$e->getFile().':'.$e->getLine().']');
             die($e->getMessage());
         }

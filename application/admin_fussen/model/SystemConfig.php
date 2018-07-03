@@ -44,6 +44,16 @@ class SystemConfig extends Base
     }
 
     /**
+     * 获取邮件服务列表
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function getEmailList()
+    {
+        $system_config_id = Db::name('system_config')->where('sys_code', 'email_config')->value('id');
+        return $this->getPidData($system_config_id);
+    }
+
+    /**
      * 根据pid获取数据列表
      * @param $pid
      * @return false|\PDOStatement|string|\think\Collection
