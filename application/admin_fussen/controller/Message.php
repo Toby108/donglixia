@@ -11,8 +11,8 @@ namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\User;
 use app\admin_fussen\model\UserDept;
-use app\admin_fussen\model\UserLetter;
-use app\admin_fussen\model\UserLetterList;
+use app\admin_fussen\model\UserMessage;
+use app\admin_fussen\model\UserMessageList;
 use app\admin_fussen\model\UserRole;
 use think\Db;
 use think\Request;
@@ -22,7 +22,7 @@ class Message extends Base
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
-        $this->currentModel = new UserLetter();//实例化当前模型
+        $this->currentModel = new UserMessage();//实例化当前模型
     }
 
     /**
@@ -55,7 +55,7 @@ class Message extends Base
     }
 
     /**
-     * 已发送页面
+     * 发件箱列表页
      * @return mixed
      */
     public function sent()
@@ -66,7 +66,7 @@ class Message extends Base
     }
 
     /**
-     * 获取已发送数据
+     * 获取已发送数据列表
      * @return mixed
      */
     public function getSentDataList()
@@ -79,7 +79,7 @@ class Message extends Base
             $map['type'] = $param['type'];
         }
         $map['create_by'] = user_info('user_id');
-        return $this->currentModel->where($map)->layTable(['type_text']);
+        return $this->currentModel->where($map)->order('id desc')->layTable(['type_text']);
     }
 
     /**
@@ -150,13 +150,13 @@ class Message extends Base
 
             $this->currentModel->save($param);//保存消息主表
 
-            $UserLetterList = new UserLetterList();
+            $UserMessageList = new UserMessageList();
             //若当前为编辑，则更新接收者列表
             if (!empty($param['id'])) {
-                //根据letter_id，删除不在当前user_ids中的数据
-                $UserLetterList->where('letter_id', $param['id'])->where('user_id', 'not in', $user_ids)->delete();
-                //根据letter_id获取，已发送的user_id集合
-                $user_id_exist = $UserLetterList->where('letter_id', $param['id'])->column('user_id');
+                //根据msg_id，删除不在当前user_ids中的数据
+                $UserMessageList->where('msg_id', $param['id'])->where('user_id', 'not in', $user_ids)->delete();
+                //根据msg_id获取，已发送的user_id集合
+                $user_id_exist = $UserMessageList->where('msg_id', $param['id'])->column('user_id');
                 //取数组差集，剔除掉已发送的user_id
                 $user_ids = array_diff($user_ids, $user_id_exist);
             }
@@ -164,9 +164,9 @@ class Message extends Base
                 $saveList = [];
                 foreach ($user_ids as $k=>$v) {
                     $saveList[$k]['user_id'] = $v;
-                    $saveList[$k]['letter_id'] = $this->currentModel->id;
+                    $saveList[$k]['msg_id'] = $this->currentModel->id;
                 }
-                $UserLetterList->saveAll($saveList);//保存发送列表
+                $UserMessageList->saveAll($saveList);//保存发送列表
             }
         }
         catch (\Exception $e) {
@@ -182,8 +182,8 @@ class Message extends Base
     public function delete($id)
     {
         try {
-            Db::name('user_letter')->where('id', $id)->delete();
-            Db::name('user_letter_list')->where('letter_id', $id)->delete();
+            Db::name('user_message')->where('id', $id)->delete();
+            Db::name('user_message_list')->where('msg_id', $id)->delete();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }

@@ -12,7 +12,7 @@ namespace app\admin_fussen\model;
 use app\common\model\Base;
 use think\Db;
 
-class UserLetter extends Base
+class UserMessage extends Base
 {
     //类型列表
     public $typeList = ['1'=>'系统消息', '2'=>'系统公告', '3'=>'文章发布', '4'=>'产品上新'];
@@ -58,17 +58,17 @@ class UserLetter extends Base
             $map['li.is_read'] = $param['is_read'];//是否已读
         }
         if (!empty($param['create_by'])) {
-            $map['le.create_by'] = $param['create_by'];//发送人id
+            $map['me.create_by'] = $param['create_by'];//发送人id
         }
         if (!empty($param['type'])) {
-            $map['le.type'] = $param['type'];//通知类型：1公告，2系统消息 ，3新发布
+            $map['me.type'] = $param['type'];//通知类型：1公告，2系统消息 ，3新发布
         }
 
         $page = !empty($param['page']) ? $param['page'] : 1;//页码
         $limit = !empty($param['limit']) && $param['limit']<=200 ? $param['limit'] : 1;//每页显示数量，最大200条
         $count = $this->getIndexDataSql($map)->count();
         $list = $this->getIndexDataSql($map)
-            ->field('li.id as list_id,li.letter_id,li.user_id,li.is_read,le.title,le.content,le.url,le.type,le.device,le.create_by,le.create_time')
+            ->field('li.id as list_id,li.msg_id,li.user_id,li.is_read,me.title,me.content,me.url,me.type,me.device,me.create_by,me.create_time')
             ->page($page, $limit)
             ->order('li.is_read asc,li.id desc')
             ->select();
@@ -83,8 +83,8 @@ class UserLetter extends Base
     public function getIndexDataSql($map = [])
     {
         $map['li.user_id'] = user_info('user_id');
-        return Db::name('user_letter_list')->alias('li')
-            ->join('UserLetter le', 'li.letter_id=le.id')
+        return Db::name('user_message_list')->alias('li')
+            ->join('UserMessage me', 'li.msg_id=me.id')
             ->where($map);
     }
 

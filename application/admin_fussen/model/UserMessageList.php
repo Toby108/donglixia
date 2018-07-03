@@ -11,7 +11,7 @@ namespace app\admin_fussen\model;
 
 use app\common\model\Base;
 
-class UserLetterList extends Base
+class UserMessageList extends Base
 {
 
 

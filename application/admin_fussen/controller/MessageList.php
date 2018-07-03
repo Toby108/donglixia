@@ -9,7 +9,7 @@
 
 namespace app\admin_fussen\controller;
 
-use app\admin_fussen\model\UserLetterList;
+use app\admin_fussen\model\UserMessageList;
 use think\Request;
 
 class MessageList extends Base
@@ -17,7 +17,7 @@ class MessageList extends Base
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
-        $this->currentModel = new UserLetterList();//实例化当前模型
+        $this->currentModel = new UserMessageList();//实例化当前模型
     }
 
 }
