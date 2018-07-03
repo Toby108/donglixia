@@ -4,20 +4,20 @@
     <form id="editForm" class="layui-form tpl-form-label-long" action="" >
         <div class="layui-tab layui-tab-card">
             <ul class="layui-tab-title">
-                <li class="layui-this">网站信息</li>
-                <li>系统设置</li>
-                <li>邮件服务</li>
+                {notempty name="list"}
+                    {volist name="list" id="vo"}
+                        <li {eq name="key" value="0" }class="layui-this"{/eq}>{$vo.view_name}</li>
+                    {/volist}
+                {/notempty}
             </ul>
             <div class="layui-tab-content">
-                <div class="layui-tab-item layui-show">
-                    {$wen_info_html}
-                </div>
-                <div class="layui-tab-item">
-                    {$system_config_html}
-                </div>
-                <div class="layui-tab-item">
-                    {$email_html}
-                </div>
+                {notempty name="list"}
+                    {volist name="list" id="vo"}
+                        <div class='layui-tab-item {eq name="key" value="0" }layui-show{/eq}'>
+                            {$vo.child_html}
+                        </div>
+                    {/volist}
+                {/notempty}
             </div>
         </div>
         <div class="tpl-form-action">

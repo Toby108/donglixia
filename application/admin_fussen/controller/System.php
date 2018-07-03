@@ -11,27 +11,24 @@ namespace app\admin_fussen\controller;
 
 use app\admin_fussen\model\SystemConfig;
 use think\Db;
+use think\Request;
 
 class System extends Base
 {
+    public function __construct(Request $request = null)
+    {
+        parent::__construct($request);
+        $this->currentModel = new SystemConfig();//实例化当前模型
+    }
+
     public function index()
     {
-        //获取网站信息
-        $SystemConfig = new SystemConfig();
-        $wen_info_list = $SystemConfig->getWebInfoList();
-        $wen_info_html = $this->contentHtml($wen_info_list);
-        $this->assign('wen_info_html', $wen_info_html);
-
-        //获取系统设置信息
-        $system_config_list = $SystemConfig->getSystemConfigList();
-        $system_config_html = $this->contentHtml($system_config_list);
-        $this->assign('system_config_html', $system_config_html);
-
-        //获取系统设置信息
-        $email_list = $SystemConfig->getEmailList();
-        $email_html = $this->contentHtml($email_list);
-        $this->assign('email_html', $email_html);
-
+        //获取数据列表，以child分组
+        $list = $this->currentModel->getDataList();
+        foreach ($list as $k=>$v) {
+            $list[$k]['child_html'] = $this->contentHtml($v['child']);
+        }
+        $this->assign('list', $list);
         return $this->fetch();
     }
 
@@ -57,7 +54,6 @@ class System extends Base
             $this->error('没有需要保存的数据！');
         }
 
-        $SystemConfig = new SystemConfig();
         try {
             foreach ($data as $k=>$v) {
                 if ($v['sys_code'] == 'web_logo' && !empty($v['sys_value'])) {
@@ -68,10 +64,10 @@ class System extends Base
                     }
                 }
             }
-            $SystemConfig->saveAll($data);
+            $this->currentModel->saveAll($data);
             setSessionConfig();//缓存系统设置
         } catch (\Exception $e) {
-            $msg = !empty($SystemConfig->getError()) ? $SystemConfig->getError() : $e->getMessage();
+            $msg = !empty($this->currentModel->getError()) ? $this->currentModel->getError() : $e->getMessage();
             $this->error($msg);
         }
 

@@ -5,11 +5,6 @@
         <input type="hidden" name="sys[{$vo.id}][sys_code]" value="{$vo.sys_code}">
         <label class="layui-form-label">{$vo.view_name}：</label>
         {switch name="vo.type"}
-        {case value="text"}
-        <div class="layui-input-block">
-            <input type="text" name="sys[{$vo.id}][sys_value]" value="{$vo.sys_value}" class="layui-input">
-        </div>
-        {/case}
         {case value="textarea"}
         <div class="layui-input-block">
             <textarea name="sys[{$vo.id}][sys_value]" class="layui-textarea">{$vo.sys_value}</textarea>
@@ -32,6 +27,7 @@
         {default /}
         <div class="layui-input-block">
             <input type="text" name="sys[{$vo.id}][sys_value]" value="{$vo.sys_value}" class="layui-input">
+            <span style="color: #FFB800;">{$vo.describe}</span>
         </div>
         {/switch}
         </div>

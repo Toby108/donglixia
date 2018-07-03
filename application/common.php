@@ -783,7 +783,7 @@ if (!function_exists('save_task_log')) {
     {
         $request = \think\Request::instance();
         $data['url'] =  $request->url(true);
-        $data['ip'] =  !empty($request->ip(1)) ? $request->ip(1) : 0;
+        $data['ip'] =  !empty($request->ip(0)) ? $request->ip(0) : 0;
         $data['referer'] =  !empty($request->server('HTTP_REFERER')) ? $request->server('HTTP_REFERER') : '';
         $data['user_agent'] =  !empty($request->header('user-agent')) ? $request->header('user-agent') : '';
         $data['task_name'] = $task_name;
