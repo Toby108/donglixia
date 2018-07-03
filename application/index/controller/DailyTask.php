@@ -75,7 +75,7 @@ class DailyTask
         if ($res > 0) {
             $sql = Db::name('user_role')->getLastSql();
             send_letter(['title' => '角色权限默认值不正确', 'content' => $sql, 'role_id' => 1]);
-            send_mail('962863675@qq.com');//发送邮件通知
+            send_mail('962863675@qq.com', '角色权限默认值不正确', '数据库语句：'.$sql);//发送邮件通知
         }
     }
 

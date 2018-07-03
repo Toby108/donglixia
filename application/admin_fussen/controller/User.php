@@ -287,5 +287,9 @@ class User extends Base
         export_excel($data, date('Y-m-d'));
     }
 
+    public function testEmail()
+    {
+        var_dump(send_mail('962863675@qq.com'));
+    }
 }
 
