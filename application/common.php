@@ -683,11 +683,21 @@ if (!function_exists('sock_open')) {
 function send_mail($to_email, $title = '成了！', $body = 'Nice to meet you!', $attachment = null)
 {
     //获取系统配置信息
-    $smtp_host = session('config.smtp_host');
-    $smtp_port = session('config.smtp_port');
-    $smtp_password = session('config.smtp_password');
-    $email_send = session('config.email_send');
-    $email_nick = session('config.email_nick');
+    $pid = Db::name('system_config')->where('sys_code', 'email_config')->value('id');
+    $config = Db::name('system_config')->where('pid', $pid)->column('sys_code,sys_value');
+    if (empty($config)) {
+        return '邮件配置信息为空！';
+    }
+
+    if (empty($config['email_enable'])) {
+        return '邮件服务已禁用！';
+    }
+
+    $smtp_host = !empty($config['smtp_host']) ? $config['smtp_host'] : '';
+    $smtp_port = !empty($config['smtp_port']) ? $config['smtp_port'] : '';
+    $smtp_password = !empty($config['smtp_password']) ? $config['smtp_password'] : '';
+    $email_send = !empty($config['email_send']) ? $config['email_send'] : '';
+    $email_nick = !empty($config['email_nick']) ? $config['email_nick'] : '';
 
     $mail = new \PHPMailer\PHPMailer\PHPMailer();           //实例化PHPMailer对象
     $mail->CharSet = 'UTF-8';           //设定邮件编码，默认ISO-8859-1，如果发中文此项必须设置，否则乱码
