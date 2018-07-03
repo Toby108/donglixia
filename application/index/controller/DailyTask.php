@@ -16,23 +16,24 @@ class DailyTask
 {
     /**
      * 执行全部
-     * @param int $time 默认每隔600秒执行一次（十分钟）
+     * @param int $time 默认每隔600秒执行一次
      * @return bool
      */
     public function all($time = 60)
     {
         try {
-            if (Cookie::get('task_runtime')) {
+            if (!empty(Cookie::get('task_runtime'))) {
                 return '执行时间没到';
             }
-            Cookie::set('task_runtime', time(), $time*60);
             $create_time = Db::name('task_log')->where('task_name', 'DailyTask')->order('id desc')->value('create_time');
-            if (empty($create_time) || (time() - strtotime($create_time) >= $time)) {
-                $this->articleGoodsPublic();//文章、产品定时发布
-                $this->deleteTempFile();//删除临时文件
-                $this->checkAuthData();//检查角色权限默认值
-                save_task_log('任务执行成功！', 1, 'DailyTask');
+            if (!empty($create_time) && time() - strtotime($create_time) < $time) {
+                return '执行时间没到';
             }
+            Cookie::set('task_runtime', time(), $time);
+            $this->articleGoodsPublic();//文章、产品定时发布
+            $this->deleteTempFile();//删除临时文件
+            $this->checkAuthData();//检查角色权限默认值
+            save_task_log('任务执行成功！', 1, 'DailyTask');
         } catch (\Exception $e) {
             save_task_log('任务执行失败！', 0, 'DailyTask');
             save_error_log($e->getMessage().' ['.$e->getFile().':'.$e->getLine().']');
