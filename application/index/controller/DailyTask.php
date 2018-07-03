@@ -73,12 +73,7 @@ class DailyTask
             ->whereOr('', 'exp', 'find_in_set(80,auth)=0')
             ->count();
         if ($res > 0) {
-            $sql = Db::name('user_role')
-                ->where('', 'exp', 'find_in_set(1,auth)=0')//不包含首页
-                ->whereOr('', 'exp', 'find_in_set(79,auth)=0')//不包含消息列表
-                ->whereOr('', 'exp', 'find_in_set(80,auth)=0')
-                ->fetchSql(true)
-                ->select();
+            $sql = Db::name('user_role')->getLastSql();
             send_letter(['title' => '角色权限默认值不正确', 'content' => $sql, 'role_id' => 1]);
         }
     }
