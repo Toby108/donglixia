@@ -19,7 +19,7 @@ class DailyTask
      * @param int $time 默认每隔600秒执行一次
      * @return bool
      */
-    public function all($time = 60)
+    public function all($time = 600)
     {
         try {
             if (!empty(Cookie::get('task_runtime'))) {
