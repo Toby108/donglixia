@@ -22,17 +22,38 @@ class DailyTask
     public function all($time = 600)
     {
         try {
+            //先检查cookie是否已过期，速度快。
             if (!empty(Cookie::get('task_runtime'))) {
                 return '执行时间没到';
             }
+            //获取任务表最后一次执行的时间，判断是否达到规定的时间间隔
             $create_time = Db::name('task_log')->where('task_name', 'DailyTask')->order('id desc')->value('create_time');
             if (!empty($create_time) && time() - strtotime($create_time) < $time) {
                 return '执行时间没到';
             }
-            Cookie::set('task_runtime', time(), $time);
+            Cookie::set('task_runtime', time(), $time);//根据规定的时间间隔，设置cookie有效期
             $this->articleGoodsPublic();//文章、产品定时发布
-            $this->deleteTempFile();//删除临时文件
-            $this->checkAuthData();//检查角色权限默认值
+
+            //设置执行时间段
+            $data = date('Hi');//当前时间：时分格式
+            if ($data <= '0700') {
+                //0点到7点
+                $this->deleteTempFile();
+                $this->checkAuthData();
+                save_task_log('0点到7点，任务执行成功！', 1, 'DailyTask');
+            } elseif ($data <= '1200') {
+                //7点到12点
+                $this->checkAuthData();
+                save_task_log('7点到12点，任务执行成功！', 1, 'DailyTask');
+            } elseif ($data <= '1800') {
+                //12点到18点
+                save_task_log('12点到18点，任务执行成功！', 1, 'DailyTask');
+            } elseif ($data <= '2400') {
+                //18点到14点
+                $this->checkAuthData();
+                save_task_log('18点到14点，任务执行成功！', 1, 'DailyTask');
+            }
+
             save_task_log('任务执行成功！', 1, 'DailyTask');
         } catch (\Exception $e) {
             save_task_log('任务执行失败！', 0, 'DailyTask');
@@ -81,7 +102,6 @@ class DailyTask
         if ($res > 0) {
             $sql = Db::name('user_role')->getLastSql();
             send_message(['title' => '角色权限默认值不正确', 'content' => $sql, 'role_id' => 1]);
-            send_mail('962863675@qq.com', '角色权限默认值不正确', '数据库语句：'.$sql);//发送邮件通知
         }
     }
 

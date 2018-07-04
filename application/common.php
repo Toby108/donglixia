@@ -829,7 +829,7 @@ if (!function_exists('save_error_log')) {
             send_mail('962863675@qq.com');//发送邮件通知
         }
         catch (\Exception $e) {
-            Db::name('error_log')->insert(['content' => '本表信息保存失败：'.$e->getMessage().'; '.json_encode($data)]);
+            Db::name('error_log')->insert(['content' => '本表信息保存失败：'.$e->getMessage().'; '.json_encode($data), 'create_time'=>date('Y-m-d H:i:s')]);
         }
     }
 }
@@ -879,7 +879,7 @@ if (!function_exists('send_message')) {
             Db::name('user_message_list')->insertAll($saveList);//插入发送列表
         }
         catch (\Exception $e) {
-            Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data)]);
+            Db::name('error_log')->insert(['content' => $e->getMessage().'; '.json_encode($data), 'create_time'=>date('Y-m-d H:i:s')]);
         }
         return true;
     }
