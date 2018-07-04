@@ -35,26 +35,26 @@ class DailyTask
             $this->articleGoodsPublic();//文章、产品定时发布
 
             //设置执行时间段
-            $data = date('Hi');//当前时间：时分格式
+            $data = date('Hi');//当前时间，格式：时分
             if ($data <= '0700') {
                 //0点到7点
                 $this->deleteTempFile();
                 $this->checkAuthData();
-                save_task_log('0点到7点，任务执行成功！', 1, 'DailyTask');
+                save_task_log('0~7点，任务执行成功！', 1, 'DailyTask');
             } elseif ($data <= '1200') {
                 //7点到12点
                 $this->checkAuthData();
-                save_task_log('7点到12点，任务执行成功！', 1, 'DailyTask');
+                save_task_log('7~12点，任务执行成功！', 1, 'DailyTask');
             } elseif ($data <= '1800') {
                 //12点到18点
-                save_task_log('12点到18点，任务执行成功！', 1, 'DailyTask');
+                save_task_log('12~18点，任务执行成功！', 1, 'DailyTask');
             } elseif ($data <= '2400') {
-                //18点到14点
+                //18点到24点
                 $this->checkAuthData();
-                save_task_log('18点到14点，任务执行成功！', 1, 'DailyTask');
+                save_task_log('18~24点，任务执行成功！', 1, 'DailyTask');
             }
 
-            save_task_log('任务执行成功！', 1, 'DailyTask');
+//            save_task_log('任务执行成功！', 1, 'DailyTask');
         } catch (\Exception $e) {
             save_task_log('任务执行失败！', 0, 'DailyTask');
             save_error_log($e->getMessage().' ['.$e->getFile().':'.$e->getLine().']');
